@@ -46,11 +46,11 @@
           <option value="previous-year-questions">Previous Year Questions</option>
           <option value="exam-preparation">Exam Preparation</option>
         </select>
-        <p class="admin-intro">After you press Add, GitHub opens the selected folder. Sign in to your own GitHub account, choose your PDF or image, and commit the upload.</p>
+        <p class="admin-intro">After you press Add, GitHub opens the selected folder. You can choose multiple PDFs or images in one upload, then commit them to GitHub.</p>
         <div class="admin-remove-area">
           <label for="existingFiles">Existing files</label>
           <select id="existingFiles" disabled><option value="">Choose semester and subject first</option></select>
-          <div class="admin-toolbar"><button class="admin-back-button" id="refreshFiles" type="button">↻ Refresh list</button><button class="admin-action" id="removeButton" type="button" disabled>− Remove selected</button></div>
+          <div class="admin-toolbar"><button class="admin-back-button" id="refreshFiles" type="button">↻ Refresh list</button><button class="admin-back-button" id="renameButton" type="button" disabled>✎ Rename selected</button><button class="admin-action" id="removeButton" type="button" disabled>− Remove selected</button></div>
           <p id="fileListStatus" class="admin-intro" aria-live="polite">Choose a semester, subject and material type to load files.</p>
         </div>
       </form>
@@ -111,11 +111,13 @@
     const existingFiles = document.getElementById("existingFiles");
     const fileListStatus = document.getElementById("fileListStatus");
     const removeButton = document.getElementById("removeButton");
+    const renameButton = document.getElementById("renameButton");
     async function loadExistingFiles() {
       const folder = selectedFolder();
       existingFiles.innerHTML = '<option value="">Loading files...</option>';
       existingFiles.disabled = true;
       removeButton.disabled = true;
+      renameButton.disabled = true;
       if (!folder) {
         existingFiles.innerHTML = '<option value="">Choose semester and subject first</option>';
         fileListStatus.textContent = "Choose a semester, subject and material type to load files.";
@@ -135,7 +137,7 @@
           existingFiles.appendChild(option);
         });
         existingFiles.disabled = files.length === 0;
-        fileListStatus.textContent = files.length ? files.length + " file(s) found. Select one file and press Remove selected." : "No files in this folder yet.";
+        fileListStatus.textContent = files.length ? files.length + " file(s) found. Select a file to rename or remove it." : "No files in this folder yet.";
       } catch (error) {
         existingFiles.innerHTML = '<option value="">No files available</option>';
         fileListStatus.textContent = error.message;
@@ -151,6 +153,13 @@
     });
     existingFiles.addEventListener("change", () => {
       removeButton.disabled = !existingFiles.value;
+      renameButton.disabled = !existingFiles.value;
+    });
+    renameButton.addEventListener("click", () => {
+      const path = existingFiles.value;
+      if (!path) return;
+      if (!confirm("Open GitHub editor for the selected file? You can change its filename/path there and commit the rename.")) return;
+      window.open("https://github.com/mrjojo07/BCA-HUB/edit/main/" + path.split("/").map(encodeURIComponent).join("/"), "_blank", "noopener");
     });
     document.getElementById("refreshFiles").addEventListener("click", loadExistingFiles);
     removeButton.addEventListener("click", () => {
