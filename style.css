@@ -121,3 +121,15 @@ main .about-section#about>div:last-child{max-width:620px!important}
 main .about-section#about h2{font-size:20px!important;line-height:1.2!important;margin:4px 0 0!important}
 main .about-section#about p{font-size:10px!important;line-height:1.5!important;margin:6px 0 0!important}
 @media(max-width:600px){main .about-section#about{padding:16px 20px!important;gap:10px!important}main .about-section#about .about-mark{flex-basis:38px!important;width:38px!important;height:38px!important;font-size:21px!important}main .about-section#about h2{font-size:18px!important}main .about-section#about p{font-size:10px!important}}
+
+/* Subject-wise learning progress tracker */
+.learning-progress{margin-top:22px;padding:20px;border:1px solid #26364c;border-radius:12px;background:#0e1827}
+.progress-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.progress-heading h4{font:700 18px "Space Grotesk";margin:7px 0 0}
+.progress-percent{font:700 22px "Space Grotesk";color:#55aaff}
+.learning-progress-track{height:7px;margin:15px 0;background:#1c2b3d;border-radius:20px;overflow:hidden}
+.learning-progress-track span{display:block;height:100%;background:#168cff;border-radius:20px;transition:width .2s}
+.progress-checklist{display:grid;gap:11px}
+.progress-checklist label{display:flex;align-items:center;gap:10px;color:#dce8f8;font-size:12px;cursor:pointer}
+.progress-checklist input{width:16px;height:16px;accent-color:#168cff}
+.learning-progress>p{margin:13px 0 0;color:#91a0b5;font-size:10px}
