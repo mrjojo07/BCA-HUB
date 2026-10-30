@@ -91,6 +91,7 @@ signupForm.addEventListener("submit", async (event) => {
   button.disabled = false; button.textContent = "Create account";
   if (error) return showStatus(readableError(error), "error");
   if (data.session) {
+    localStorage.setItem("bca-hub-student-login-started-at", String(Date.now()));
     showStatus("Your account is ready. Your 3-day trial has started.", "success");
     await showAccount(data.user);
   } else {
@@ -110,6 +111,7 @@ loginForm.addEventListener("submit", async (event) => {
   });
   button.disabled = false; button.textContent = "Log in";
   if (error) return showStatus(readableError(error), "error");
+  localStorage.setItem("bca-hub-student-login-started-at", String(Date.now()));
   await showAccount(data.user);
 });
 
@@ -148,8 +150,12 @@ supabase.auth.onAuthStateChange(async (event, session) => {
   if (event === "PASSWORD_RECOVERY") {
     showForm("newPassword");
   } else if (session?.user && event === "SIGNED_IN") {
+    if (!localStorage.getItem("bca-hub-student-login-started-at")) {
+      localStorage.setItem("bca-hub-student-login-started-at", String(Date.now()));
+    }
     queueMicrotask(() => showAccount(session.user));
   } else if (event === "SIGNED_OUT") {
+    localStorage.removeItem("bca-hub-student-login-started-at");
     formsPanel.hidden = false;
     accountPanel.hidden = true;
   }
@@ -161,7 +167,12 @@ if (params.get("mode") === "recovery") {
   showForm("newPassword");
 } else {
   const { data: { session } } = await supabase.auth.getSession();
-  if (session?.user) await showAccount(session.user);
-  else showForm("login");
+  const startedAt = Number(localStorage.getItem("bca-hub-student-login-started-at"));
+  if (session?.user && startedAt && Date.now() - startedAt < 30 * 24 * 60 * 60 * 1000) await showAccount(session.user);
+  else {
+    if (session) await supabase.auth.signOut({ scope: "local" });
+    localStorage.removeItem("bca-hub-student-login-started-at");
+    showForm("login");
+  }
   if (params.get("verified") === "1") showStatus("Email verified. You can now log in.", "success");
 }
