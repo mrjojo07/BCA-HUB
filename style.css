@@ -153,3 +153,12 @@ main .about-section#about p{font-size:10px!important;line-height:1.5!important;m
 .nav-saved:hover{background:#173858;border-color:#55aaff}
 .saved-empty{padding:18px;border:1px dashed #354963;border-radius:10px;color:#aabbd0;font-size:12px}
 @media(max-width:800px){.nav-saved{width:100%;margin:5px 0}}
+
+/* Saved resources opens as a floating panel, not a section at the bottom */
+.saved-resources-section{position:fixed;z-index:1000;top:82px;right:22px;width:min(440px,calc(100vw - 28px));max-height:calc(100vh - 104px);overflow-y:auto;margin:0;padding:22px;background:#0b1421;border:1px solid #30445e;border-radius:16px;box-shadow:0 18px 60px rgba(0,0,0,.55)}
+.saved-resources-section[hidden]{display:none}
+.saved-panel-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.saved-panel-heading h2{font-size:20px;margin:5px 0 0}
+.saved-panel-close{flex:0 0 32px;width:32px;height:32px;border:1px solid #354963;border-radius:8px;background:#142235;color:#e8f2ff;font-size:22px;line-height:1;cursor:pointer}
+.saved-resources-list{margin-top:16px}
+@media(max-width:600px){.saved-resources-section{top:72px;right:10px;width:calc(100vw - 20px);max-height:calc(100vh - 84px);padding:17px}}
