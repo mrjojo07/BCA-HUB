@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#05080e">
   <title>Admin Panel | BCA HUB</title>
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body class="admin-page">
   <header class="site-header">
@@ -178,6 +178,68 @@
       uploadPanel.hidden = true;
       loginPanel.hidden = false;
       document.getElementById("accessCode").value = "";
+    });
+
+    const examForm = document.getElementById("examForm");
+    const examTitle = document.getElementById("examTitle");
+    const examDate = document.getElementById("examDate");
+    const examEntries = document.getElementById("examEntries");
+    const examJson = document.getElementById("examJson");
+    let examItems = [];
+
+    function renderExamItems() {
+      examEntries.replaceChildren();
+      examItems.forEach((exam, index) => {
+        const row = document.createElement("div");
+        row.className = "exam-admin-row";
+        const label = document.createElement("span");
+        label.textContent = exam.title + " — " + exam.date;
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "admin-back-button";
+        remove.textContent = "Remove";
+        remove.addEventListener("click", () => {
+          examItems.splice(index, 1);
+          renderExamItems();
+        });
+        row.append(label, remove);
+        examEntries.append(row);
+      });
+      examJson.value = JSON.stringify(examItems, null, 2);
+    }
+
+    fetch("exam-timetable.json?v=" + Date.now())
+      .then(response => response.ok ? response.json() : [])
+      .then(data => {
+        examItems = Array.isArray(data) ? data.filter(item => item && item.title && item.date) : [];
+        renderExamItems();
+      })
+      .catch(() => renderExamItems());
+
+    examForm.addEventListener("submit", event => {
+      event.preventDefault();
+      const title = examTitle.value.trim();
+      const date = examDate.value;
+      if (!title || !date) return;
+      examItems.push({ title, date });
+      examItems.sort((a, b) => a.date.localeCompare(b.date));
+      examForm.reset();
+      renderExamItems();
+    });
+
+    document.getElementById("copyExam").addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(examJson.value);
+        alert("Timetable data copied. Open GitHub, edit exam-timetable.json, paste and commit.");
+      } catch (error) {
+        examJson.focus();
+        examJson.select();
+        alert("Copy was blocked by the browser. The JSON is selected; copy it manually.");
+      }
+    });
+
+    document.getElementById("publishExam").addEventListener("click", () => {
+      window.open("https://github.com/mrjojo07/BCA-HUB/edit/main/exam-timetable.json", "_blank", "noopener");
     });
   </script>
 </body>
