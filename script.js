@@ -284,14 +284,22 @@ document.getElementById("savedResourcesList")?.addEventListener("click", event =
   writeSavedResources(items);
 });
 renderSavedResources();
+const savedPanel = document.getElementById("savedResourcesSection");
+function closeSavedResources() {
+  if (savedPanel) savedPanel.hidden = true;
+  document.getElementById("savedResourcesButton")?.setAttribute("aria-expanded", "false");
+}
 document.getElementById("savedResourcesButton")?.addEventListener("click", () => {
-  const section = document.getElementById("savedResourcesSection");
-  if (!section) return;
-  section.hidden = false;
-  renderSavedResources();
-  section.scrollIntoView({ behavior: "smooth", block: "start" });
+  if (!savedPanel) return;
+  savedPanel.hidden = !savedPanel.hidden;
+  document.getElementById("savedResourcesButton")?.setAttribute("aria-expanded", String(!savedPanel.hidden));
+  if (!savedPanel.hidden) renderSavedResources();
   navLinks?.classList.remove("open");
   menuToggle?.setAttribute("aria-expanded", "false");
+});
+document.getElementById("closeSavedResources")?.addEventListener("click", closeSavedResources);
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape") closeSavedResources();
 });
 
 subjectBrowser?.addEventListener("click", (event) => {
