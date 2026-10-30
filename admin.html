@@ -18,18 +18,8 @@
   <main class="admin-main">
     <div class="eyebrow">SITE OWNER TOOLS</div>
     <h1 class="admin-title">BCA HUB <span>Admin</span></h1>
-    <section id="loginPanel" class="admin-login">
-      <h2>Admin access</h2>
-      <p class="admin-intro">Enter your temporary access code to open the upload panel.</p>
-      <form id="loginForm">
-        <label for="accessCode">Secret code</label>
-        <input id="accessCode" type="password" autocomplete="current-password" required placeholder="Enter admin code">
-        <button class="admin-action" type="submit">Unlock Admin Panel</button>
-        <p id="loginError" class="admin-error" aria-live="polite"></p>
-      </form>
-    </section>
-    <section id="uploadPanel" hidden>
-      <div class="admin-warning"><strong>Temporary mode:</strong> this code check is visible in the public website files. It is only a basic screen lock, not secure authentication. Do not upload private or sensitive files.</div>
+    <section id="uploadPanel">
+      <div class="admin-warning"><strong>GitHub sign-in required:</strong> This panel is open to view, but uploading, editing, or deleting files requires signing in to GitHub with an account that has write access to this repository. Do not upload private or sensitive files.</div>
       <div class="admin-toolbar"><div><h2>Learning materials</h2><p class="admin-intro">Choose where your material belongs, then use + Add to upload it to the matching GitHub folder.</p></div><button class="admin-action add-button" id="addButton" type="button">＋ Add</button></div>
       <form id="materialForm" class="admin-form">
         <label for="semester">Semester</label>
@@ -65,33 +55,16 @@
         <p class="admin-footnote">Use “Open on GitHub” to reply, add labels, or close a completed request. Requests are stored as public GitHub Issues.</p>
       </section>
       <p class="admin-footnote">Remove opens GitHub's delete confirmation page for the selected file. Sign in and confirm the commit there.</p>
-      <button class="admin-back-button" id="logoutButton" type="button">Lock Admin Panel</button>
     </section>
     <a class="admin-home-link" href="index.html">← Return to BCA HUB homepage</a>
   </main>
   <script>
-    let exams=[];const jsonBox=document.getElementById("examJson");const entries=document.getElementById("examEntries");function draw(){jsonBox.value=JSON.stringify(exams,null,2);entries.replaceChildren();exams.forEach((x,i)=>{const p=document.createElement("p");p.textContent=x.date+" — "+x.title+" ";const b=document.createElement("button");b.type="button";b.textContent="Remove";b.onclick=()=>{exams.splice(i,1);draw();};p.append(b);entries.append(p);});}fetch("exam-timetable.json").then(r=>r.ok?r.json():[]).then(x=>{exams=Array.isArray(x)?x:[];draw();}).catch(draw);document.getElementById("examForm").addEventListener("submit",e=>{e.preventDefault();exams.push({title:document.getElementById("examTitle").value.trim(),date:document.getElementById("examDate").value});e.target.reset();draw();});document.getElementById("copyExam").onclick=async()=>{try{await navigator.clipboard.writeText(jsonBox.value);alert("Copied timetable data.");}catch(e){jsonBox.select();alert("Copy the selected timetable data.");}};document.getElementById("publishExam").onclick=()=>{jsonBox.select();window.open("https://github.com/mrjojo07/BCA-HUB/edit/main/exam-timetable.json","_blank","noopener");};
-    const TEMP_ADMIN_CODE = "adnanbcahub@2008";
-    const loginPanel = document.getElementById("loginPanel");
-    const uploadPanel = document.getElementById("uploadPanel");
-    document.getElementById("loginForm").addEventListener("submit", (event) => {
-      event.preventDefault();
-      const entered = document.getElementById("accessCode").value;
-      if (entered === TEMP_ADMIN_CODE) {
-        loginPanel.hidden = true;
-        uploadPanel.hidden = false;
-        document.getElementById("loginError").textContent = "";
-      } else {
-        document.getElementById("loginError").textContent = "Incorrect code. Please try again.";
-      }
-    });
     const subjectLists = {
       "semester-1": [
         "Fundamentals of Computers and Computational Thinking",
         "Introduction to Computers and Office Automation",
         "Mathematical Foundation for Computer Applications",
-        "Discrete Structures for Computer Applications",
-        "Creativity, Innovation and Business Development"
+        "Discrete Structures for Computer Applications"
       ]
     };
     const semesterSelect = document.getElementById("semester");
@@ -183,11 +156,6 @@
     document.getElementById("category").addEventListener("change", loadExistingFiles);
     subjectSelect.addEventListener("change", loadExistingFiles);
     semesterSelect.addEventListener("change", () => setTimeout(loadExistingFiles, 0));
-    document.getElementById("logoutButton").addEventListener("click", () => {
-      uploadPanel.hidden = true;
-      loginPanel.hidden = false;
-      document.getElementById("accessCode").value = "";
-    });
 
     const examForm = document.getElementById("examForm");
     const examTitle = document.getElementById("examTitle");
@@ -286,6 +254,6 @@
     }
     document.getElementById("refreshRequests")?.addEventListener("click", loadAdminResourceRequests);
     loadAdminResourceRequests();
-\n  </script>
+  </script>
 </body>
 </html>
