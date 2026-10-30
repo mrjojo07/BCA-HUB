@@ -179,3 +179,39 @@ main .about-section#about p{font-size:10px!important;line-height:1.5!important;m
 .request-view-link{display:inline-block;margin-top:16px;color:#8fc4ff;font-size:12px;text-decoration:none}
 .request-view-link:hover{text-decoration:underline}
 @media(max-width:650px){.resource-request-section{padding:46px 20px}.resource-request-form{grid-template-columns:1fr;padding:17px}.request-field-wide,.request-submit-row,.request-feedback{grid-column:1}.request-submit-row{align-items:flex-start;flex-direction:column}}
+
+
+/* Student account and authentication */
+.auth-page{min-height:100vh;display:flex;flex-direction:column;background:#05080e}
+.auth-home-link{font-size:12px;font-weight:700;color:#9bcaff}
+.auth-main{width:100%;flex:1;display:grid;place-items:center;padding:48px 20px}
+.auth-card{width:min(100%,480px);padding:34px;border:1px solid #26364c;border-radius:18px;background:#0d1725;box-shadow:0 22px 70px #0007}
+.auth-card h1{font-size:clamp(34px,7vw,48px);margin:14px 0 10px}
+.auth-intro{font-size:13px;line-height:1.7;color:#a5afbf;margin-bottom:24px}
+.auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:5px;background:#08111d;border-radius:10px;margin-bottom:22px}
+.auth-tab{border:0;border-radius:7px;padding:11px;background:transparent;color:#9aabc0;font:700 12px "DM Sans";cursor:pointer}
+.auth-tab.active{background:#173858;color:#fff}
+.auth-form{display:grid;gap:10px}
+.auth-form[hidden],#authForms[hidden],#accountPanel[hidden]{display:none}
+.auth-form label{margin-top:6px;color:#dce8f8;font-size:12px;font-weight:700}
+.auth-form input{width:100%;padding:13px;border:1px solid #30445e;border-radius:9px;background:#09111d;color:#eef5ff;font:14px "DM Sans"}
+.auth-form input:focus{outline:2px solid #168cff;outline-offset:2px}
+.auth-submit{width:100%;justify-content:center;margin-top:10px;border:0;cursor:pointer}
+.auth-submit:disabled{opacity:.6;cursor:wait}
+.auth-text-button{border:0;background:transparent;color:#8fc4ff;font:600 12px "DM Sans";cursor:pointer;padding:8px}
+.auth-small-note{font-size:10px;line-height:1.7;color:#91a0b5;margin:8px 0 0}
+.auth-status{min-height:0;margin:0 0 12px;font-size:12px;line-height:1.6;color:#9bcaff}
+.auth-status:empty{display:none}
+.auth-status[data-kind="error"]{color:#ffb2b2}
+.auth-status[data-kind="success"]{color:#91e0b4}
+.account-welcome h2{font-size:28px;margin:10px 0 5px}
+.account-welcome p{font-size:12px;color:#9aabc0;overflow-wrap:anywhere}
+.membership-card{display:grid;gap:8px;margin:22px 0;padding:20px;border:1px solid #28527b;border-radius:12px;background:#102944}
+.membership-label{font-size:9px;letter-spacing:1.5px;color:#8fc4ff;font-weight:700}
+.membership-card strong{font:700 24px "Space Grotesk";color:#fff}
+.membership-card p{font-size:11px;line-height:1.6;color:#b8cce2;margin:0}
+.account-actions{display:grid;gap:12px}
+.account-actions .button{justify-content:center}
+.auth-secondary-button{padding:12px;border:1px solid #354963;border-radius:8px;background:#142235;color:#dce8f8;font:700 12px "DM Sans";cursor:pointer}
+.auth-page .site-footer{margin-top:auto}
+@media(max-width:520px){.auth-card{padding:24px 19px}.auth-main{padding:28px 14px}}
