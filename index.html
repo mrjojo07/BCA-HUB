@@ -10,14 +10,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=5">
-  <script src="script.js?v=6" defer></script>
+  <script src="script.js?v=8" defer></script>
 </head>
 <body>
   <header class="site-header">
     <a class="brand" href="#" aria-label="BCA HUB home"><span class="brand-mark">B</span><span>BCA <b>HUB</b></span></a>
     <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
     <nav class="nav-links" id="navLinks">
-      <a href="#semesters">Subjects</a><a href="#semesters">Semesters</a><a href="#about">About</a>
+      <a href="#semesters">Subjects</a><a href="#semesters">Semesters</a><a href="#mcqQuiz">MCQ Quiz</a><a href="#about">About</a>
       <a class="nav-admin" href="admin.html">Admin Panel <span>↗</span></a><a class="nav-cta" href="#semesters">Explore semesters <span>↗</span></a>
     </nav>
   </header>
@@ -61,6 +61,29 @@
       <section id="subjectBrowser" class="subject-browser" hidden aria-live="polite"></section>
       <p class="notice" id="resourceNotice">Choose Semester 1 to browse its subjects. Other semester subject lists will be added after they are confirmed against your syllabus.</p>
       <a class="syllabus-link" href="https://docs.uoc.ac.in/website/syllabus/2025-06-13%2014%3A37%3A35_syl2255.pdf" target="_blank" rel="noopener noreferrer">Open University of Calicut BCA syllabus <span>↗</span></a>
+    </section>
+
+    <section class="quiz-section" id="mcqQuiz">
+      <div class="section-heading">
+        <div><div class="eyebrow">TEST YOUR KNOWLEDGE</div><h2>Quick <span>MCQ quiz.</span></h2></div>
+        <p>Practise core computer science concepts, answer timed questions and check your score.</p>
+      </div>
+      <div class="quiz-panel" id="quizPanel">
+        <div class="quiz-intro" id="quizIntro">
+          <div class="quiz-symbol">✎</div>
+          <h3>Computer Fundamentals</h3>
+          <p>5 sample questions · 5 minutes · One point for each correct answer</p>
+          <button class="quiz-button" id="startQuiz" type="button">Start quiz ↗</button>
+        </div>
+        <div id="quizPlay" hidden>
+          <div class="quiz-topline"><span id="quizProgress">Question 1 of 5</span><span class="quiz-timer" id="quizTimer">05:00</span></div>
+          <div class="quiz-progress"><span id="quizProgressBar"></span></div>
+          <h3 class="quiz-question" id="quizQuestion"></h3>
+          <div class="quiz-options" id="quizOptions"></div>
+          <div class="quiz-controls"><button class="quiz-button secondary" id="quizPrevious" type="button" disabled>← Previous</button><button class="quiz-button" id="quizNext" type="button">Next →</button><button class="quiz-button" id="quizSubmit" type="button" hidden>Submit quiz</button></div>
+        </div>
+        <div id="quizResult" class="quiz-result" hidden aria-live="polite"></div>
+      </div>
     </section>
     <section class="about-section" id="about"><div class="about-mark">B</div><div><div class="eyebrow dark-eyebrow">ABOUT BCA HUB</div><h2>One hub. <span>More possibilities.</span></h2><p>BCA HUB is a learning space designed to make study resources easier to discover and use. Our goal is simple: help students learn concepts, practise skills and prepare with confidence.</p></div></section>
   </main>
