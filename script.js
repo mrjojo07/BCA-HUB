@@ -44,9 +44,23 @@ semesterGrid?.addEventListener("click",(event)=>{
   if(card) showSemester(Number(card.dataset.semester));
 });
 subjectBrowser?.addEventListener("click",(event)=>{
-  if(event.target.closest(".browser-close")) { subjectBrowser.hidden=true; return; }
+  if(event.target.closest(".browser-close")) {
+    const backToSubjects = event.target.closest(".browser-close").dataset.back === "subjects";
+    if (backToSubjects) showSemester(1);
+    else subjectBrowser.hidden=true;
+    return;
+  }
   const item=event.target.closest("[data-subject-index]");
-  if(!item) return;
-  const name=semesterSubjects[1][Number(item.dataset.subjectIndex)];
-  subjectBrowser.innerHTML='<div class="browser-heading"><div><div class="eyebrow">SEMESTER 1 · SUBJECT</div><h3>'+name+'</h3></div><button class="browser-close" type="button">← Back</button></div><div class="material-grid"><article class="material-type"><span>▤</span><h4>Notes</h4><p>Study notes for this subject will appear here.</p><small>Coming soon</small></article><article class="material-type"><span>✦</span><h4>Important Questions</h4><p>Important exam questions will appear here.</p><small>Coming soon</small></article><article class="material-type"><span>▧</span><h4>Previous Year Questions</h4><p>Previous year question papers will appear here.</p><small>Coming soon</small></article></div>';
+  if(item) {
+    const name=semesterSubjects[1][Number(item.dataset.subjectIndex)];
+    subjectBrowser.innerHTML='<div class="browser-heading"><div><div class="eyebrow">SEMESTER 1 · SUBJECT</div><h3>'+name+'</h3></div><button class="browser-close" data-back="subjects" type="button">← Subjects</button></div><div class="material-grid"><button type="button" class="material-type" data-material="notes"><span>▤</span><h4>Notes</h4><p>Study notes and topic-wise learning materials.</p><small>Open category ↗</small></button><button type="button" class="material-type" data-material="important-questions"><span>✦</span><h4>Important Questions</h4><p>Key questions for revision and exam preparation.</p><small>Open category ↗</small></button><button type="button" class="material-type" data-material="previous-year-questions"><span>▧</span><h4>Previous Year Questions</h4><p>Previous examination question papers.</p><small>Open category ↗</small></button><button type="button" class="material-type" data-material="exam-preparation"><span>◎</span><h4>Exam Preparation</h4><p>Revision materials, model questions and exam guidance.</p><small>Open category ↗</small></button></div>';
+    subjectBrowser.scrollIntoView({behavior:"smooth",block:"start"});
+    return;
+  }
+  const material=event.target.closest("[data-material]");
+  if(material) {
+    const labels={"notes":"Notes","important-questions":"Important Questions","previous-year-questions":"Previous Year Questions","exam-preparation":"Exam Preparation"};
+    const label=labels[material.dataset.material];
+    subjectBrowser.innerHTML='<div class="browser-heading"><div><div class="eyebrow">SEMESTER 1 · SUBJECT RESOURCE</div><h3>'+label+'</h3></div><button class="browser-close" data-back="subjects" type="button">← Back to subject</button></div><p class="browser-empty">No files have been uploaded here yet. Materials added for this subject will appear in this section.</p>';
+  }
 });
