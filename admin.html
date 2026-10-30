@@ -64,6 +64,7 @@
         <div id="adminResourceRequests" class="admin-resource-requests"></div>
         <p class="admin-footnote">Use “Open on GitHub” to reply, add labels, or close a completed request. Requests are stored as public GitHub Issues.</p>
       </section>
+      <section class="admin-timetable" id="feedbackManagerPanel"><div class="admin-toolbar"><div><h2>Student feedback</h2><p class="admin-intro">Feedback submitted through the homepage appears here.</p></div><button class="admin-back-button" id="refreshFeedback" type="button">↻ Refresh feedback</button></div><p class="admin-intro" id="feedbackAdminStatus" aria-live="polite">Loading feedback…</p><div id="adminFeedbackList" class="admin-resource-requests"></div><p class="admin-footnote">Open a feedback issue on GitHub to reply or close it. Feedback issues are public.</p></section>
       <p class="admin-footnote">Remove opens GitHub's delete confirmation page for the selected file. Sign in and confirm the commit there.</p>
       <button class="admin-back-button" id="logoutButton" type="button">Lock Admin Panel</button>
     </section>
@@ -286,6 +287,41 @@
     }
     document.getElementById("refreshRequests")?.addEventListener("click", loadAdminResourceRequests);
     loadAdminResourceRequests();
+
+    const feedbackList = document.getElementById("adminFeedbackList");
+    const feedbackStatus = document.getElementById("feedbackAdminStatus");
+    async function loadAdminFeedback() {
+      feedbackStatus.textContent = "Loading feedback from GitHub…";
+      feedbackList.replaceChildren();
+      try {
+        const response = await fetch("https://api.github.com/repos/mrjojo07/BCA-HUB/issues?state=all&per_page=100&sort=created&direction=desc");
+        if (!response.ok) throw new Error("GitHub could not load feedback (HTTP " + response.status + ").");
+        const issues = await response.json();
+        const feedbackItems = issues.filter(item => !item.pull_request && item.title && item.title.startsWith("[Feedback]"));
+        if (!feedbackItems.length) { feedbackStatus.textContent = "No feedback received yet."; return; }
+        feedbackStatus.textContent = feedbackItems.length + " feedback item(s) found.";
+        feedbackItems.forEach(item => {
+          const card = document.createElement("article");
+          card.className = "admin-request-card";
+          const top = document.createElement("div"); top.className = "admin-request-top";
+          const title = document.createElement("strong"); title.textContent = item.title;
+          const state = document.createElement("span");
+          state.className = "admin-request-state " + (item.state === "open" ? "is-open" : "is-closed");
+          state.textContent = item.state === "open" ? "Open" : "Closed";
+          top.append(title, state);
+          const meta = document.createElement("p"); meta.className = "admin-intro";
+          meta.textContent = "#" + item.number + " · " + new Date(item.created_at).toLocaleString() + " · " + (item.user?.login || "GitHub user");
+          const details = document.createElement("p"); details.className = "admin-request-body";
+          details.textContent = (item.body || "No details provided.").slice(0, 1500);
+          const link = document.createElement("a"); link.className = "admin-back-button";
+          link.href = item.html_url; link.target = "_blank"; link.rel = "noopener noreferrer";
+          link.textContent = "Open on GitHub ↗";
+          card.append(top, meta, details, link); feedbackList.append(card);
+        });
+      } catch (error) { feedbackStatus.textContent = error.message || "Could not load feedback."; }
+    }
+    document.getElementById("refreshFeedback")?.addEventListener("click", loadAdminFeedback);
+    loadAdminFeedback();
   </script>
 </body>
 </html>
