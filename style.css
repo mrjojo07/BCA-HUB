@@ -112,3 +112,12 @@ h1,h2,h3,p{margin-top:0}h1,h2{font-family:"Space Grotesk",sans-serif;letter-spac
 .about-section h2{font-size:clamp(23px,2.5vw,29px);line-height:1.25;margin-top:8px}
 .about-section p{font-size:12px;line-height:1.7;margin-top:10px}
 @media(max-width:600px){.about-section{padding:38px 24px;gap:16px}.about-mark{flex-basis:58px;height:58px;font-size:34px}}
+
+
+/* Strong compact override for About section */
+main .about-section#about{box-sizing:border-box!important;max-width:900px!important;margin:0 auto!important;padding:22px 28px!important;gap:16px!important;min-height:0!important;align-items:center!important}
+main .about-section#about .about-mark{flex:0 0 44px!important;width:44px!important;height:44px!important;border-radius:10px!important;font-size:25px!important}
+main .about-section#about>div:last-child{max-width:620px!important}
+main .about-section#about h2{font-size:20px!important;line-height:1.2!important;margin:4px 0 0!important}
+main .about-section#about p{font-size:10px!important;line-height:1.5!important;margin:6px 0 0!important}
+@media(max-width:600px){main .about-section#about{padding:16px 20px!important;gap:10px!important}main .about-section#about .about-mark{flex-basis:38px!important;width:38px!important;height:38px!important;font-size:21px!important}main .about-section#about h2{font-size:18px!important}main .about-section#about p{font-size:10px!important}}
