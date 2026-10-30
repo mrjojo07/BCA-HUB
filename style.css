@@ -83,3 +83,24 @@ h1,h2,h3,p{margin-top:0}h1,h2{font-family:"Space Grotesk",sans-serif;letter-spac
 
 
 /* Homepage styles version 7 */
+
+
+/* Interactive MCQ quiz */
+.quiz-panel{margin-top:22px;padding:clamp(18px,4vw,30px);border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,#0d1726,#090f19)}
+.quiz-progress{margin:0 0 12px;color:#69b7ff;font-size:.76rem;font-weight:700;letter-spacing:.12em}
+.quiz-progress-track{height:6px;background:#1c2b3d;border-radius:20px;overflow:hidden;margin-bottom:24px}
+.quiz-progress-track span{display:block;height:100%;background:#168cff;border-radius:20px;transition:width .2s}
+.quiz-question{font-size:clamp(1.15rem,3vw,1.55rem);line-height:1.45;margin:0 0 20px}
+.quiz-options{display:grid;gap:11px}
+.quiz-option{width:100%;padding:14px 16px;text-align:left;border:1px solid #29394d;border-radius:12px;background:#101c2b;color:var(--ink);font:inherit;cursor:pointer;transition:.18s}
+.quiz-option:hover:not(:disabled){border-color:#168cff;background:#132943}
+.quiz-option:disabled{cursor:default;opacity:1}
+.quiz-option.correct{border-color:#23b879;background:#103326}
+.quiz-option.incorrect{border-color:#e16a6a;background:#351d24}
+.quiz-feedback{min-height:24px;font-weight:600;color:#ffb0a8}
+.quiz-feedback.is-correct{color:#68d9a7}
+.quiz-next{margin-top:16px;padding:12px 20px;border:0;border-radius:10px;background:#168cff;color:white;font:inherit;font-weight:700;cursor:pointer}
+.quiz-next:disabled{opacity:.45;cursor:not-allowed}
+.quiz-score{font-size:3rem;font-weight:800;color:#69b7ff}
+.quiz-result{text-align:center;padding:38px 20px}
+.quiz-result h3{margin:8px 0}
