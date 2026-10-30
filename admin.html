@@ -18,7 +18,17 @@
   <main class="admin-main">
     <div class="eyebrow">SITE OWNER TOOLS</div>
     <h1 class="admin-title">BCA HUB <span>Admin</span></h1>
-    <section id="uploadPanel">
+    <section id="accessGate" class="admin-timetable" style="max-width:440px;margin:24px auto;">
+      <h2>Admin access</h2>
+      <p class="admin-intro">Enter the BCA HUB admin access code to continue.</p>
+      <form id="accessCodeForm" class="admin-form">
+        <label for="accessCodeInput">Access code</label>
+        <input id="accessCodeInput" type="password" autocomplete="current-password" required>
+        <p id="accessCodeError" class="admin-intro" role="alert" style="color:#ff8d8d;display:none;">Incorrect access code. Please try again.</p>
+        <button class="admin-action" type="submit">Unlock Admin Panel</button>
+      </form>
+    </section>
+    <section id="uploadPanel" hidden>
       <div class="admin-warning"><strong>GitHub sign-in required:</strong> This panel is open to view, but uploading, editing, or deleting files requires signing in to GitHub with an account that has write access to this repository. Do not upload private or sensitive files.</div>
       <div class="admin-toolbar"><div><h2>Learning materials</h2><p class="admin-intro">Choose where your material belongs, then use + Add to upload it to the matching GitHub folder.</p></div><button class="admin-action add-button" id="addButton" type="button">＋ Add</button></div>
       <form id="materialForm" class="admin-form">
@@ -59,6 +69,23 @@
     <a class="admin-home-link" href="index.html">← Return to BCA HUB homepage</a>
   </main>
   <script>
+    // Basic client-side access gate. This is not secure server-side authentication.
+    const ACCESS_CODE = "adnanbcahub@2008";
+    const accessGate = document.getElementById("accessGate");
+    const uploadPanel = document.getElementById("uploadPanel");
+    document.getElementById("accessCodeForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const enteredCode = document.getElementById("accessCodeInput").value;
+      if (enteredCode === ACCESS_CODE) {
+        accessGate.hidden = true;
+        uploadPanel.hidden = false;
+      } else {
+        document.getElementById("accessCodeError").style.display = "block";
+        document.getElementById("accessCodeInput").value = "";
+        document.getElementById("accessCodeInput").focus();
+      }
+    });
+
     const subjectLists = {
       "semester-1": [
         "Fundamentals of Computers and Computational Thinking",
