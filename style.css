@@ -104,3 +104,11 @@ h1,h2,h3,p{margin-top:0}h1,h2{font-family:"Space Grotesk",sans-serif;letter-spac
 .quiz-score{font-size:3rem;font-weight:800;color:#69b7ff}
 .quiz-result{text-align:center;padding:38px 20px}
 .quiz-result h3{margin:8px 0}
+
+
+/* Compact About BCA HUB section */
+.about-section{padding:48px max(8vw,28px);gap:24px}
+.about-mark{flex-basis:72px;height:72px;border-radius:17px;font-size:42px}
+.about-section h2{font-size:clamp(23px,2.5vw,29px);line-height:1.25;margin-top:8px}
+.about-section p{font-size:12px;line-height:1.7;margin-top:10px}
+@media(max-width:600px){.about-section{padding:38px 24px;gap:16px}.about-mark{flex-basis:58px;height:58px;font-size:34px}}
