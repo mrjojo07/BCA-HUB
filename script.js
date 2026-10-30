@@ -328,3 +328,35 @@ subjectBrowser?.addEventListener("click", (event) => {
 (async function(){const box=document.getElementById("examCountdownList");if(!box)return;try{const r=await fetch("exam-timetable.json?v="+Date.now());if(!r.ok)throw 0;const exams=await r.json();const today=new Date();today.setHours(0,0,0,0);box.replaceChildren();(Array.isArray(exams)?exams:[]).filter(x=>x.date&&x.title).sort((a,b)=>a.date.localeCompare(b.date)).forEach(x=>{const d=new Date(x.date+"T00:00:00");const n=Math.ceil((d-today)/86400000);const card=document.createElement("article");card.className="countdown-card";const title=document.createElement("h3");title.textContent=x.title;const date=document.createElement("p");date.textContent=d.toLocaleDateString();const days=document.createElement("strong");days.className="countdown-days";days.textContent=n<0?"Exam completed":n===0?"Exam is today":n+" days left";card.append(date,title,days);box.append(card);});if(!box.children.length)box.textContent="No upcoming exams have been added yet.";}catch(e){box.textContent="Exam timetable is currently unavailable.";}})();
 
 
+\n
+/* Resource requests are submitted as GitHub Issues so the admin can review them. */
+const resourceRequestForm = document.getElementById("resourceRequestForm");
+resourceRequestForm?.addEventListener("submit", event => {
+  event.preventDefault();
+  const semester = document.getElementById("requestSemester").value;
+  const subject = document.getElementById("requestSubject").value;
+  const type = document.getElementById("requestType").value;
+  const details = document.getElementById("requestDetails").value.trim();
+  const feedback = document.getElementById("requestFeedback");
+  if (!semester || !subject || !type || !details) {
+    feedback.textContent = "Please complete all fields before submitting.";
+    return;
+  }
+  const title = "[Resource Request] " + semester + " — " + type;
+  const body = [
+    "### Resource request",
+    "- **Semester:** " + semester,
+    "- **Subject:** " + subject,
+    "- **Resource type:** " + type,
+    "",
+    "### Details",
+    details,
+    "",
+    "---",
+    "Submitted through the BCA HUB website."
+  ].join("\n");
+  const issueUrl = "https://github.com/mrjojo07/BCA-HUB/issues/new?title=" +
+    encodeURIComponent(title) + "&body=" + encodeURIComponent(body);
+  feedback.textContent = "Opening GitHub to review and submit your request…";
+  window.open(issueUrl, "_blank", "noopener,noreferrer");
+});
