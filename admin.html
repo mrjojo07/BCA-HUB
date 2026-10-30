@@ -47,8 +47,14 @@
           <option value="exam-preparation">Exam Preparation</option>
         </select>
         <p class="admin-intro">After you press Add, GitHub opens the selected folder. Sign in to your own GitHub account, choose your PDF or image, and commit the upload.</p>
+        <div class="admin-remove-area">
+          <label for="existingFiles">Existing files</label>
+          <select id="existingFiles" disabled><option value="">Choose semester and subject first</option></select>
+          <div class="admin-toolbar"><button class="admin-back-button" id="refreshFiles" type="button">↻ Refresh list</button><button class="admin-action" id="removeButton" type="button" disabled>− Remove selected</button></div>
+          <p id="fileListStatus" class="admin-intro" aria-live="polite">Choose a semester, subject and material type to load files.</p>
+        </div>
       </form>
-      <p class="admin-footnote">Note: this temporary workflow uploads the file to the repository. It does not automatically publish a clickable item on the homepage yet.</p>
+      <p class="admin-footnote">Remove opens GitHub's delete confirmation page for the selected file. Sign in and confirm the commit there.</p>
       <button class="admin-back-button" id="logoutButton" type="button">Lock Admin Panel</button>
     </section>
     <a class="admin-home-link" href="index.html">← Return to BCA HUB homepage</a>
@@ -94,18 +100,69 @@
         ? subjects.length + " subjects available."
         : "This semester's subject list has not been added yet. Send the subject list to enable this dropdown.";
     });
-    document.getElementById("addButton").addEventListener("click", () => {
+    function selectedFolder() {
       const semester = semesterSelect.value;
       const subject = subjectSelect.value;
       const category = document.getElementById("category").value;
-      if (!semester || !subject) {
+      if (!semester || !subject) return "";
+      const slug = subject.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+      return "resources/" + semester + "/" + category + "/" + slug;
+    }
+    const existingFiles = document.getElementById("existingFiles");
+    const fileListStatus = document.getElementById("fileListStatus");
+    const removeButton = document.getElementById("removeButton");
+    async function loadExistingFiles() {
+      const folder = selectedFolder();
+      existingFiles.innerHTML = '<option value="">Loading files...</option>';
+      existingFiles.disabled = true;
+      removeButton.disabled = true;
+      if (!folder) {
+        existingFiles.innerHTML = '<option value="">Choose semester and subject first</option>';
+        fileListStatus.textContent = "Choose a semester, subject and material type to load files.";
+        return;
+      }
+      fileListStatus.textContent = "Checking GitHub folder...";
+      try {
+        const response = await fetch("https://api.github.com/repos/mrjojo07/BCA-HUB/contents/" + folder);
+        if (!response.ok) throw new Error(response.status === 404 ? "No files found in this folder yet." : "Could not load the file list. Please try Refresh.");
+        const items = await response.json();
+        const files = Array.isArray(items) ? items.filter(item => item.type === "file") : [];
+        existingFiles.innerHTML = '<option value="">Choose a file to remove</option>';
+        files.forEach(file => {
+          const option = document.createElement("option");
+          option.value = file.path;
+          option.textContent = file.name;
+          existingFiles.appendChild(option);
+        });
+        existingFiles.disabled = files.length === 0;
+        fileListStatus.textContent = files.length ? files.length + " file(s) found. Select one file and press Remove selected." : "No files in this folder yet.";
+      } catch (error) {
+        existingFiles.innerHTML = '<option value="">No files available</option>';
+        fileListStatus.textContent = error.message;
+      }
+    }
+    document.getElementById("addButton").addEventListener("click", () => {
+      const folder = selectedFolder();
+      if (!folder) {
         alert("Please choose a semester and a subject.");
         return;
       }
-      const slug = subject.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-      const folder = "resources/" + semester + "/" + category + "/" + slug;
       window.open("https://github.com/mrjojo07/BCA-HUB/upload/main/" + folder, "_blank", "noopener");
     });
+    existingFiles.addEventListener("change", () => {
+      removeButton.disabled = !existingFiles.value;
+    });
+    document.getElementById("refreshFiles").addEventListener("click", loadExistingFiles);
+    removeButton.addEventListener("click", () => {
+      const path = existingFiles.value;
+      if (!path) return;
+      const fileName = path.split("/").pop();
+      if (!confirm('Open GitHub to delete "' + fileName + '"? You will review and confirm the deletion on GitHub.')) return;
+      window.open("https://github.com/mrjojo07/BCA-HUB/delete/main/" + path.split("/").map(encodeURIComponent).join("/"), "_blank", "noopener");
+    });
+    document.getElementById("category").addEventListener("change", loadExistingFiles);
+    subjectSelect.addEventListener("change", loadExistingFiles);
+    semesterSelect.addEventListener("change", () => setTimeout(loadExistingFiles, 0));
     document.getElementById("logoutButton").addEventListener("click", () => {
       uploadPanel.hidden = true;
       loginPanel.hidden = false;
