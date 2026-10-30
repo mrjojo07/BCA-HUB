@@ -43,31 +43,11 @@ function readableError(error) {
   if (/user already registered/i.test(message)) return "An account already exists for this email. Please log in.";
   return message;
 }
-function effectiveMembership(row) {
-  if (!row) return { plan: "Free", info: "Your free membership is active." };
-  if (row.plan === "premium" && (!row.premium_until || new Date(row.premium_until) > new Date())) {
-    return { plan: "Premium", info: row.premium_until ? "Premium access until " + new Date(row.premium_until).toLocaleDateString() + "." : "Premium access is active." };
-  }
-  if (row.plan === "trial" && row.trial_ends_at && new Date(row.trial_ends_at) > new Date()) {
-    const ends = new Date(row.trial_ends_at);
-    return { plan: "Free Trial", info: "Your 3-day trial ends on " + ends.toLocaleString() + "." };
-  }
-  return { plan: "Free", info: "Your free membership is active. Your trial or premium access has ended." };
-}
 async function showAccount(user) {
   formsPanel.hidden = true;
   accountPanel.hidden = false;
   $("accountName").textContent = user.user_metadata?.display_name || user.email?.split("@")[0] || "Student";
   $("accountEmail").textContent = user.email || "";
-  const { data, error } = await supabase.from("memberships").select("plan,trial_started_at,trial_ends_at,premium_until").eq("user_id", user.id).maybeSingle();
-  if (error) {
-    $("membershipPlan").textContent = "Membership unavailable";
-    $("membershipInfo").textContent = "Please refresh the page to try again.";
-    return;
-  }
-  const membership = effectiveMembership(data);
-  $("membershipPlan").textContent = membership.plan;
-  $("membershipInfo").textContent = membership.info;
 }
 $("showLogin").addEventListener("click", () => showForm("login"));
 $("showSignup").addEventListener("click", () => showForm("signup"));
@@ -91,11 +71,11 @@ signupForm.addEventListener("submit", async (event) => {
   button.disabled = false; button.textContent = "Create account";
   if (error) return showStatus(readableError(error), "error");
   if (data.session) {
-    showStatus("Your account is ready. Your 3-day trial has started.", "success");
+    showStatus("Your account is ready.", "success");
     await showAccount(data.user);
   } else {
     showForm("login");
-    showStatus("Account created. Check your inbox and verify your email before logging in. Your 3-day trial starts when the account is created.", "success");
+    showStatus("Account created. Check your inbox and verify your email before logging in.", "success");
   }
 });
 
@@ -110,7 +90,6 @@ loginForm.addEventListener("submit", async (event) => {
   });
   button.disabled = false; button.textContent = "Log in";
   if (error) return showStatus(readableError(error), "error");
-  localStorage.setItem("bca-hub-student-login-started-at", String(Date.now()));
   await showAccount(data.user);
 });
 
@@ -149,8 +128,6 @@ supabase.auth.onAuthStateChange(async (event, session) => {
   if (event === "PASSWORD_RECOVERY") {
     showForm("newPassword");
   } else if (session?.user && event === "SIGNED_IN") {
-    if (!localStorage.getItem("bca-hub-student-login-started-at")) {
-      }
     queueMicrotask(() => showAccount(session.user));
   } else if (event === "SIGNED_OUT") {
     formsPanel.hidden = false;
@@ -164,15 +141,7 @@ if (params.get("mode") === "recovery") {
   showForm("newPassword");
 } else {
   const { data: { session } } = await supabase.auth.getSession();
-  let startedAt = Number(localStorage.getItem("bca-hub-student-login-started-at"));
-  if (session?.user && (!startedAt || !Number.isFinite(startedAt))) {
-    startedAt = Date.now();
-    localStorage.setItem("bca-hub-student-login-started-at", String(startedAt));
-  }
-  if (session?.user && Date.now() - startedAt < 30 * 24 * 60 * 60 * 1000) await showAccount(session.user);
-  else {
-    if (session) await supabase.auth.signOut({ scope: "local" });
-    showForm("login");
-  }
+  if (session?.user) await showAccount(session.user);
+  else showForm("login");
   if (params.get("verified") === "1") showStatus("Email verified. You can now log in.", "success");
 }
