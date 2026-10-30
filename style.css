@@ -18,3 +18,19 @@ h1,h2,h3,p{margin-top:0}h1,h2{font-family:"Space Grotesk",sans-serif;letter-spac
 @media(max-width:900px){.hero{grid-template-columns:1fr .85fr;padding-top:75px}.resource-grid{grid-template-columns:repeat(2,1fr)}.semester-grid{grid-template-columns:repeat(2,1fr)}.section-heading{align-items:flex-start;flex-direction:column}.section-heading>p{max-width:500px}}
 @media(max-width:650px){.site-header{height:66px}.menu-toggle{display:block}.nav-links{display:none;position:absolute;top:65px;left:0;right:0;padding:22px 25px;background:#05080e;border-bottom:1px solid #263244;flex-direction:column;align-items:stretch;gap:20px}.nav-links.open{display:flex}.nav-cta{text-align:center}.hero{display:block;padding:65px 25px 42px}.hero-art{height:300px;margin-top:25px}.orbit-one{width:300px;height:200px}.orbit-two{width:340px;height:245px}.code-card{width:min(350px,90%)}.chip-notes{right:0;top:25px}.chip-code{left:0;bottom:20px}.hero-note{margin-top:35px}.stats-strip{grid-template-columns:repeat(2,1fr);gap:18px;padding:25px}.stats-strip div{justify-content:flex-start;border:0}.section,.semester-section{padding:68px 23px}.resource-grid{gap:11px}.resource-card{padding:19px 15px}.resource-card p{min-height:100px}.semester-grid{gap:9px}.semester-card{padding:14px 11px;gap:9px}.semester-card>span{font-size:17px}.semester-card b{font-size:11px}.semester-card small{font-size:9px}.about-section{padding:65px 25px;align-items:flex-start;gap:20px}.about-mark{flex-basis:65px;height:65px;border-radius:16px;font-size:38px}.site-footer{flex-wrap:wrap;gap:12px}.copyright{width:100%;margin-left:0}.admin-main{padding:55px 22px 65px}.admin-grid{grid-template-columns:1fr}.admin-card{padding:20px}.admin-guide{padding:22px}}
 @media(max-width:370px){.resource-grid{grid-template-columns:1fr}.resource-card p{min-height:0}.semester-grid{grid-template-columns:1fr}.about-section{display:block}.about-mark{margin-bottom:25px}}
+
+.nav-admin{font-size:13px;font-weight:700;color:#55aaff;padding:11px 14px;border:1px solid #168cff66;border-radius:8px}
+.nav-admin:hover{background:#10233a}
+.admin-login{max-width:470px;margin-top:32px;padding:28px;background:#0e1521;border:1px solid #263244;border-radius:12px}
+.admin-login h2,.admin-toolbar h2{font:700 24px "Space Grotesk";margin:0 0 12px}
+.admin-login label,.admin-form label{display:block;color:#cbd5e1;font-size:12px;font-weight:700;margin:17px 0 8px}
+.admin-login input,.admin-form input,.admin-form select{width:100%;padding:13px 14px;background:#080c13;border:1px solid #34445a;border-radius:8px;color:#f2f5fa;font:14px "DM Sans"}
+.admin-action{border:0;border-radius:8px;background:#087de0;color:white;padding:13px 18px;font:700 13px "DM Sans";cursor:pointer}
+.admin-login .admin-action{margin-top:18px;width:100%}
+.admin-error{color:#ff9a9a;font-size:12px;margin:12px 0 0}
+.admin-toolbar{display:flex;justify-content:space-between;align-items:center;gap:20px;margin:28px 0 20px}
+.admin-form{max-width:650px;padding:25px;background:#0e1521;border:1px solid #263244;border-radius:12px}
+.admin-footnote{color:#a5afbf;font-size:11px;line-height:1.8;margin:18px 0}
+.admin-back-button{background:transparent;border:1px solid #34445a;color:#cbd5e1;padding:10px 14px;border-radius:8px;cursor:pointer}
+[hidden]{display:none!important}
+@media(max-width:650px){.nav-admin{display:block;text-align:center}.admin-toolbar{align-items:flex-start;flex-direction:column}.add-button{width:100%}}
