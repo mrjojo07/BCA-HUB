@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=20">
-  <script type="module" src="auth.js?v=3"></script>
+  <script type="module" src="auth.js?v=4"></script>
 </head>
 <body class="auth-page">
   <header class="site-header">
@@ -20,7 +20,7 @@
     <section class="auth-card">
       <div class="eyebrow">YOUR BCA HUB ACCOUNT</div>
       <h1>Student <span>account.</span></h1>
-      <p class="auth-intro">Sign in to access your student space, learning progress and membership.</p>
+      <p class="auth-intro">Sign in to access your BCA HUB student space and learning progress.</p>
       <div id="authStatus" class="auth-status" role="status" aria-live="polite"></div>
       <section id="authForms">
         <div class="auth-tabs" role="tablist" aria-label="Account options">
@@ -43,7 +43,7 @@
           <label for="signupPassword">Create password</label>
           <input id="signupPassword" type="password" autocomplete="new-password" required minlength="8" placeholder="At least 8 characters">
           <button class="button button-gold auth-submit" type="submit">Create account</button>
-          <p class="auth-small-note">A verification email will be sent before you can sign in. Your 3-day trial starts when your account is created.</p>
+          <p class="auth-small-note">A verification email will be sent before you can sign in.</p>
         </form>
         <form id="recoveryForm" class="auth-form" hidden>
           <label for="recoveryEmail">Account email</label>
@@ -61,7 +61,6 @@
       </section>
       <section id="accountPanel" hidden>
         <div class="account-welcome"><div class="eyebrow">SIGNED IN</div><h2 id="accountName">Welcome</h2><p id="accountEmail"></p></div>
-        <div class="membership-card"><span class="membership-label">MEMBERSHIP</span><strong id="membershipPlan">Loading…</strong><p id="membershipInfo">Checking your membership…</p></div>
         <div class="account-actions">
           <a class="button button-gold" href="dashboard.html">Open student dashboard ↗</a>
           <button class="auth-secondary-button" id="logoutButton" type="button">Log out</button>
