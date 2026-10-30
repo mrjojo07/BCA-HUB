@@ -9,15 +9,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=6">
-  <script src="script.js?v=9" defer></script>
+  <link rel="stylesheet" href="style.css?v=7">
+  <script src="script.js?v=10" defer></script>
 </head>
 <body>
   <header class="site-header">
     <a class="brand" href="#" aria-label="BCA HUB home"><span class="brand-mark">B</span><span>BCA <b>HUB</b></span></a>
     <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
     <nav class="nav-links" id="navLinks">
-      <a href="#semesters">Subjects</a><a href="#semesters">Semesters</a><a href="#mcqQuiz">MCQ Quiz</a><a href="#programmingPractice">Code Practice</a><a href="#about">About</a>
+      <a href="#semesters">Subjects</a><a href="#semesters">Semesters</a><a href="#about">About</a>
       <a class="nav-admin" href="admin.html">Admin Panel <span>↗</span></a><a class="nav-cta" href="#semesters">Explore semesters <span>↗</span></a>
     </nav>
   </header>
@@ -56,47 +56,7 @@
       <a class="syllabus-link" href="https://docs.uoc.ac.in/website/syllabus/2025-06-13%2014%3A37%3A35_syl2255.pdf" target="_blank" rel="noopener noreferrer">Open University of Calicut BCA syllabus <span>↗</span></a>
     </section>
 
-    <section class="quiz-section" id="mcqQuiz">
-      <div class="section-heading">
-        <div><div class="eyebrow">TEST YOUR KNOWLEDGE</div><h2>Quick <span>MCQ quiz.</span></h2></div>
-        <p>Practise core computer science concepts, answer timed questions and check your score.</p>
-      </div>
-      <div class="quiz-panel" id="quizPanel">
-        <div class="quiz-intro" id="quizIntro">
-          <div class="quiz-symbol">✎</div>
-          <h3>Computer Fundamentals</h3>
-          <p>5 sample questions · 5 minutes · One point for each correct answer</p>
-          <button class="quiz-button" id="startQuiz" type="button">Start quiz ↗</button>
-        </div>
-        <div id="quizPlay" hidden>
-          <div class="quiz-topline"><span id="quizProgress">Question 1 of 5</span><span class="quiz-timer" id="quizTimer">05:00</span></div>
-          <div class="quiz-progress"><span id="quizProgressBar"></span></div>
-          <h3 class="quiz-question" id="quizQuestion"></h3>
-          <div class="quiz-options" id="quizOptions"></div>
-          <div class="quiz-controls"><button class="quiz-button secondary" id="quizPrevious" type="button" disabled>← Previous</button><button class="quiz-button" id="quizNext" type="button">Next →</button><button class="quiz-button" id="quizSubmit" type="button" hidden>Submit quiz</button></div>
-        </div>
-        <div id="quizResult" class="quiz-result" hidden aria-live="polite"></div>
-      </div>
-    </section>
     <section class="countdown-section" id="examCountdown"><div class="section-heading"><div><div class="eyebrow">STAY EXAM-READY</div><h2>Exam <span>countdown.</span></h2></div><p>Upcoming exam dates published by the BCA HUB admin.</p></div><div id="examCountdownList" class="countdown-list">No exam timetable published yet.</div></section>
-    <section class="practice-section" id="programmingPractice">
-      <div class="section-heading">
-        <div><div class="eyebrow">LEARN BY DOING</div><h2>Programming <span>practice.</span></h2></div>
-        <p>Explore beginner-friendly examples in C, Python and Java. Read the code, check its output and try the practice tasks.</p>
-      </div>
-      <div class="practice-tabs" role="tablist" aria-label="Choose programming language">
-        <button class="practice-tab active" type="button" data-language="c" role="tab" aria-selected="true">C</button>
-        <button class="practice-tab" type="button" data-language="python" role="tab" aria-selected="false">Python</button>
-        <button class="practice-tab" type="button" data-language="java" role="tab" aria-selected="false">Java</button>
-      </div>
-      <article class="practice-card">
-        <div class="practice-card-head"><div><span class="practice-kicker" id="practiceLanguage">C PROGRAM</span><h3 id="practiceTitle">Print a message</h3></div><button class="quiz-button secondary" id="copyPracticeCode" type="button">Copy code</button></div>
-        <pre class="practice-code"><code id="practiceCode"></code></pre>
-        <div class="practice-output"><strong>Expected output</strong><pre id="practiceOutput"></pre></div>
-      </article>
-      <div class="practice-tasks"><h3>Try these yourself</h3><ol id="practiceTasks"></ol></div>
-      <p class="practice-note">These are learning examples. Code is displayed for study and is not executed on this website.</p>
-    </section>
     <section class="about-section" id="about"><div class="about-mark">B</div><div><div class="eyebrow dark-eyebrow">ABOUT BCA HUB</div><h2>One hub. <span>More possibilities.</span></h2><p>BCA HUB is a learning space designed to make study resources easier to discover and use. Our goal is simple: help students learn concepts, practise skills and prepare with confidence.</p></div></section>
   </main>
   <footer class="site-footer"><a class="brand footer-brand" href="#"><span class="brand-mark">B</span><span>BCA <b>HUB</b></span></a><p>Learn. Practise. Succeed.</p><span class="copyright">© <span id="year"></span> BCA HUB</span></footer>
