@@ -3,13 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#101b35">
-  <meta name="description" content="BCA HUB content management shortcuts for the site owner.">
-  <title>Admin | BCA HUB</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <meta name="theme-color" content="#05080e">
+  <title>Admin Panel | BCA HUB</title>
+  <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body class="admin-page">
   <header class="site-header">
@@ -17,28 +13,72 @@
     <a class="admin-back" href="index.html">← Back to website</a>
   </header>
   <main class="admin-main">
-    <div class="eyebrow dark-eyebrow">SITE OWNER TOOLS</div>
+    <div class="eyebrow">SITE OWNER TOOLS</div>
     <h1 class="admin-title">BCA HUB <span>Admin</span></h1>
-    <p class="admin-intro">Use these shortcuts to manage the website files and add learning materials through your GitHub account.</p>
-    <div class="admin-warning"><strong>Important:</strong> This is a GitHub management dashboard, not a separate login system. To make changes, GitHub will ask you to sign in with an account that has permission to edit this repository. Never share your password or access token.</div>
-    <div class="admin-grid">
-      <a class="admin-card" href="https://github.com/mrjojo07/BCA-HUB" target="_blank" rel="noopener noreferrer"><span class="admin-card-icon">⌂</span><small>REPOSITORY</small><strong>Open GitHub repository</strong><span>View all website files and project history ↗</span></a>
-      <a class="admin-card" href="https://github.com/mrjojo07/BCA-HUB/upload/main" target="_blank" rel="noopener noreferrer"><span class="admin-card-icon">↑</span><small>ADD MATERIALS</small><strong>Upload PDFs and files</strong><span>Add notes, question papers and lab resources ↗</span></a>
-      <a class="admin-card" href="https://github.com/mrjojo07/BCA-HUB/edit/main/index.html" target="_blank" rel="noopener noreferrer"><span class="admin-card-icon">✎</span><small>EDIT WEBSITE</small><strong>Edit homepage</strong><span>Change text, sections and resource links ↗</span></a>
-      <a class="admin-card" href="https://github.com/mrjojo07/BCA-HUB/commits/main" target="_blank" rel="noopener noreferrer"><span class="admin-card-icon">◷</span><small>ACTIVITY</small><strong>View recent updates</strong><span>Check what changed and when ↗</span></a>
-    </div>
-    <section class="admin-guide">
-      <h2>How to add a PDF</h2>
-      <ol>
-        <li>Choose <b>Upload PDFs and files</b> above and sign in to GitHub.</li>
-        <li>Open or create a folder such as <code>resources/semester-1/</code>.</li>
-        <li>Select your PDF, then commit the upload to the <code>main</code> branch.</li>
-        <li>Copy the file link and add it to the matching semester section on the homepage.</li>
-      </ol>
-      <p>Only upload materials you have permission to share. Check the correct University of Calicut syllabus and admission batch before assigning subjects to semesters.</p>
+    <section id="loginPanel" class="admin-login">
+      <h2>Admin access</h2>
+      <p class="admin-intro">Enter your temporary access code to open the upload panel.</p>
+      <form id="loginForm">
+        <label for="accessCode">Secret code</label>
+        <input id="accessCode" type="password" autocomplete="current-password" required placeholder="Enter admin code">
+        <button class="admin-action" type="submit">Unlock Admin Panel</button>
+        <p id="loginError" class="admin-error" aria-live="polite"></p>
+      </form>
+    </section>
+    <section id="uploadPanel" hidden>
+      <div class="admin-warning"><strong>Temporary mode:</strong> this code check is visible in the public website files. It is only a basic screen lock, not secure authentication. Do not upload private or sensitive files.</div>
+      <div class="admin-toolbar"><div><h2>Learning materials</h2><p class="admin-intro">Choose where your material belongs, then use + Add to upload it to the matching GitHub folder.</p></div><button class="admin-action add-button" id="addButton" type="button">＋ Add</button></div>
+      <form id="materialForm" class="admin-form">
+        <label for="semester">Semester</label>
+        <select id="semester" required>
+          <option value="">Choose semester</option>
+          <option value="semester-1">Semester 1</option><option value="semester-2">Semester 2</option><option value="semester-3">Semester 3</option><option value="semester-4">Semester 4</option><option value="semester-5">Semester 5</option><option value="semester-6">Semester 6</option><option value="semester-7">Semester 7</option><option value="semester-8">Semester 8</option>
+        </select>
+        <label for="subject">Subject name</label>
+        <input id="subject" required maxlength="80" placeholder="e.g. Programming in C">
+        <label for="category">Material type</label>
+        <select id="category" required>
+          <option value="notes">Notes</option><option value="question-papers">Question Paper</option><option value="lab">Lab / Programs</option><option value="important-questions">Important Questions</option>
+        </select>
+        <p class="admin-intro">After you press Add, GitHub opens the selected folder. Sign in to your own GitHub account, choose your PDF or image, and commit the upload.</p>
+      </form>
+      <p class="admin-footnote">Note: this temporary workflow uploads the file to the repository. It does not automatically publish a clickable item on the homepage yet.</p>
+      <button class="admin-back-button" id="logoutButton" type="button">Lock Admin Panel</button>
     </section>
     <a class="admin-home-link" href="index.html">← Return to BCA HUB homepage</a>
   </main>
-  <footer class="site-footer"><a class="brand footer-brand" href="index.html"><span class="brand-mark">B</span><span>BCA <b>HUB</b></span></a><p>Learn. Practise. Succeed.</p><span class="copyright">Owner tools</span></footer>
+  <script>
+    const TEMP_ADMIN_CODE = "adnanbcahub@2008";
+    const loginPanel = document.getElementById("loginPanel");
+    const uploadPanel = document.getElementById("uploadPanel");
+    document.getElementById("loginForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const entered = document.getElementById("accessCode").value;
+      if (entered === TEMP_ADMIN_CODE) {
+        loginPanel.hidden = true;
+        uploadPanel.hidden = false;
+        document.getElementById("loginError").textContent = "";
+      } else {
+        document.getElementById("loginError").textContent = "Incorrect code. Please try again.";
+      }
+    });
+    document.getElementById("addButton").addEventListener("click", () => {
+      const semester = document.getElementById("semester").value;
+      const subject = document.getElementById("subject").value.trim();
+      const category = document.getElementById("category").value;
+      if (!semester || !subject) {
+        alert("Please choose a semester and enter the subject name.");
+        return;
+      }
+      const slug = subject.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+      const folder = "resources/" + semester + "/" + category + "/" + slug;
+      window.open("https://github.com/mrjojo07/BCA-HUB/upload/main/" + folder, "_blank", "noopener");
+    });
+    document.getElementById("logoutButton").addEventListener("click", () => {
+      uploadPanel.hidden = true;
+      loginPanel.hidden = false;
+      document.getElementById("accessCode").value = "";
+    });
+  </script>
 </body>
 </html>
