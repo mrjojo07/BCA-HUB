@@ -13,9 +13,14 @@ async function requireStudentSession() {
   if (redirecting) return;
   const { data, error } = await supabase.auth.getSession();
   const session = data?.session;
-  const startedAt = Number(localStorage.getItem(SESSION_STARTED_KEY));
+  let startedAt = Number(localStorage.getItem(SESSION_STARTED_KEY));
 
-  if (error || !session?.user || !startedAt || !Number.isFinite(startedAt) || Date.now() - startedAt >= SESSION_MAX_AGE) {
+  if (!error && session?.user && (!startedAt || !Number.isFinite(startedAt))) {
+    startedAt = Date.now();
+    localStorage.setItem(SESSION_STARTED_KEY, String(startedAt));
+  }
+
+  if (error || !session?.user || Date.now() - startedAt >= SESSION_MAX_AGE) {
     redirecting = true;
     localStorage.removeItem(SESSION_STARTED_KEY);
     if (session) await supabase.auth.signOut({ scope: "local" });
