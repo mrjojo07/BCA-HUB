@@ -7,7 +7,7 @@
   <title>Admin Panel | BCA HUB</title>
   <link rel="stylesheet" href="style.css?v=6">
   <style>
-.admin-resource-requests{display:grid;gap:12px;margin-top:16px}.admin-request-card{padding:16px;border:1px solid #26364c;border-radius:12px;background:#0b1421}.admin-request-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.admin-request-top strong{font-size:13px;color:#eaf2ff}.admin-request-state{flex:none;padding:4px 8px;border-radius:20px;font-size:10px;font-weight:700}.admin-request-state.is-open{background:#123b2c;color:#86e0b1}.admin-request-state.is-closed{background:#263448;color:#aebbd0}.admin-request-body{white-space:pre-wrap;overflow-wrap:anywhere;color:#c4d0e0;font-size:12px;line-height:1.6;margin:10px 0 14px}
+.admin-bulk-guide{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0;padding:14px;border:1px solid #26364c;border-radius:12px;background:#0b1421}.admin-bulk-step{font-size:12px;line-height:1.6;color:#c4d0e0}.admin-bulk-step strong{display:block;color:#eaf2ff;font-size:13px;margin-bottom:4px}@media(max-width:620px){.admin-bulk-guide{grid-template-columns:1fr}}.admin-resource-requests{display:grid;gap:12px;margin-top:16px}.admin-request-card{padding:16px;border:1px solid #26364c;border-radius:12px;background:#0b1421}.admin-request-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.admin-request-top strong{font-size:13px;color:#eaf2ff}.admin-request-state{flex:none;padding:4px 8px;border-radius:20px;font-size:10px;font-weight:700}.admin-request-state.is-open{background:#123b2c;color:#86e0b1}.admin-request-state.is-closed{background:#263448;color:#aebbd0}.admin-request-body{white-space:pre-wrap;overflow-wrap:anywhere;color:#c4d0e0;font-size:12px;line-height:1.6;margin:10px 0 14px}
 </style>
 </head>
 <body class="admin-page">
@@ -30,7 +30,7 @@
     </section>
     <section id="uploadPanel" hidden>
       <div class="admin-warning"><strong>GitHub sign-in required:</strong> This panel is open to view, but uploading, editing, or deleting files requires signing in to GitHub with an account that has write access to this repository. Do not upload private or sensitive files.</div>
-      <div class="admin-toolbar"><div><h2>Learning materials</h2><p class="admin-intro">Choose where your material belongs, then use + Add to upload it to the matching GitHub folder.</p></div><button class="admin-action add-button" id="addButton" type="button">＋ Add</button></div>
+      <div class="admin-toolbar"><div><h2>Bulk Upload Manager</h2><p class="admin-intro">Upload multiple learning materials to the selected semester, subject and category in one GitHub commit.</p></div><button class="admin-action add-button" id="addButton" type="button">＋ Open Bulk Uploader</button></div><div class="admin-bulk-guide"><div class="admin-bulk-step"><strong>1. Choose destination</strong>Select the semester, subject and material type below.</div><div class="admin-bulk-step"><strong>2. Select multiple files</strong>GitHub upload page lets you choose or drag in several PDFs and images together.</div><div class="admin-bulk-step"><strong>3. Review and publish</strong>Check filenames, then commit the upload to add them to BCA HUB.</div></div>
       <form id="materialForm" class="admin-form">
         <label for="semester">Semester</label>
         <select id="semester" required>
@@ -49,7 +49,7 @@
           <option value="previous-year-questions">Previous Year Questions</option>
           
         </select>
-        <p class="admin-intro">After you press Add, GitHub opens the selected folder. You can choose multiple PDFs or images in one upload, then commit them to GitHub.</p>
+        <p class="admin-intro">Open Bulk Uploader to open the selected GitHub folder. On GitHub, select multiple PDFs or images together, review the file list, and commit the upload. Files become available on BCA HUB after the website updates.</p>
         <div class="admin-remove-area">
           <label for="existingFiles">Existing files</label>
           <select id="existingFiles" disabled><option value="">Choose semester and subject first</option></select>
