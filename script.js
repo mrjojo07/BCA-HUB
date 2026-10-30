@@ -289,14 +289,16 @@ function closeSavedResources() {
   if (savedPanel) savedPanel.hidden = true;
   document.getElementById("savedResourcesButton")?.setAttribute("aria-expanded", "false");
 }
-document.getElementById("savedResourcesButton")?.addEventListener("click", () => {
+function toggleSavedResourcesPanel() {
   if (!savedPanel) return;
   savedPanel.hidden = !savedPanel.hidden;
   document.getElementById("savedResourcesButton")?.setAttribute("aria-expanded", String(!savedPanel.hidden));
   if (!savedPanel.hidden) renderSavedResources();
   navLinks?.classList.remove("open");
   menuToggle?.setAttribute("aria-expanded", "false");
-});
+}
+document.getElementById("savedResourcesButton")?.addEventListener("click", toggleSavedResourcesPanel);
+document.getElementById("savedNotesHeroButton")?.addEventListener("click", toggleSavedResourcesPanel);
 document.getElementById("closeSavedResources")?.addEventListener("click", closeSavedResources);
 document.addEventListener("keydown", event => {
   if (event.key === "Escape") closeSavedResources();
