@@ -179,3 +179,63 @@ async function loadRecentMaterials() {
   }
 }
 loadRecentMaterials();
+
+
+/* Timed MCQ practice quiz */
+const quizQuestions = [
+  {q:"Which component is known as the brain of a computer?",o:["RAM","CPU","Hard disk","Monitor"],a:1},
+  {q:"Which of these is an input device?",o:["Printer","Speaker","Keyboard","Projector"],a:2},
+  {q:"What does URL stand for?",o:["Uniform Resource Locator","Universal Record Link","Unified Routing Language","User Reference Location"],a:0},
+  {q:"Which memory is volatile?",o:["ROM","SSD","RAM","DVD"],a:2},
+  {q:"Which number system uses only 0 and 1?",o:["Decimal","Octal","Hexadecimal","Binary"],a:3}
+];
+const quizIntro=document.getElementById("quizIntro");
+const quizPlay=document.getElementById("quizPlay");
+const quizResult=document.getElementById("quizResult");
+if(quizIntro&&quizPlay&&quizResult){
+  let qIndex=0,answers=Array(quizQuestions.length).fill(null),secondsLeft=300,timerId=null,finished=false;
+  const byId=id=>document.getElementById(id);
+  function renderQuestion(){
+    const q=quizQuestions[qIndex];
+    byId("quizProgress").textContent="Question "+(qIndex+1)+" of "+quizQuestions.length;
+    byId("quizProgressBar").style.width=((qIndex+1)/quizQuestions.length*100)+"%";
+    byId("quizQuestion").textContent=q.q;
+    const options=byId("quizOptions"); options.replaceChildren();
+    q.o.forEach((option,index)=>{
+      const label=document.createElement("label"); label.className="quiz-option"+(answers[qIndex]===index?" selected":"");
+      const radio=document.createElement("input"); radio.type="radio"; radio.name="quizAnswer"; radio.value=index; radio.checked=answers[qIndex]===index;
+      radio.addEventListener("change",()=>{answers[qIndex]=index;renderQuestion();});
+      const text=document.createElement("span"); text.textContent=option;
+      label.append(radio,text); options.append(label);
+    });
+    byId("quizPrevious").disabled=qIndex===0;
+    byId("quizNext").hidden=qIndex===quizQuestions.length-1;
+    byId("quizSubmit").hidden=qIndex!==quizQuestions.length-1;
+  }
+  function updateTimer(){
+    const mins=String(Math.floor(secondsLeft/60)).padStart(2,"0"),secs=String(secondsLeft%60).padStart(2,"0");
+    byId("quizTimer").textContent=mins+":"+secs;
+    if(secondsLeft<=60)byId("quizTimer").classList.add("urgent");
+  }
+  function finishQuiz(){
+    if(finished)return; finished=true; clearInterval(timerId);
+    const score=answers.reduce((sum,answer,index)=>sum+(answer===quizQuestions[index].a?1:0),0);
+    quizPlay.hidden=true;quizResult.hidden=false;
+    const heading=document.createElement("h3");heading.textContent="Quiz completed!";
+    const scoreText=document.createElement("p");scoreText.className="quiz-score";scoreText.textContent=score+" / "+quizQuestions.length;
+    const detail=document.createElement("p");detail.textContent="You answered "+answers.filter(a=>a!==null).length+" of "+quizQuestions.length+" questions. "+(secondsLeft===0?"Time is up.":"Well done for practising!");
+    const retry=document.createElement("button");retry.className="quiz-button";retry.textContent="Try again ↻";retry.addEventListener("click",resetQuiz);
+    quizResult.replaceChildren(heading,scoreText,detail,retry);
+  }
+  function resetQuiz(){
+    qIndex=0;answers=Array(quizQuestions.length).fill(null);secondsLeft=300;finished=false;
+    quizResult.hidden=true;quizIntro.hidden=false;quizPlay.hidden=true;updateTimer();
+  }
+  byId("startQuiz").addEventListener("click",()=>{
+    quizIntro.hidden=true;quizResult.hidden=true;quizPlay.hidden=false;renderQuestion();updateTimer();
+    timerId=setInterval(()=>{secondsLeft--;updateTimer();if(secondsLeft<=0)finishQuiz();},1000);
+  });
+  byId("quizPrevious").addEventListener("click",()=>{if(qIndex>0){qIndex--;renderQuestion();}});
+  byId("quizNext").addEventListener("click",()=>{if(qIndex<quizQuestions.length-1){qIndex++;renderQuestion();}});
+  byId("quizSubmit").addEventListener("click",()=>{if(confirm("Submit your answers and view your score?"))finishQuiz();});
+}
