@@ -76,3 +76,29 @@ h1,h2,h3,p{margin-top:0}h1,h2{font-family:"Space Grotesk",sans-serif;letter-spac
 .recent-card:hover{border-color:#168cff;transform:translateY(-2px)}
 @media(max-width:900px){.recent-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.recent-section{padding:60px 23px}.recent-list{grid-template-columns:1fr}}
+
+
+/* MCQ quiz */
+.quiz-section{padding:78px max(8vw,28px);background:#05080e;color:#f2f5fa;border-top:1px solid #1d2735}
+.quiz-panel{max-width:760px;margin:0 auto;padding:28px;border:1px solid #26364c;border-radius:13px;background:#0b1220}
+.quiz-intro{text-align:center;padding:22px 10px}
+.quiz-symbol{width:58px;height:58px;margin:0 auto 18px;display:grid;place-items:center;border-radius:15px;background:#142b45;color:#55aaff;font-size:28px}
+.quiz-intro h3,.quiz-result h3{font:700 24px "Space Grotesk";margin:0 0 10px}
+.quiz-intro p,.quiz-result p{color:#a5afbf;font-size:13px;line-height:1.7}
+.quiz-button{border:0;border-radius:8px;background:#087de0;color:white;padding:12px 18px;font:700 13px "DM Sans";cursor:pointer}
+.quiz-button:disabled{opacity:.4;cursor:not-allowed}
+.quiz-button.secondary{background:transparent;border:1px solid #34445a;color:#dce8f8}
+.quiz-topline,.quiz-controls{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.quiz-topline{font-size:12px;font-weight:700;color:#b8c5d8}
+.quiz-timer{font:700 16px "Space Grotesk";color:#55aaff}
+.quiz-timer.urgent{color:#ff9a9a}
+.quiz-progress{height:6px;background:#1c293a;border-radius:10px;margin:16px 0 25px;overflow:hidden}
+.quiz-progress span{display:block;height:100%;width:0;background:#168cff;transition:width .2s}
+.quiz-question{font:700 21px/1.45 "Space Grotesk";margin:0 0 20px}
+.quiz-options{display:grid;gap:10px;margin-bottom:24px}
+.quiz-option{display:flex;align-items:center;gap:12px;padding:14px;border:1px solid #2b3a50;border-radius:9px;background:#0e1827;color:#e7edf7;font-size:13px;cursor:pointer}
+.quiz-option.selected{border-color:#168cff;background:#10243b}
+.quiz-option input{accent-color:#168cff}
+.quiz-result{text-align:center;padding:22px 10px}
+.quiz-score{font:700 42px "Space Grotesk";color:#55aaff;margin:12px 0}
+@media(max-width:650px){.quiz-section{padding:60px 23px}.quiz-panel{padding:19px}.quiz-controls{flex-wrap:wrap}.quiz-controls button{flex:1}.quiz-question{font-size:18px}}
