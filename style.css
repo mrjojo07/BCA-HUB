@@ -215,3 +215,42 @@ main .about-section#about p{font-size:10px!important;line-height:1.5!important;m
 .auth-secondary-button{padding:12px;border:1px solid #354963;border-radius:8px;background:#142235;color:#dce8f8;font:700 12px "DM Sans";cursor:pointer}
 .auth-page .site-footer{margin-top:auto}
 @media(max-width:520px){.auth-card{padding:24px 19px}.auth-main{padding:28px 14px}}
+
+
+/* Student dashboard */
+.dashboard-page{min-height:100vh;display:flex;flex-direction:column;background:#05080e}
+.dashboard-nav{display:flex;align-items:center;gap:18px}
+.dashboard-nav>a{color:#b8cce2;font-size:12px;font-weight:700;text-decoration:none}
+.dashboard-nav>a:hover{color:#8fc4ff}
+.dashboard-nav .auth-secondary-button{padding:9px 12px}
+.dashboard-main{width:min(1120px,100%);margin:0 auto;padding:46px 24px 70px;flex:1}
+.dashboard-main>.auth-status{margin-bottom:18px}
+.dashboard-welcome{display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,330px);align-items:center;gap:24px;margin-bottom:28px}
+.dashboard-welcome h1{font:700 clamp(30px,5vw,48px) "Space Grotesk";letter-spacing:-1.8px;margin:12px 0 8px;color:#f3f7ff}
+.dashboard-welcome h1 span{color:#55aaff}
+.dashboard-welcome>div>p{font-size:12px;color:#91a0b5;overflow-wrap:anywhere}
+.dashboard-membership{margin:0}
+.dashboard-stat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:22px}
+.dashboard-stat{display:grid;gap:8px;padding:20px;border:1px solid #26364c;border-radius:13px;background:#0d1725}
+.dashboard-stat>span{font-size:9px;letter-spacing:1px;font-weight:700;color:#91a0b5}
+.dashboard-stat strong{font:700 30px "Space Grotesk";color:#f3f7ff}
+.dashboard-stat small{font-size:10px;color:#91a0b5}
+.dashboard-columns{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+.dashboard-panel{min-width:0;padding:22px;border:1px solid #26364c;border-radius:14px;background:#0d1725}
+.dashboard-panel-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.dashboard-panel-heading h2{font:700 21px "Space Grotesk";margin:6px 0 0;color:#f3f7ff}
+.dashboard-panel-heading>a{font-size:10px;color:#8fc4ff;text-decoration:none;white-space:nowrap}
+.dashboard-list{display:grid;gap:10px}
+.dashboard-list-item{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-top:1px solid #223148}
+.dashboard-list-item>div{display:grid;gap:5px;min-width:0}
+.dashboard-list-item strong{font-size:12px;color:#eaf2ff;overflow-wrap:anywhere}
+.dashboard-list-item small{font-size:10px;color:#91a0b5}
+.dashboard-state,.dashboard-score{font-size:10px;font-weight:700;color:#aabbd0;white-space:nowrap}
+.dashboard-state.done{color:#91e0b4}
+.dashboard-score{color:#8fc4ff;font-size:13px}
+.dashboard-open-link{font-size:10px;color:#8fc4ff;text-decoration:none;white-space:nowrap}
+.dashboard-empty{font-size:11px;line-height:1.7;color:#91a0b5}
+.dashboard-footnote{margin:18px 0 0;color:#7f8fa5;font-size:10px;line-height:1.7}
+.dashboard-page .site-footer{margin-top:auto}
+@media(max-width:760px){.dashboard-welcome{grid-template-columns:1fr}.dashboard-membership{max-width:100%}.dashboard-columns{grid-template-columns:1fr}}
+@media(max-width:520px){.dashboard-main{padding:30px 15px 48px}.dashboard-stat-grid{gap:8px}.dashboard-stat{padding:13px 10px}.dashboard-stat>span{font-size:8px}.dashboard-stat strong{font-size:25px}.dashboard-panel{padding:17px}.dashboard-nav{gap:10px}.dashboard-nav>a{font-size:10px}.dashboard-nav .auth-secondary-button{font-size:10px;padding:8px}}
