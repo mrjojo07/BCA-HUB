@@ -108,6 +108,36 @@
       </form>
       <a class="request-view-link" href="https://github.com/mrjojo07/BCA-HUB/issues" target="_blank" rel="noopener noreferrer">View submitted requests ↗</a>
     </section>
+    <section class="resource-request-section" id="feedback">
+      <div class="section-heading">
+        <div><div class="eyebrow">SHARE YOUR THOUGHTS</div><h2>Send us <span>feedback.</span></h2></div>
+        <p>Tell us what works well or what we can improve. Please do not include private information.</p>
+      </div>
+      <form class="resource-request-form" id="feedbackForm">
+        <div class="request-field">
+          <label for="feedbackTopic">Feedback about</label>
+          <select id="feedbackTopic" required>
+            <option value="">Choose a topic</option>
+            <option>Website design</option><option>Study materials</option><option>MCQ Quiz</option><option>Website issue / Bug</option><option>Suggestion / Feature request</option><option>Other</option>
+          </select>
+        </div>
+        <div class="request-field">
+          <label for="feedbackRating">How was your experience?</label>
+          <select id="feedbackRating" required>
+            <option value="">Choose rating</option><option>Excellent</option><option>Good</option><option>Okay</option><option>Needs improvement</option>
+          </select>
+        </div>
+        <div class="request-field request-field-wide">
+          <label for="feedbackDetails">Your feedback</label>
+          <textarea id="feedbackDetails" rows="4" maxlength="1500" required placeholder="Share your feedback or suggestion…"></textarea>
+        </div>
+        <div class="request-submit-row">
+          <button class="button button-gold" type="submit">Send feedback ↗</button>
+          <p>Feedback opens in GitHub. You’ll need to sign in to submit.</p>
+        </div>
+        <p class="request-feedback" id="feedbackStatus" role="status" aria-live="polite"></p>
+      </form>
+    </section>
     <section class="about-section" id="about"><div class="about-mark">B</div><div><div class="eyebrow dark-eyebrow">ABOUT BCA HUB</div><h2>One hub. <span>More possibilities.</span></h2><p>BCA HUB is a learning space designed to make study resources easier to discover and use. Our goal is simple: help students learn concepts, practise skills and prepare with confidence.</p></div></section>
   </main>
   <footer class="site-footer"><a class="brand footer-brand" href="#"><span class="brand-mark">B</span><span>BCA <b>HUB</b></span></a><p></p><span class="copyright">© <span id="year"></span> BCA HUB</span></footer>
