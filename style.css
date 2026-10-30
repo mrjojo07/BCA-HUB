@@ -133,3 +133,17 @@ main .about-section#about p{font-size:10px!important;line-height:1.5!important;m
 .progress-checklist label{display:flex;align-items:center;gap:10px;color:#dce8f8;font-size:12px;cursor:pointer}
 .progress-checklist input{width:16px;height:16px;accent-color:#168cff}
 .learning-progress>p{margin:13px 0 0;color:#91a0b5;font-size:10px}
+
+/* Bookmarks and personal saved resources */
+.resource-save,.saved-remove,.saved-open{border:1px solid #29415d;border-radius:8px;padding:8px 11px;background:#101d2c;color:#c9ddf5;font:600 11px "DM Sans";text-decoration:none;cursor:pointer;white-space:nowrap}
+.resource-save.is-saved{color:#7dbaff;border-color:#2878c4;background:#102944}
+.saved-resources-section{max-width:1120px;margin:0 auto;padding:58px 24px}
+.saved-resources-section[hidden]{display:none}
+.saved-resources-list{display:grid;gap:10px;margin-top:22px}
+.saved-resource-item{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 17px;border:1px solid #26364c;border-radius:12px;background:#0d1725}
+.saved-resource-info{display:grid;gap:5px;min-width:0}
+.saved-resource-info strong{font-size:13px;color:#eef5ff;overflow-wrap:anywhere}
+.saved-resource-info small{font-size:10px;color:#91a0b5}
+.saved-resource-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.saved-remove{color:#ffb0b0;border-color:#55343c}
+@media(max-width:600px){.saved-resource-item{align-items:flex-start;flex-direction:column}.saved-resource-actions{width:100%}}
