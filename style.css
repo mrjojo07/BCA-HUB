@@ -102,3 +102,5 @@ h1,h2,h3,p{margin-top:0}h1,h2{font-family:"Space Grotesk",sans-serif;letter-spac
 .quiz-result{text-align:center;padding:22px 10px}
 .quiz-score{font:700 42px "Space Grotesk";color:#55aaff;margin:12px 0}
 @media(max-width:650px){.quiz-section{padding:60px 23px}.quiz-panel{padding:19px}.quiz-controls{flex-wrap:wrap}.quiz-controls button{flex:1}.quiz-question{font-size:18px}}
+
+.countdown-section,.admin-timetable{padding:28px 6vw;background:#080e18;color:#eef4ff;border-top:1px solid #26364d}.countdown-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}.countdown-card{padding:18px;border:1px solid #26364d;border-radius:12px;background:#0d1726}.countdown-card h3{color:#fff}.countdown-days{display:block;color:#55aaff;font-size:24px;font-weight:700;margin-top:12px}.exam-admin-row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #26364d}#examJson{width:100%;margin-top:14px;background:#070d16;color:#dce9fb;border:1px solid #31435d;padding:12px;border-radius:8px}
