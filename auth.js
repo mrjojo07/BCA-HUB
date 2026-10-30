@@ -167,8 +167,12 @@ if (params.get("mode") === "recovery") {
   showForm("newPassword");
 } else {
   const { data: { session } } = await supabase.auth.getSession();
-  const startedAt = Number(localStorage.getItem("bca-hub-student-login-started-at"));
-  if (session?.user && startedAt && Date.now() - startedAt < 30 * 24 * 60 * 60 * 1000) await showAccount(session.user);
+  let startedAt = Number(localStorage.getItem("bca-hub-student-login-started-at"));
+  if (session?.user && (!startedAt || !Number.isFinite(startedAt))) {
+    startedAt = Date.now();
+    localStorage.setItem("bca-hub-student-login-started-at", String(startedAt));
+  }
+  if (session?.user && Date.now() - startedAt < 30 * 24 * 60 * 60 * 1000) await showAccount(session.user);
   else {
     if (session) await supabase.auth.signOut({ scope: "local" });
     localStorage.removeItem("bca-hub-student-login-started-at");
