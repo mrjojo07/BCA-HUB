@@ -91,7 +91,6 @@ signupForm.addEventListener("submit", async (event) => {
   button.disabled = false; button.textContent = "Create account";
   if (error) return showStatus(readableError(error), "error");
   if (data.session) {
-    localStorage.setItem("bca-hub-student-login-started-at", String(Date.now()));
     showStatus("Your account is ready. Your 3-day trial has started.", "success");
     await showAccount(data.user);
   } else {
@@ -151,11 +150,9 @@ supabase.auth.onAuthStateChange(async (event, session) => {
     showForm("newPassword");
   } else if (session?.user && event === "SIGNED_IN") {
     if (!localStorage.getItem("bca-hub-student-login-started-at")) {
-      localStorage.setItem("bca-hub-student-login-started-at", String(Date.now()));
-    }
+      }
     queueMicrotask(() => showAccount(session.user));
   } else if (event === "SIGNED_OUT") {
-    localStorage.removeItem("bca-hub-student-login-started-at");
     formsPanel.hidden = false;
     accountPanel.hidden = true;
   }
@@ -175,7 +172,6 @@ if (params.get("mode") === "recovery") {
   if (session?.user && Date.now() - startedAt < 30 * 24 * 60 * 60 * 1000) await showAccount(session.user);
   else {
     if (session) await supabase.auth.signOut({ scope: "local" });
-    localStorage.removeItem("bca-hub-student-login-started-at");
     showForm("login");
   }
   if (params.get("verified") === "1") showStatus("Email verified. You can now log in.", "success");
