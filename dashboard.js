@@ -103,12 +103,8 @@ function renderSaved(rows) {
 }
 async function loadDashboard() {
   const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-  const sessionStartedAt = Number(localStorage.getItem("bca-hub-student-login-started-at"));
-  const maxSessionAge = 30 * 24 * 60 * 60 * 1000;
-  if (sessionError || !sessionData?.session || !sessionStartedAt || !Number.isFinite(sessionStartedAt) || Date.now() - sessionStartedAt >= maxSessionAge) {
-    localStorage.removeItem("bca-hub-student-login-started-at");
-    if (sessionData?.session) await supabase.auth.signOut({ scope: "local" });
-    window.location.replace("login.html?reason=session-expired");
+  if (sessionError || !sessionData?.session?.user) {
+    window.location.replace("login.html");
     return;
   }
   const { data: userData, error: userError } = await supabase.auth.getUser();
