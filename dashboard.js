@@ -20,16 +20,6 @@ function safeDate(value) {
 function titleFromSlug(slug) {
   return (slug || "General").replace(/[-_]/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
-function membershipFor(row) {
-  const now = Date.now();
-  if (row?.plan === "premium" && (!row.premium_until || new Date(row.premium_until).getTime() > now)) {
-    return { plan: "Premium", info: row.premium_until ? "Access until " + safeDate(row.premium_until) : "Premium access is active." };
-  }
-  if (row?.plan === "trial" && row.trial_ends_at && new Date(row.trial_ends_at).getTime() > now) {
-    return { plan: "Free Trial", info: "Your 3-day trial ends " + new Date(row.trial_ends_at).toLocaleString() + "." };
-  }
-  return { plan: "Free", info: "Your free membership is active." };
-}
 function addEmpty(target, text) {
   const p = document.createElement("p");
   p.className = "dashboard-empty";
@@ -118,14 +108,13 @@ async function loadDashboard() {
     status.append(" ", link);
     return;
   }
-  const [profileResult, membershipResult, progressResult, quizResult, savedResult] = await Promise.all([
+  const [profileResult, progressResult, quizResult, savedResult] = await Promise.all([
     supabase.from("profiles").select("display_name").eq("id", user.id).maybeSingle(),
-    supabase.from("memberships").select("plan,trial_started_at,trial_ends_at,premium_until").eq("user_id", user.id).maybeSingle(),
     supabase.from("learning_progress").select("semester,subject_slug,category,completed,updated_at").eq("user_id", user.id).order("updated_at", { ascending: false }).limit(30),
     supabase.from("quiz_attempts").select("semester,subject_slug,score,total_questions,attempted_at").eq("user_id", user.id).order("attempted_at", { ascending: false }).limit(20),
     supabase.from("saved_resources").select("resource_path,resource_title,semester,subject_slug,category,created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(30)
   ]);
-  const failed = [profileResult, membershipResult, progressResult, quizResult, savedResult].find((result) => result.error);
+  const failed = [profileResult, progressResult, quizResult, savedResult].find((result) => result.error);
   if (failed) {
     message("Some dashboard information could not be loaded. Please refresh and try again.", "error");
     return;
@@ -135,9 +124,6 @@ async function loadDashboard() {
   const saved = savedResult.data || [];
   $("studentName").textContent = profileResult.data?.display_name || user.user_metadata?.display_name || user.email?.split("@")[0] || "Student";
   $("studentEmail").textContent = user.email || "";
-  const membership = membershipFor(membershipResult.data);
-  $("studentPlan").textContent = membership.plan;
-  $("studentPlanInfo").textContent = membership.info;
   $("progressCount").textContent = progress.filter((item) => item.completed).length;
   $("quizCount").textContent = quizzes.length;
   $("savedCount").textContent = saved.length;
