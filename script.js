@@ -21,8 +21,7 @@ const semesterSubjects = {
     "Fundamentals of Computers and Computational Thinking",
     "Introduction to Computers and Office Automation",
     "Mathematical Foundation for Computer Applications",
-    "Discrete Structures for Computer Applications",
-    "Creativity, Innovation and Business Development"
+    "Discrete Structures for Computer Applications"
   ]
 };
 const subjectBrowser = document.getElementById("subjectBrowser");
@@ -46,10 +45,11 @@ function showSemester(number) {
 }
 function showCategories(name) {
   currentSubject = name;
-  subjectBrowser.innerHTML = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · SUBJECT</div><h3>'+name+'</h3></div><button class="browser-close" data-back="subjects" type="button">← Subjects</button></div><div class="material-grid"><button type="button" class="material-type" data-material="notes"><span>▤</span><h4>Notes</h4><p>Study notes and topic-wise learning materials.</p><small>Open category ↗</small></button><button type="button" class="material-type" data-material="important-questions"><span>✦</span><h4>Important Questions</h4><p>Key questions for revision and exam preparation.</p><small>Open category ↗</small></button><button type="button" class="material-type" data-material="previous-year-questions"><span>▧</span><h4>Previous Year Questions</h4><p>Previous examination question papers.</p><small>Open category ↗</small></button><button type="button" class="material-type" data-material="mcq"><span>✓</span><h4>MCQ</h4><p>Multiple-choice questions to test your understanding.</p><small>Open category ↗</small></button></div>';
+  subjectBrowser.innerHTML = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · SUBJECT</div><h3>'+name+'</h3></div><button class="browser-close" data-back="subjects" type="button">← Subjects</button></div><div class="material-grid"><button type="button" class="material-type" data-material="notes"><span>▤</span><h4>Notes</h4><p>Study notes and topic-wise learning materials.</p><small>Open category ↗</small></button><button type="button" class="material-type" data-material="important-questions"><span>✦</span><h4>Important Questions</h4><p>Key questions for revision and exam preparation.</p><small>Open category ↗</small></button><button type="button" class="material-type" data-material="previous-year-questions"><span>▧</span><h4>Previous Year Questions</h4><p>Previous examination question papers.</p><small>Open category ↗</small></button><button type="button" class="material-type" data-material="mcq"><span>✓</span><h4>MCQ Quiz</h4><p>Take a 10-question random quiz from 30 important questions.</p><small>Start quiz ↗</small></button></div>';
   subjectBrowser.scrollIntoView({behavior:"smooth",block:"start"});
 }
 async function showMaterials(category) {
+  if (category === "mcq") { startMcqQuiz(); return; }
   const labels = {"notes":"Notes","important-questions":"Important Questions","previous-year-questions":"Previous Year Questions","mcq":"MCQ"};
   subjectBrowser.innerHTML = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · '+labels[category].toUpperCase()+'</div><h3>'+labels[category]+'</h3></div><button class="browser-close" data-back="subject" type="button">← Back to subject</button></div><p class="browser-empty">Loading materials…</p>';
   const folder = 'resources/semester-'+currentSemester+'/'+category+'/'+subjectSlug(currentSubject);
@@ -95,6 +95,81 @@ async function showMaterials(category) {
   }
   subjectBrowser.scrollIntoView({behavior:"smooth",block:"start"});
 }
+
+let quizBank = [];
+let quizSet = [];
+let quizIndex = 0;
+let quizScore = 0;
+let quizAnswered = false;
+async function startMcqQuiz() {
+  subjectBrowser.innerHTML = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · MCQ QUIZ</div><h3>Loading quiz…</h3></div><button class="browser-close" data-back="subject" type="button">← Back to subject</button></div>';
+  try {
+    if (!quizBank.length) {
+      const response = await fetch('mcq-questions.json?v=1');
+      if (!response.ok) throw new Error('Could not load the MCQ question bank.');
+      quizBank = await response.json();
+    }
+    quizSet = [...(quizBank[currentSubject] || [])].sort(() => Math.random() - 0.5).slice(0, 10);
+    if (quizSet.length < 10) throw new Error('This subject quiz is being prepared. Please check again later.');
+    quizIndex = 0; quizScore = 0; quizAnswered = false;
+    renderMcqQuestion();
+  } catch (error) {
+    subjectBrowser.innerHTML = '<div class="browser-heading"><div><div class="eyebrow">MCQ QUIZ</div><h3>Quiz unavailable</h3></div><button class="browser-close" data-back="subject" type="button">← Back to subject</button></div><p class="browser-empty">'+error.message+'</p>';
+  }
+}
+function renderMcqQuestion() {
+  const item = quizSet[quizIndex];
+  subjectBrowser.replaceChildren();
+  const heading = document.createElement('div');
+  heading.className = 'browser-heading';
+  const intro = document.createElement('div');
+  intro.innerHTML = '<div class="eyebrow">SEMESTER '+currentSemester+' · MCQ QUIZ</div><h3>'+currentSubject+'</h3>';
+  const back = document.createElement('button');
+  back.className = 'browser-close'; back.type = 'button'; back.dataset.back = 'subject'; back.textContent = '← Back to subject';
+  heading.append(intro, back);
+  const panel = document.createElement('section'); panel.className = 'quiz-panel';
+  const progress = document.createElement('p'); progress.className = 'quiz-progress'; progress.textContent = 'QUESTION '+(quizIndex+1)+' OF 10';
+  const bar = document.createElement('div'); bar.className = 'quiz-progress-track';
+  const fill = document.createElement('span'); fill.style.width = ((quizIndex+1)*10)+'%'; bar.append(fill);
+  const question = document.createElement('h3'); question.className = 'quiz-question'; question.textContent = item[0];
+  const options = document.createElement('div'); options.className = 'quiz-options';
+  const feedback = document.createElement('p'); feedback.className = 'quiz-feedback'; feedback.setAttribute('aria-live','polite');
+  item[1].forEach((option,index)=>{
+    const button=document.createElement('button'); button.type='button'; button.className='quiz-option'; button.textContent=String.fromCharCode(65+index)+'. '+option;
+    button.addEventListener('click',()=>{
+      if(quizAnswered)return;
+      quizAnswered=true;
+      const correct=index===item[2];
+      if(correct)quizScore++;
+      [...options.children].forEach((el,i)=>{el.disabled=true;if(i===item[2])el.classList.add('correct');else if(i===index)el.classList.add('incorrect');});
+      feedback.textContent=correct?'Correct answer!':'Not quite. Correct answer: '+item[1][item[2]];
+      feedback.classList.toggle('is-correct',correct);
+      next.disabled=false;
+    });
+    options.append(button);
+  });
+  const next=document.createElement('button'); next.type='button'; next.className='quiz-next'; next.textContent=quizIndex===9?'View result':'Next question'; next.disabled=true;
+  next.addEventListener('click',()=>{
+    if(quizIndex<9){quizIndex++;quizAnswered=false;renderMcqQuestion();}
+    else renderMcqResult();
+  });
+  panel.append(progress,bar,question,options,feedback,next);
+  subjectBrowser.append(heading,panel);
+}
+function renderMcqResult() {
+  subjectBrowser.innerHTML='';
+  const heading=document.createElement('div');heading.className='browser-heading';
+  heading.innerHTML='<div><div class="eyebrow">QUIZ COMPLETED</div><h3>'+currentSubject+'</h3></div>';
+  const back=document.createElement('button');back.className='browser-close';back.type='button';back.dataset.back='subject';back.textContent='← Back to subject';
+  heading.append(back);
+  const panel=document.createElement('section');panel.className='quiz-panel quiz-result';
+  const score=document.createElement('div');score.className='quiz-score';score.textContent=quizScore+'/10';
+  const message=document.createElement('h3');message.textContent=quizScore>=8?'Excellent work!':quizScore>=5?'Good effort!':'Keep practising!';
+  const detail=document.createElement('p');detail.textContent='You answered '+quizScore+' out of 10 questions correctly.';
+  const again=document.createElement('button');again.className='quiz-next';again.type='button';again.textContent='Try another random set';again.addEventListener('click',startMcqQuiz);
+  panel.append(score,message,detail,again);subjectBrowser.append(heading,panel);
+}
+
 semesterGrid?.addEventListener("click", (event) => {
   const card = event.target.closest("[data-semester]");
   if (card) showSemester(Number(card.dataset.semester));
