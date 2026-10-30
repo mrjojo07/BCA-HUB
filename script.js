@@ -21,8 +21,7 @@ const semesterSubjects = {
     "Fundamentals of Computers and Computational Thinking",
     "Introduction to Computers and Office Automation",
     "Mathematical Foundation for Computer Applications",
-    "Discrete Structures for Computer Applications",
-    "Creativity, Innovation and Business Development"
+    "Discrete Structures for Computer Applications"
   ]
 };
 const subjectBrowser = document.getElementById("subjectBrowser");
@@ -48,7 +47,7 @@ function showCategories(name) {
   currentSubject = name;
   const quizAvailable = !(currentSemester === 1 && name === "Creativity, Innovation and Business Development");
   const quizCard = quizAvailable ? '<button type="button" class="material-type" data-material="mcq"><span>✓</span><h4>MCQ Quiz</h4><p>Take a 10-question random quiz from 30 important questions.</p><small>Start quiz ↗</small></button>' : '';
-  subjectBrowser.innerHTML = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · SUBJECT</div><h3>'+name+'</h3></div><button class="browser-close" data-back="subjects" type="button">← Subjects</button></div><div class="material-grid"><button type="button" class="material-type" data-material="notes"><span>▤</span><h4>Notes</h4><p>Study notes and topic-wise learning materials.</p><small>Open category ↗</small></button><button type="button" class="material-type" data-material="important-questions"><span>✦</span><h4>Important Questions</h4><p>Key questions for revision and exam preparation.</p><small>Open category ↗</small></button><button type="button" class="material-type" data-material="previous-year-questions"><span>▧</span><h4>Previous Year Questions</h4><p>Previous examination question papers.</p><small>Open category ↗</small></button>'+quizCard+'</div>';
+  subjectBrowser.innerHTML = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · SUBJECT</div><h3>'+name+'</h3></div><button class="browser-close" data-back="subjects" type="button">← Subjects</button></div><div class="material-grid"><button type="button" class="material-type" data-material="notes"><span>▤</span><h4>Notes</h4><p>Study notes and topic-wise learning materials.</p><small>Open category ↗</small></button><button type="button" class="material-type" data-material="important-questions"><span>✦</span><h4>Important Questions</h4><p>Key questions for revision and exam preparation.</p><small>Open category ↗</small></button><button type="button" class="material-type" data-material="previous-year-questions"><span>▧</span><h4>Previous Year Questions</h4><p>Previous examination question papers.</p><small>Open category ↗</small></button>'+quizCard+'</div>'+progressTrackerMarkup(name);
   subjectBrowser.scrollIntoView({behavior:"smooth",block:"start"});
 }
 async function showMaterials(category) {
@@ -177,6 +176,33 @@ semesterGrid?.addEventListener("click", (event) => {
   const card = event.target.closest("[data-semester]");
   if (card) showSemester(Number(card.dataset.semester));
 });
+
+const progressTasks = [
+  ["notes", "Study notes completed"],
+  ["important", "Important questions completed"],
+  ["quiz", "MCQ quiz completed"]
+];
+function progressStorageKey(subject) {
+  return "bca-hub-progress-" + subjectSlug(subject);
+}
+function progressTrackerMarkup(subject) {
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(progressStorageKey(subject)) || "{}"); } catch (_) {}
+  const done = progressTasks.filter(([key]) => saved[key]).length;
+  const percent = Math.round(done / progressTasks.length * 100);
+  return '<section class="learning-progress"><div class="progress-heading"><div><div class="eyebrow">YOUR LEARNING JOURNEY</div><h4>Subject progress</h4></div><strong class="progress-percent">'+percent+'%</strong></div><div class="learning-progress-track"><span style="width:'+percent+'%"></span></div><div class="progress-checklist">'+progressTasks.map(([key,label])=>'<label><input type="checkbox" data-progress-task="'+key+'" '+(saved[key]?'checked':'')+'><span>'+label+'</span></label>').join('')+'</div><p>Your progress is saved on this device.</p></section>';
+}
+subjectBrowser?.addEventListener("change", (event) => {
+  const checkbox = event.target.closest("[data-progress-task]");
+  if (!checkbox || !currentSubject) return;
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(progressStorageKey(currentSubject)) || "{}"); } catch (_) {}
+  saved[checkbox.dataset.progressTask] = checkbox.checked;
+  localStorage.setItem(progressStorageKey(currentSubject), JSON.stringify(saved));
+  const oldTracker = subjectBrowser.querySelector(".learning-progress");
+  if (oldTracker) oldTracker.outerHTML = progressTrackerMarkup(currentSubject);
+});
+
 subjectBrowser?.addEventListener("click", (event) => {
   const close = event.target.closest(".browser-close");
   if (close) {
