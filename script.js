@@ -355,3 +355,34 @@ resourceRequestForm?.addEventListener("submit", event => {
   feedback.textContent = "Opening GitHub to review and submit your request…";
   window.open(issueUrl, "_blank", "noopener,noreferrer");
 });
+
+
+/* Feedback is submitted as a GitHub Issue for admin review. */
+const feedbackForm = document.getElementById("feedbackForm");
+feedbackForm?.addEventListener("submit", event => {
+  event.preventDefault();
+  const topic = document.getElementById("feedbackTopic").value;
+  const rating = document.getElementById("feedbackRating").value;
+  const details = document.getElementById("feedbackDetails").value.trim();
+  const status = document.getElementById("feedbackStatus");
+  if (!topic || !rating || !details) {
+    status.textContent = "Please complete all fields before sending.";
+    return;
+  }
+  const title = "[Feedback] " + topic;
+  const body = [
+    "### Website feedback",
+    "- **Topic:** " + topic,
+    "- **Experience:** " + rating,
+    "",
+    "### Feedback",
+    details,
+    "",
+    "---",
+    "Submitted through the BCA HUB website."
+  ].join("\\n");
+  const issueUrl = "https://github.com/mrjojo07/BCA-HUB/issues/new?title=" +
+    encodeURIComponent(title) + "&body=" + encodeURIComponent(body);
+  status.textContent = "Opening GitHub to review and submit your feedback…";
+  window.open(issueUrl, "_blank", "noopener,noreferrer");
+});
