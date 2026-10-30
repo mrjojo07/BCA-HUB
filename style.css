@@ -34,3 +34,24 @@ h1,h2,h3,p{margin-top:0}h1,h2{font-family:"Space Grotesk",sans-serif;letter-spac
 .admin-back-button{background:transparent;border:1px solid #34445a;color:#cbd5e1;padding:10px 14px;border-radius:8px;cursor:pointer}
 [hidden]{display:none!important}
 @media(max-width:650px){.nav-admin{display:block;text-align:center}.admin-toolbar{align-items:flex-start;flex-direction:column}.add-button{width:100%}}
+
+.semester-card{font:inherit;text-align:left;color:inherit;width:100%;cursor:pointer}
+.semester-card:focus-visible,.subject-item:focus-visible,.browser-close:focus-visible{outline:2px solid #55aaff;outline-offset:3px}
+.subject-browser{margin-top:28px;padding:26px;background:#0b1220;border:1px solid #26364c;border-radius:13px;scroll-margin-top:95px}
+.browser-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}
+.browser-heading h3{font:700 clamp(21px,3vw,28px) "Space Grotesk";margin:9px 0 0;color:#f5f7fb}
+.browser-close{background:#142235;border:1px solid #34445a;color:#dce8f8;padding:9px 13px;border-radius:7px;cursor:pointer}
+.subject-list{display:grid;gap:9px}
+.subject-item{display:flex;align-items:center;gap:14px;text-align:left;padding:16px;border-radius:9px;border:1px solid #273449;background:#0e1827;color:#f2f5fa;cursor:pointer}
+.subject-item:hover{border-color:#168cff;background:#13233a}
+.subject-number{font:700 15px "Space Grotesk";color:#55aaff}
+.subject-item strong{font-size:13px;line-height:1.5;flex:1}
+.subject-arrow{color:#55aaff}
+.browser-empty{font-size:13px;line-height:1.8;color:#a5afbf}
+.material-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.material-type{padding:20px;border:1px solid #273449;border-radius:10px;background:#0e1827}
+.material-type>span{font-size:22px;color:#55aaff}
+.material-type h4{font:700 17px "Space Grotesk";margin:15px 0 8px}
+.material-type p{font-size:12px;line-height:1.7;color:#a5afbf;min-height:42px}
+.material-type small{font-size:10px;color:#55aaff;font-weight:700}
+@media(max-width:650px){.subject-browser{padding:18px}.material-grid{grid-template-columns:1fr}.material-type p{min-height:0}.subject-item{padding:13px}.subject-item strong{font-size:12px}}
