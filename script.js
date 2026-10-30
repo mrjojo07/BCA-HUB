@@ -117,3 +117,65 @@ subjectBrowser?.addEventListener("click", (event) => {
   const material = event.target.closest("[data-material]");
   if (material) showMaterials(material.dataset.material);
 });
+
+
+async function loadRecentMaterials() {
+  const container = document.getElementById("recentMaterialsList");
+  if (!container) return;
+  try {
+    const commitsResponse = await fetch("https://api.github.com/repos/mrjojo07/BCA-HUB/commits?path=resources&per_page=10", {headers:{Accept:"application/vnd.github+json"}});
+    if (!commitsResponse.ok) throw new Error("Latest uploads are temporarily unavailable.");
+    const commits = await commitsResponse.json();
+    const details = await Promise.all(commits.slice(0, 10).map(async commit => {
+      const response = await fetch(commit.url, {headers:{Accept:"application/vnd.github+json"}});
+      if (!response.ok) return null;
+      return {commit, detail: await response.json()};
+    }));
+    const seen = new Set();
+    const recent = [];
+    details.filter(Boolean).forEach(({commit, detail}) => {
+      (detail.files || []).forEach(file => {
+        if (!/^resources\//.test(file.filename) || !["added","modified","renamed"].includes(file.status) || seen.has(file.filename)) return;
+        seen.add(file.filename);
+        recent.push({
+          name: file.filename.split("/").pop(),
+          path: file.filename,
+          date: commit.commit.author?.date || commit.commit.committer?.date || "",
+          message: commit.commit.message.split("\n")[0]
+        });
+      });
+    });
+    recent.sort((a,b) => new Date(b.date) - new Date(a.date));
+    container.replaceChildren();
+    if (!recent.length) {
+      container.innerHTML = '<p class="browser-empty">No uploads yet. New learning materials will appear here.</p>';
+      return;
+    }
+    recent.slice(0, 6).forEach(file => {
+      const parts = file.path.split("/");
+      const semester = (parts.find(part => /^semester-\d+$/.test(part)) || "semester").replace("-", " ");
+      const categoryNames = {"notes":"Notes","important-questions":"Important Questions","previous-year-questions":"Previous Year Questions","exam-preparation":"Exam Preparation"};
+      const category = categoryNames[parts[2]] || "Learning material";
+      const card = document.createElement("article");
+      card.className = "recent-card";
+      const meta = document.createElement("div");
+      meta.className = "recent-meta";
+      meta.textContent = semester.toUpperCase() + " · " + category;
+      const title = document.createElement("h3");
+      title.textContent = file.name;
+      const date = document.createElement("p");
+      date.className = "recent-date";
+      date.textContent = file.date ? new Date(file.date).toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"}) : "Recently uploaded";
+      const link = document.createElement("a");
+      link.href = "https://github.com/mrjojo07/BCA-HUB/blob/main/" + file.path.split("/").map(encodeURIComponent).join("/");
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = "Open material ↗";
+      card.append(meta,title,date,link);
+      container.appendChild(card);
+    });
+  } catch (error) {
+    container.innerHTML = '<p class="browser-empty">Could not load recent materials right now. Please refresh the page.</p>';
+  }
+}
+loadRecentMaterials();
