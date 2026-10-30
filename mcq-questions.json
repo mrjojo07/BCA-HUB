@@ -1,0 +1,1210 @@
+{
+  "Fundamentals of Computers and Computational Thinking": [
+    [
+      "Which component is called the brain of a computer?",
+      [
+        "CPU",
+        "Monitor",
+        "Keyboard",
+        "Printer"
+      ],
+      0
+    ],
+    [
+      "Which unit performs arithmetic and logical operations?",
+      [
+        "CU",
+        "ALU",
+        "RAM",
+        "ROM"
+      ],
+      1
+    ],
+    [
+      "Which memory is volatile?",
+      [
+        "ROM",
+        "SSD",
+        "RAM",
+        "DVD"
+      ],
+      2
+    ],
+    [
+      "Which is an input device?",
+      [
+        "Monitor",
+        "Speaker",
+        "Keyboard",
+        "Projector"
+      ],
+      2
+    ],
+    [
+      "Which is an output device?",
+      [
+        "Mouse",
+        "Scanner",
+        "Microphone",
+        "Monitor"
+      ],
+      3
+    ],
+    [
+      "What is the full form of CPU?",
+      [
+        "Central Processing Unit",
+        "Computer Primary Utility",
+        "Central Program User",
+        "Control Processing Utility"
+      ],
+      0
+    ],
+    [
+      "Which number system uses only 0 and 1?",
+      [
+        "Decimal",
+        "Binary",
+        "Octal",
+        "Hexadecimal"
+      ],
+      1
+    ],
+    [
+      "One byte contains how many bits?",
+      [
+        "4",
+        "8",
+        "16",
+        "32"
+      ],
+      1
+    ],
+    [
+      "Which is secondary storage?",
+      [
+        "Cache",
+        "Register",
+        "Hard disk",
+        "RAM"
+      ],
+      2
+    ],
+    [
+      "What does an operating system manage?",
+      [
+        "Only games",
+        "Hardware and software resources",
+        "Only documents",
+        "Only internet"
+      ],
+      1
+    ],
+    [
+      "Which is system software?",
+      [
+        "Operating system",
+        "Photo",
+        "Presentation",
+        "Spreadsheet"
+      ],
+      0
+    ],
+    [
+      "Which is an example of application software?",
+      [
+        "BIOS",
+        "Device driver",
+        "Word processor",
+        "Boot loader"
+      ],
+      2
+    ],
+    [
+      "What is the main purpose of an algorithm?",
+      [
+        "Decorate a screen",
+        "Give step-by-step solution",
+        "Store files",
+        "Connect cables"
+      ],
+      1
+    ],
+    [
+      "A flowchart represents an algorithm using what?",
+      [
+        "Symbols",
+        "Audio",
+        "Tables only",
+        "Machine code only"
+      ],
+      0
+    ],
+    [
+      "Which flowchart symbol usually represents a decision?",
+      [
+        "Rectangle",
+        "Oval",
+        "Diamond",
+        "Parallelogram"
+      ],
+      2
+    ],
+    [
+      "What is debugging?",
+      [
+        "Writing a report",
+        "Finding and fixing errors",
+        "Installing hardware",
+        "Compressing files"
+      ],
+      1
+    ],
+    [
+      "What is decomposition in computational thinking?",
+      [
+        "Breaking a problem into smaller parts",
+        "Deleting data",
+        "Increasing screen size",
+        "Encrypting a file"
+      ],
+      0
+    ],
+    [
+      "Pattern recognition means what?",
+      [
+        "Finding similarities or trends",
+        "Formatting a disk",
+        "Printing output",
+        "Changing a password"
+      ],
+      0
+    ],
+    [
+      "Abstraction focuses on what?",
+      [
+        "Every irrelevant detail",
+        "Important features while ignoring irrelevant details",
+        "Only colours",
+        "Only hardware"
+      ],
+      1
+    ],
+    [
+      "What is pseudocode?",
+      [
+        "A programming-language compiler",
+        "An informal, structured description of an algorithm",
+        "A storage device",
+        "A network cable"
+      ],
+      1
+    ],
+    [
+      "Which is an example of an output?",
+      [
+        "Data entered by user",
+        "A printed report",
+        "A mouse click",
+        "A scanned page"
+      ],
+      1
+    ],
+    [
+      "What does booting mean?",
+      [
+        "Starting a computer",
+        "Closing a file",
+        "Deleting an app",
+        "Changing a font"
+      ],
+      0
+    ],
+    [
+      "Which memory is generally fastest?",
+      [
+        "Hard disk",
+        "RAM",
+        "CPU register",
+        "Optical disc"
+      ],
+      2
+    ],
+    [
+      "What is cache memory used for?",
+      [
+        "Long-term archiving",
+        "Speeding up access to frequently used data",
+        "Printing files",
+        "Connecting to Wi-Fi"
+      ],
+      1
+    ],
+    [
+      "Which device converts hard copy to digital form?",
+      [
+        "Printer",
+        "Scanner",
+        "Speaker",
+        "Plotter"
+      ],
+      1
+    ],
+    [
+      "What is the binary equivalent of decimal 2?",
+      [
+        "10",
+        "11",
+        "01",
+        "100"
+      ],
+      0
+    ],
+    [
+      "Which is an example of a storage device?",
+      [
+        "SSD",
+        "Mouse",
+        "Monitor",
+        "Microphone"
+      ],
+      0
+    ],
+    [
+      "What does GUI stand for?",
+      [
+        "General User Internet",
+        "Graphical User Interface",
+        "Global Utility Input",
+        "Graphical Unit Integration"
+      ],
+      1
+    ],
+    [
+      "Which is a characteristic of a computer?",
+      [
+        "Always has human emotions",
+        "High speed and accuracy",
+        "Works without instructions",
+        "Never needs electricity"
+      ],
+      1
+    ],
+    [
+      "What is the purpose of a network?",
+      [
+        "Connect devices to share data and resources",
+        "Increase monitor brightness",
+        "Replace the CPU",
+        "Format documents"
+      ],
+      0
+    ]
+  ],
+  "Mathematical Foundation for Computer Applications": [
+    [
+      "What is the value of 5! (5 factorial)?",
+      [
+        "25",
+        "60",
+        "120",
+        "720"
+      ],
+      2
+    ],
+    [
+      "What is the determinant of [[1,0],[0,1]]?",
+      [
+        "0",
+        "1",
+        "2",
+        "-1"
+      ],
+      1
+    ],
+    [
+      "A matrix with the same number of rows and columns is called?",
+      [
+        "Row matrix",
+        "Column matrix",
+        "Square matrix",
+        "Null matrix"
+      ],
+      2
+    ],
+    [
+      "What is the identity element for matrix multiplication?",
+      [
+        "Zero matrix",
+        "Identity matrix",
+        "Row matrix",
+        "Diagonal of zeros"
+      ],
+      1
+    ],
+    [
+      "If f(x)=x², what is f(3)?",
+      [
+        "6",
+        "9",
+        "3",
+        "12"
+      ],
+      1
+    ],
+    [
+      "What is the derivative of x²?",
+      [
+        "x",
+        "2x",
+        "x³",
+        "2"
+      ],
+      1
+    ],
+    [
+      "What is the derivative of a constant?",
+      [
+        "1",
+        "The constant",
+        "0",
+        "Undefined"
+      ],
+      2
+    ],
+    [
+      "What is the slope of y=3x+2?",
+      [
+        "2",
+        "3",
+        "5",
+        "-3"
+      ],
+      1
+    ],
+    [
+      "What is the solution of 2x=10?",
+      [
+        "2",
+        "4",
+        "5",
+        "8"
+      ],
+      2
+    ],
+    [
+      "Which set contains all positive integers?",
+      [
+        "{...,-2,-1,0}",
+        "{1,2,3,...}",
+        "All fractions",
+        "All real numbers"
+      ],
+      1
+    ],
+    [
+      "What is the union of sets A and B?",
+      [
+        "Elements common to both",
+        "Elements in A or B or both",
+        "Elements in neither",
+        "Only elements in A"
+      ],
+      1
+    ],
+    [
+      "What is the intersection of two disjoint sets?",
+      [
+        "Universal set",
+        "Empty set",
+        "Infinite set",
+        "Power set"
+      ],
+      1
+    ],
+    [
+      "How many elements are in the power set of a 3-element set?",
+      [
+        "3",
+        "6",
+        "8",
+        "9"
+      ],
+      2
+    ],
+    [
+      "What is the Cartesian product A×B made of?",
+      [
+        "Ordered pairs",
+        "Only common elements",
+        "Unordered triples",
+        "A single number"
+      ],
+      0
+    ],
+    [
+      "What is log₁₀(100)?",
+      [
+        "1",
+        "2",
+        "10",
+        "100"
+      ],
+      1
+    ],
+    [
+      "What is the value of 2³?",
+      [
+        "6",
+        "8",
+        "9",
+        "12"
+      ],
+      1
+    ],
+    [
+      "Which is an even integer?",
+      [
+        "7",
+        "11",
+        "14",
+        "19"
+      ],
+      2
+    ],
+    [
+      "What is the mean of 2, 4 and 6?",
+      [
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      1
+    ],
+    [
+      "What is the probability of getting heads on a fair coin?",
+      [
+        "0",
+        "1/4",
+        "1/2",
+        "1"
+      ],
+      2
+    ],
+    [
+      "What is the range of 3, 8, 10, 12?",
+      [
+        "7",
+        "8",
+        "9",
+        "12"
+      ],
+      0
+    ],
+    [
+      "What is the slope of a horizontal line?",
+      [
+        "0",
+        "1",
+        "Undefined",
+        "-1"
+      ],
+      0
+    ],
+    [
+      "Which matrix has all entries equal to zero?",
+      [
+        "Identity matrix",
+        "Null matrix",
+        "Diagonal matrix",
+        "Scalar matrix"
+      ],
+      1
+    ],
+    [
+      "For a 2×3 matrix, how many rows are present?",
+      [
+        "2",
+        "3",
+        "5",
+        "6"
+      ],
+      0
+    ],
+    [
+      "What is the sum of the first five natural numbers?",
+      [
+        "10",
+        "15",
+        "20",
+        "25"
+      ],
+      1
+    ],
+    [
+      "What is the value of √81?",
+      [
+        "7",
+        "8",
+        "9",
+        "10"
+      ],
+      2
+    ],
+    [
+      "If A={1,2} and B={2,3}, what is A∩B?",
+      [
+        "{1}",
+        "{2}",
+        "{3}",
+        "{1,2,3}"
+      ],
+      1
+    ],
+    [
+      "If A={a,b}, how many subsets does A have?",
+      [
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      2
+    ],
+    [
+      "What is the derivative of 5x?",
+      [
+        "5",
+        "x",
+        "5x²",
+        "0"
+      ],
+      0
+    ],
+    [
+      "What is 25% of 200?",
+      [
+        "25",
+        "40",
+        "50",
+        "75"
+      ],
+      2
+    ],
+    [
+      "Which relation pairs every input with exactly one output?",
+      [
+        "Function",
+        "Matrix",
+        "Graph",
+        "Sequence"
+      ],
+      0
+    ]
+  ],
+  "Discrete Structures for Computer Applications": [
+    [
+      "A proposition is a statement that is what?",
+      [
+        "Always a question",
+        "Either true or false",
+        "Always false",
+        "An instruction"
+      ],
+      1
+    ],
+    [
+      "Which symbol commonly denotes logical AND?",
+      [
+        "∨",
+        "¬",
+        "∧",
+        "→"
+      ],
+      2
+    ],
+    [
+      "Which symbol commonly denotes logical OR?",
+      [
+        "∧",
+        "∨",
+        "¬",
+        "↔"
+      ],
+      1
+    ],
+    [
+      "The negation of a true proposition is?",
+      [
+        "True",
+        "False",
+        "Unknown",
+        "Both"
+      ],
+      1
+    ],
+    [
+      "A conjunction is true when?",
+      [
+        "Both propositions are true",
+        "At least one is true",
+        "Both are false",
+        "Exactly one is true"
+      ],
+      0
+    ],
+    [
+      "A disjunction is false when?",
+      [
+        "Both are true",
+        "At least one is true",
+        "Both are false",
+        "Exactly one is false"
+      ],
+      2
+    ],
+    [
+      "What does p→q mean?",
+      [
+        "p and q",
+        "p or q",
+        "If p then q",
+        "Not p"
+      ],
+      2
+    ],
+    [
+      "A tautology is a proposition that is?",
+      [
+        "Always true",
+        "Always false",
+        "Sometimes true",
+        "Never evaluated"
+      ],
+      0
+    ],
+    [
+      "A contradiction is a proposition that is?",
+      [
+        "Always true",
+        "Always false",
+        "Always unknown",
+        "A set"
+      ],
+      1
+    ],
+    [
+      "What is the converse of p→q?",
+      [
+        "q→p",
+        "¬p→¬q",
+        "¬q→¬p",
+        "p∧q"
+      ],
+      0
+    ],
+    [
+      "What is a predicate?",
+      [
+        "A statement involving variable(s)",
+        "A number system",
+        "A graph edge",
+        "A matrix"
+      ],
+      0
+    ],
+    [
+      "The symbol ∀ means?",
+      [
+        "There exists",
+        "For all",
+        "Not",
+        "Therefore"
+      ],
+      1
+    ],
+    [
+      "The symbol ∃ means?",
+      [
+        "For all",
+        "And",
+        "There exists",
+        "If"
+      ],
+      2
+    ],
+    [
+      "A set with no elements is called?",
+      [
+        "Universal set",
+        "Empty set",
+        "Power set",
+        "Finite set"
+      ],
+      1
+    ],
+    [
+      "A graph consists primarily of?",
+      [
+        "Vertices and edges",
+        "Rows and columns",
+        "Only numbers",
+        "Functions and limits"
+      ],
+      0
+    ],
+    [
+      "A vertex is also called a?",
+      [
+        "Node",
+        "Matrix",
+        "Path",
+        "Tree root only"
+      ],
+      0
+    ],
+    [
+      "An edge connects what in a graph?",
+      [
+        "Two vertices",
+        "Two matrices",
+        "Two sets only",
+        "Two functions"
+      ],
+      0
+    ],
+    [
+      "A simple graph has?",
+      [
+        "Loops and multiple edges",
+        "No loops or multiple edges",
+        "Only one vertex",
+        "No edges"
+      ],
+      1
+    ],
+    [
+      "A path in a graph is?",
+      [
+        "A sequence of connected vertices",
+        "A set of matrices",
+        "A truth table",
+        "A type of function"
+      ],
+      0
+    ],
+    [
+      "A tree is a connected graph with?",
+      [
+        "A cycle",
+        "No cycles",
+        "Every edge repeated",
+        "No vertices"
+      ],
+      1
+    ],
+    [
+      "A tree with n vertices has how many edges?",
+      [
+        "n",
+        "n+1",
+        "n−1",
+        "2n"
+      ],
+      2
+    ],
+    [
+      "What is the degree of a vertex?",
+      [
+        "Number of incident edges",
+        "Number of graph colours",
+        "Number of paths",
+        "Number of components"
+      ],
+      0
+    ],
+    [
+      "A complete graph connects?",
+      [
+        "No vertices",
+        "Every pair of distinct vertices",
+        "Only adjacent numbered vertices",
+        "Only one vertex"
+      ],
+      1
+    ],
+    [
+      "What is a bijection?",
+      [
+        "One-to-one and onto function",
+        "Only one-to-one",
+        "Only onto",
+        "A relation that is not a function"
+      ],
+      0
+    ],
+    [
+      "A relation that is reflexive, symmetric and transitive is?",
+      [
+        "Equivalence relation",
+        "Partial sequence",
+        "Tree relation",
+        "Contradiction"
+      ],
+      0
+    ],
+    [
+      "Which is a basic counting principle for independent choices?",
+      [
+        "Multiplication principle",
+        "Negation rule",
+        "De Morgan law",
+        "Pigeonhole only"
+      ],
+      0
+    ],
+    [
+      "How many ways can 3 distinct items be arranged?",
+      [
+        "3",
+        "6",
+        "9",
+        "12"
+      ],
+      1
+    ],
+    [
+      "What does nC1 equal?",
+      [
+        "1",
+        "n",
+        "n²",
+        "n!"
+      ],
+      1
+    ],
+    [
+      "The Pigeonhole Principle says that if more objects than boxes are placed, then?",
+      [
+        "Every box is empty",
+        "At least one box contains more than one object",
+        "All boxes contain one object",
+        "Objects disappear"
+      ],
+      1
+    ],
+    [
+      "Which structure follows a parent-child hierarchy?",
+      [
+        "Tree",
+        "Complete graph only",
+        "Truth table",
+        "Matrix"
+      ],
+      0
+    ]
+  ],
+  "Introduction to Computers and Office Automation": [
+    [
+      "Which software is mainly used for word processing?",
+      [
+        "MS Word",
+        "MS Excel",
+        "MS PowerPoint",
+        "MS Access"
+      ],
+      0
+    ],
+    [
+      "Which software is commonly used for spreadsheets?",
+      [
+        "Word",
+        "Excel",
+        "PowerPoint",
+        "Paint"
+      ],
+      1
+    ],
+    [
+      "Which software is used to create slide presentations?",
+      [
+        "Excel",
+        "Word",
+        "PowerPoint",
+        "Notepad"
+      ],
+      2
+    ],
+    [
+      "In a spreadsheet, the intersection of a row and column is called?",
+      [
+        "Cell",
+        "Slide",
+        "Page",
+        "Field"
+      ],
+      0
+    ],
+    [
+      "Which symbol usually begins a formula in Excel?",
+      [
+        "#",
+        "=",
+        "@",
+        "&"
+      ],
+      1
+    ],
+    [
+      "Which function adds a range of numbers?",
+      [
+        "COUNT",
+        "MAX",
+        "SUM",
+        "AVERAGE"
+      ],
+      2
+    ],
+    [
+      "Which function calculates the arithmetic mean?",
+      [
+        "AVERAGE",
+        "SUM",
+        "MIN",
+        "COUNT"
+      ],
+      0
+    ],
+    [
+      "A cell reference that changes when copied is called?",
+      [
+        "Absolute",
+        "Relative",
+        "Fixed",
+        "External"
+      ],
+      1
+    ],
+    [
+      "Which symbol is used in an absolute cell reference?",
+      [
+        "#",
+        "$",
+        "%",
+        "&"
+      ],
+      1
+    ],
+    [
+      "What is the default extension of modern Word documents?",
+      [
+        ".xlsx",
+        ".pptx",
+        ".docx",
+        ".txtx"
+      ],
+      2
+    ],
+    [
+      "What is the default extension of modern Excel workbooks?",
+      [
+        ".docx",
+        ".xlsx",
+        ".pptx",
+        ".exe"
+      ],
+      1
+    ],
+    [
+      "What is the default extension of modern PowerPoint presentations?",
+      [
+        ".pptx",
+        ".xlsx",
+        ".docx",
+        ".pdfx"
+      ],
+      0
+    ],
+    [
+      "Which feature creates personalised letters for many recipients?",
+      [
+        "Mail Merge",
+        "WordArt",
+        "AutoCorrect",
+        "Track Changes"
+      ],
+      0
+    ],
+    [
+      "Which feature records edits made by reviewers?",
+      [
+        "Mail Merge",
+        "Track Changes",
+        "Page Break",
+        "Find"
+      ],
+      1
+    ],
+    [
+      "What is a header in a document?",
+      [
+        "Text at the top margin area",
+        "Text at the bottom only",
+        "A spreadsheet formula",
+        "A slide transition"
+      ],
+      0
+    ],
+    [
+      "What is a footer?",
+      [
+        "Text at the top",
+        "Text at the bottom margin area",
+        "A chart title",
+        "A file name"
+      ],
+      1
+    ],
+    [
+      "Which shortcut commonly saves a document?",
+      [
+        "Ctrl+P",
+        "Ctrl+S",
+        "Ctrl+X",
+        "Ctrl+Z"
+      ],
+      1
+    ],
+    [
+      "Which shortcut commonly copies selected content?",
+      [
+        "Ctrl+C",
+        "Ctrl+V",
+        "Ctrl+A",
+        "Ctrl+N"
+      ],
+      0
+    ],
+    [
+      "Which shortcut pastes copied content?",
+      [
+        "Ctrl+X",
+        "Ctrl+P",
+        "Ctrl+V",
+        "Ctrl+F"
+      ],
+      2
+    ],
+    [
+      "Which shortcut reverses the last action?",
+      [
+        "Ctrl+Y",
+        "Ctrl+Z",
+        "Ctrl+S",
+        "Ctrl+O"
+      ],
+      1
+    ],
+    [
+      "Which PowerPoint view displays slides as thumbnails for rearranging?",
+      [
+        "Slide Sorter",
+        "Reading view",
+        "Outline only",
+        "Notes page"
+      ],
+      0
+    ],
+    [
+      "What is a transition in PowerPoint?",
+      [
+        "Effect when moving between slides",
+        "A spelling rule",
+        "A spreadsheet function",
+        "A page margin"
+      ],
+      0
+    ],
+    [
+      "Which chart is useful for showing parts of a whole?",
+      [
+        "Pie chart",
+        "Line chart only",
+        "Scatter plot only",
+        "Surface chart"
+      ],
+      0
+    ],
+    [
+      "What does sorting data do?",
+      [
+        "Arranges data in an order",
+        "Deletes all data",
+        "Changes formulas to text",
+        "Prints a workbook"
+      ],
+      0
+    ],
+    [
+      "What does filtering data do?",
+      [
+        "Shows records matching criteria",
+        "Changes font size",
+        "Adds a slide",
+        "Closes a workbook"
+      ],
+      0
+    ],
+    [
+      "Which feature checks spelling in a document?",
+      [
+        "Spell Check",
+        "Mail Merge",
+        "Freeze Panes",
+        "Slide Master"
+      ],
+      0
+    ],
+    [
+      "What is a template?",
+      [
+        "A pre-designed document or layout",
+        "A computer virus",
+        "A formula error",
+        "A printer setting"
+      ],
+      0
+    ],
+    [
+      "What does PDF stand for?",
+      [
+        "Portable Document Format",
+        "Personal Data File",
+        "Printed Document Folder",
+        "Program Design Format"
+      ],
+      0
+    ],
+    [
+      "Which command is used to produce a paper copy?",
+      [
+        "Save",
+        "Print",
+        "Undo",
+        "Share"
+      ],
+      1
+    ],
+    [
+      "What is cloud storage?",
+      [
+        "Saving files on remote internet-accessible servers",
+        "Saving only on a keyboard",
+        "Printing files",
+        "Deleting temporary files"
+      ],
+      0
+    ]
+  ]
+}
