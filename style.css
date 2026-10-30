@@ -62,3 +62,17 @@ h1,h2,h3,p{margin-top:0}h1,h2{font-family:"Space Grotesk",sans-serif;letter-spac
 .material-type{display:block;width:100%;text-align:left;color:#f2f5fa;cursor:pointer;font:inherit}
 .material-type:hover{border-color:#168cff;background:#13233a}
 @media(max-width:650px){.material-grid{grid-template-columns:1fr}}
+
+/* Recently added learning materials */
+.recent-section{padding:78px max(8vw,28px);background:#080c13;color:#fff;border-bottom:1px solid #1d2735}
+.recent-section .section-heading h2 span{color:#168cff}
+.recent-section .section-heading>p{color:#a5afbf}
+.recent-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.recent-card{min-width:0;padding:20px;border:1px solid #263244;border-radius:10px;background:#0e1521}
+.recent-meta{font-size:9px;letter-spacing:1px;font-weight:700;color:#55aaff;text-transform:uppercase}
+.recent-card h3{font:700 15px/1.5 "Space Grotesk";color:#f2f5fa;overflow-wrap:anywhere;margin:12px 0}
+.recent-date{font-size:11px;color:#9eacbf;margin:0 0 15px}
+.recent-card a{font-size:11px;font-weight:700;color:#55aaff}
+.recent-card:hover{border-color:#168cff;transform:translateY(-2px)}
+@media(max-width:900px){.recent-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.recent-section{padding:60px 23px}.recent-list{grid-template-columns:1fr}}
