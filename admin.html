@@ -147,7 +147,7 @@
       const appMeta = user.app_metadata || {};
       const isAdmin = appMeta.role === "admin" || appMeta.admin === true;
       if (!isAdmin) {
-        await supabase.auth.signOut();
+        // Keep the student's session active; deny only Admin Panel access.
         loginPanel.hidden = false;
         mfaPanel.hidden = true;
         uploadPanel.hidden = true;
