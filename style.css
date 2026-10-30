@@ -55,3 +55,10 @@ h1,h2,h3,p{margin-top:0}h1,h2{font-family:"Space Grotesk",sans-serif;letter-spac
 .material-type p{font-size:12px;line-height:1.7;color:#a5afbf;min-height:42px}
 .material-type small{font-size:10px;color:#55aaff;font-weight:700}
 @media(max-width:650px){.subject-browser{padding:18px}.material-grid{grid-template-columns:1fr}.material-type p{min-height:0}.subject-item{padding:13px}.subject-item strong{font-size:12px}}
+
+/* Subject-first learning library */
+.resource-grid,.resources-section{display:none!important}
+.material-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.material-type{display:block;width:100%;text-align:left;color:#f2f5fa;cursor:pointer;font:inherit}
+.material-type:hover{border-color:#168cff;background:#13233a}
+@media(max-width:650px){.material-grid{grid-template-columns:1fr}}
