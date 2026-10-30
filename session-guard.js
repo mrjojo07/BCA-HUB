@@ -23,6 +23,8 @@ async function requireStudentSession() {
     return;
   }
 
+  document.documentElement.style.visibility = "visible";
+
   const remaining = SESSION_MAX_AGE - (Date.now() - startedAt);
   window.setTimeout(requireStudentSession, remaining);
 }
