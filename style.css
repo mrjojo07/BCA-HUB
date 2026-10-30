@@ -147,3 +147,9 @@ main .about-section#about p{font-size:10px!important;line-height:1.5!important;m
 .saved-resource-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .saved-remove{color:#ffb0b0;border-color:#55343c}
 @media(max-width:600px){.saved-resource-item{align-items:flex-start;flex-direction:column}.saved-resource-actions{width:100%}}
+
+/* Header shortcut for the saved-resource library */
+.nav-saved{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 14px;border:1px solid #2878c4;border-radius:9px;background:#102944;color:#9bcaff;font:700 12px "DM Sans";cursor:pointer;white-space:nowrap}
+.nav-saved:hover{background:#173858;border-color:#55aaff}
+.saved-empty{padding:18px;border:1px dashed #354963;border-radius:10px;color:#aabbd0;font-size:12px}
+@media(max-width:800px){.nav-saved{width:100%;margin:5px 0}}
