@@ -256,3 +256,27 @@ main .about-section#about p{font-size:10px!important;line-height:1.5!important;m
 @media(max-width:520px){.dashboard-main{padding:30px 15px 48px}.dashboard-stat-grid{gap:8px}.dashboard-stat{padding:13px 10px}.dashboard-stat>span{font-size:8px}.dashboard-stat strong{font-size:25px}.dashboard-panel{padding:17px}.dashboard-nav{gap:10px}.dashboard-nav>a{font-size:10px}.dashboard-nav .auth-secondary-button{font-size:10px;padding:8px}}
 
 .header-dashboard{margin-left:auto;margin-right:12px;white-space:nowrap;color:#dceaff;font-size:12px;font-weight:700;text-decoration:none;padding:9px 12px;border:1px solid #244568;border-radius:9px;background:#0b1b2c}.header-dashboard:hover{background:#123354;color:#fff}@media(min-width:651px){.header-dashboard{margin-left:0;margin-right:0}}
+
+
+/* Make the Website shortcut easy to spot in the student dashboard */
+.dashboard-nav>a.dashboard-website-link{
+  position:relative;display:inline-flex;align-items:center;gap:7px;
+  padding:11px 17px;border:1px solid #168cff;border-radius:10px;
+  color:#fff!important;background:linear-gradient(110deg,#0756a5,#087fe8,#0756a5);
+  background-size:200% 100%;font-size:13px;font-weight:800;
+  box-shadow:0 0 0 1px #168cff55,0 0 14px #168cff88;
+  animation:websiteLinkGlow 1.8s ease-in-out infinite,websiteLinkShine 3s linear infinite;
+}
+.dashboard-nav>a.dashboard-website-link span{font-size:15px}
+.dashboard-nav>a.dashboard-website-link:hover{color:#fff!important;transform:translateY(-1px);box-shadow:0 0 0 2px #65baff88,0 0 22px #168cffcc}
+@keyframes websiteLinkGlow{
+  0%,100%{box-shadow:0 0 0 1px #168cff55,0 0 10px #168cff66}
+  50%{box-shadow:0 0 0 2px #65baffaa,0 0 22px #168cffdd}
+}
+@keyframes websiteLinkShine{to{background-position:200% 0}}
+@media(prefers-reduced-motion:reduce){
+  .dashboard-nav>a.dashboard-website-link{animation:none}
+}
+@media(max-width:520px){
+  .dashboard-nav>a.dashboard-website-link{font-size:12px;padding:10px 12px;gap:5px}
+}
