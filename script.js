@@ -179,3 +179,49 @@ if(quizIntro&&quizPlay&&quizResult){
 }
 
 (async function(){const box=document.getElementById("examCountdownList");if(!box)return;try{const r=await fetch("exam-timetable.json?v="+Date.now());if(!r.ok)throw 0;const exams=await r.json();const today=new Date();today.setHours(0,0,0,0);box.replaceChildren();(Array.isArray(exams)?exams:[]).filter(x=>x.date&&x.title).sort((a,b)=>a.date.localeCompare(b.date)).forEach(x=>{const d=new Date(x.date+"T00:00:00");const n=Math.ceil((d-today)/86400000);const card=document.createElement("article");card.className="countdown-card";const title=document.createElement("h3");title.textContent=x.title;const date=document.createElement("p");date.textContent=d.toLocaleDateString();const days=document.createElement("strong");days.className="countdown-days";days.textContent=n<0?"Exam completed":n===0?"Exam is today":n+" days left";card.append(date,title,days);box.append(card);});if(!box.children.length)box.textContent="No upcoming exams have been added yet.";}catch(e){box.textContent="Exam timetable is currently unavailable.";}})();
+
+
+/* Beginner programming practice examples */
+const practiceExamples = {
+  c: {
+    label:"C PROGRAM", title:"Print a message",
+    code:'#include <stdio.h>\n\nint main(void) {\n    printf("Hello, BCA HUB!\\n");\n    return 0;\n}',
+    output:"Hello, BCA HUB!",
+    tasks:["Print your name on the screen.","Read two integers and display their sum.","Check whether a number is even or odd."]
+  },
+  python: {
+    label:"PYTHON PROGRAM", title:"Print a message",
+    code:'print("Hello, BCA HUB!")',
+    output:"Hello, BCA HUB!",
+    tasks:["Print your name on the screen.","Read two numbers and display their sum.","Check whether a number is even or odd."]
+  },
+  java: {
+    label:"JAVA PROGRAM", title:"Print a message",
+    code:'public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello, BCA HUB!");\n    }\n}',
+    output:"Hello, BCA HUB!",
+    tasks:["Print your name on the screen.","Read two integers and display their sum.","Check whether a number is even or odd."]
+  }
+};
+const practiceTabs=document.querySelectorAll(".practice-tab");
+const practiceCode=document.getElementById("practiceCode");
+if(practiceCode){
+  function showPractice(language){
+    const item=practiceExamples[language];
+    document.getElementById("practiceLanguage").textContent=item.label;
+    document.getElementById("practiceTitle").textContent=item.title;
+    practiceCode.textContent=item.code;
+    document.getElementById("practiceOutput").textContent=item.output;
+    const tasks=document.getElementById("practiceTasks");
+    tasks.replaceChildren();
+    item.tasks.forEach(task=>{const li=document.createElement("li");li.textContent=task;tasks.append(li);});
+    practiceTabs.forEach(tab=>{const active=tab.dataset.language===language;tab.classList.toggle("active",active);tab.setAttribute("aria-selected",String(active));});
+  }
+  practiceTabs.forEach(tab=>tab.addEventListener("click",()=>showPractice(tab.dataset.language)));
+  document.getElementById("copyPracticeCode")?.addEventListener("click",async()=>{
+    const button=document.getElementById("copyPracticeCode");
+    try{await navigator.clipboard.writeText(practiceCode.textContent);button.textContent="Copied!";}
+    catch(e){button.textContent="Select code to copy";}
+    setTimeout(()=>button.textContent="Copy code",1600);
+  });
+  showPractice("c");
+}
