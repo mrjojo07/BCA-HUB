@@ -6,7 +6,6 @@ menuToggle?.addEventListener("click", () => {
   menuToggle.setAttribute("aria-expanded", String(isOpen));
   menuToggle.setAttribute("aria-label", isOpen ? "Close navigation" : "Open navigation");
 });
-
 navLinks?.querySelectorAll("a").forEach((link) => {
   link.addEventListener("click", () => {
     navLinks.classList.remove("open");
@@ -28,8 +27,14 @@ const semesterSubjects = {
 };
 const subjectBrowser = document.getElementById("subjectBrowser");
 const semesterGrid = document.getElementById("semesterGrid");
+let currentSemester = 1;
+let currentSubject = "";
 
+function subjectSlug(name) {
+  return name.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
 function showSemester(number) {
+  currentSemester = number;
   const subjects = semesterSubjects[number] || [];
   subjectBrowser.hidden = false;
   if (!subjects.length) {
@@ -39,28 +44,76 @@ function showSemester(number) {
   }
   subjectBrowser.scrollIntoView({behavior:"smooth",block:"start"});
 }
-semesterGrid?.addEventListener("click",(event)=>{
-  const card=event.target.closest("[data-semester]");
-  if(card) showSemester(Number(card.dataset.semester));
+function showCategories(name) {
+  currentSubject = name;
+  subjectBrowser.innerHTML = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · SUBJECT</div><h3>'+name+'</h3></div><button class="browser-close" data-back="subjects" type="button">← Subjects</button></div><div class="material-grid"><button type="button" class="material-type" data-material="notes"><span>▤</span><h4>Notes</h4><p>Study notes and topic-wise learning materials.</p><small>Open category ↗</small></button><button type="button" class="material-type" data-material="important-questions"><span>✦</span><h4>Important Questions</h4><p>Key questions for revision and exam preparation.</p><small>Open category ↗</small></button><button type="button" class="material-type" data-material="previous-year-questions"><span>▧</span><h4>Previous Year Questions</h4><p>Previous examination question papers.</p><small>Open category ↗</small></button><button type="button" class="material-type" data-material="exam-preparation"><span>◎</span><h4>Exam Preparation</h4><p>Revision materials, model questions and exam guidance.</p><small>Open category ↗</small></button></div>';
+  subjectBrowser.scrollIntoView({behavior:"smooth",block:"start"});
+}
+async function showMaterials(category) {
+  const labels = {"notes":"Notes","important-questions":"Important Questions","previous-year-questions":"Previous Year Questions","exam-preparation":"Exam Preparation"};
+  subjectBrowser.innerHTML = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · '+labels[category].toUpperCase()+'</div><h3>'+labels[category]+'</h3></div><button class="browser-close" data-back="subject" type="button">← Back to subject</button></div><p class="browser-empty">Loading materials…</p>';
+  const folder = 'resources/semester-'+currentSemester+'/'+category+'/'+subjectSlug(currentSubject);
+  const apiUrl = 'https://api.github.com/repos/mrjojo07/BCA-HUB/contents/'+folder;
+  try {
+    const response = await fetch(apiUrl, {headers:{Accept:'application/vnd.github+json'}});
+    if (!response.ok) throw new Error(response.status === 404 ? 'No files have been added to this category yet.' : 'Could not load files. Please try again.');
+    const files = (await response.json()).filter(file => file.type === 'file');
+    const heading = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · '+labels[category].toUpperCase()+'</div><h3>'+labels[category]+'</h3></div><button class="browser-close" data-back="subject" type="button">← Back to subject</button></div>';
+    if (!files.length) {
+      subjectBrowser.innerHTML = heading+'<p class="browser-empty">No files have been uploaded here yet.</p>';
+      return;
+    }
+    const list = document.createElement('div');
+    list.className = 'subject-list';
+    files.forEach(file => {
+      const row = document.createElement('div');
+      row.className = 'subject-item';
+      const title = document.createElement('strong');
+      title.textContent = file.name;
+      const link = document.createElement('a');
+      link.href = file.download_url || file.html_url;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.className = 'subject-arrow';
+      link.textContent = 'Open ↗';
+      row.append(title, link);
+      list.appendChild(row);
+      if (/\.(png|jpe?g|webp|gif)$/i.test(file.name)) {
+        const preview = document.createElement('img');
+        preview.src = file.download_url;
+        preview.alt = file.name;
+        preview.loading = 'lazy';
+        preview.style.cssText = 'display:block;max-width:100%;height:auto;border-radius:12px;margin:10px 0 18px';
+        list.appendChild(preview);
+      }
+    });
+    subjectBrowser.innerHTML = heading;
+    subjectBrowser.appendChild(list);
+  } catch (error) {
+    const heading = subjectBrowser.querySelector('.browser-heading')?.outerHTML || '';
+    subjectBrowser.innerHTML = heading+'<p class="browser-empty">'+error.message+'</p>';
+  }
+  subjectBrowser.scrollIntoView({behavior:"smooth",block:"start"});
+}
+semesterGrid?.addEventListener("click", (event) => {
+  const card = event.target.closest("[data-semester]");
+  if (card) showSemester(Number(card.dataset.semester));
 });
-subjectBrowser?.addEventListener("click",(event)=>{
-  if(event.target.closest(".browser-close")) {
-    const backToSubjects = event.target.closest(".browser-close").dataset.back === "subjects";
-    if (backToSubjects) showSemester(1);
-    else subjectBrowser.hidden=true;
+subjectBrowser?.addEventListener("click", (event) => {
+  const close = event.target.closest(".browser-close");
+  if (close) {
+    if (close.dataset.back === "subjects") showSemester(currentSemester);
+    else if (close.dataset.back === "subject") showCategories(currentSubject);
+    else subjectBrowser.hidden = true;
     return;
   }
-  const item=event.target.closest("[data-subject-index]");
-  if(item) {
-    const name=semesterSubjects[1][Number(item.dataset.subjectIndex)];
-    subjectBrowser.innerHTML='<div class="browser-heading"><div><div class="eyebrow">SEMESTER 1 · SUBJECT</div><h3>'+name+'</h3></div><button class="browser-close" data-back="subjects" type="button">← Subjects</button></div><div class="material-grid"><button type="button" class="material-type" data-material="notes"><span>▤</span><h4>Notes</h4><p>Study notes and topic-wise learning materials.</p><small>Open category ↗</small></button><button type="button" class="material-type" data-material="important-questions"><span>✦</span><h4>Important Questions</h4><p>Key questions for revision and exam preparation.</p><small>Open category ↗</small></button><button type="button" class="material-type" data-material="previous-year-questions"><span>▧</span><h4>Previous Year Questions</h4><p>Previous examination question papers.</p><small>Open category ↗</small></button><button type="button" class="material-type" data-material="exam-preparation"><span>◎</span><h4>Exam Preparation</h4><p>Revision materials, model questions and exam guidance.</p><small>Open category ↗</small></button></div>';
-    subjectBrowser.scrollIntoView({behavior:"smooth",block:"start"});
+  const item = event.target.closest("[data-subject-index]");
+  if (item) {
+    const subjects = semesterSubjects[currentSemester] || [];
+    const name = subjects[Number(item.dataset.subjectIndex)];
+    if (name) showCategories(name);
     return;
   }
-  const material=event.target.closest("[data-material]");
-  if(material) {
-    const labels={"notes":"Notes","important-questions":"Important Questions","previous-year-questions":"Previous Year Questions","exam-preparation":"Exam Preparation"};
-    const label=labels[material.dataset.material];
-    subjectBrowser.innerHTML='<div class="browser-heading"><div><div class="eyebrow">SEMESTER 1 · SUBJECT RESOURCE</div><h3>'+label+'</h3></div><button class="browser-close" data-back="subjects" type="button">← Back to subject</button></div><p class="browser-empty">No files have been uploaded here yet. Materials added for this subject will appear in this section.</p>';
-  }
+  const material = event.target.closest("[data-material]");
+  if (material) showMaterials(material.dataset.material);
 });
