@@ -20,11 +20,13 @@
     <h1 class="admin-title">BCA HUB <span>Admin</span></h1>
     <section id="loginPanel" class="admin-login">
       <h2>Admin access</h2>
-      <p class="admin-intro">Enter your temporary access code to open the upload panel.</p>
+      <p class="admin-intro">Sign in with your approved BCA HUB administrator account.</p>
       <form id="loginForm">
-        <label for="accessCode">Secret code</label>
-        <input id="accessCode" type="password" autocomplete="current-password" required placeholder="Enter admin code">
-        <button class="admin-action" type="submit">Unlock Admin Panel</button>
+        <label for="adminEmail">Admin email</label>
+        <input id="adminEmail" type="email" autocomplete="username" required placeholder="Enter admin email">
+        <label for="adminPassword">Password</label>
+        <input id="adminPassword" type="password" autocomplete="current-password" required placeholder="Enter password">
+        <button class="admin-action" type="submit">Sign in to Admin Panel</button>
         <p id="loginError" class="admin-error" aria-live="polite"></p>
       </form>
     </section>
@@ -70,22 +72,46 @@
     </section>
     <a class="admin-home-link" href="index.html">← Return to BCA HUB homepage</a>
   </main>
-  <script>
-    // Basic client-side screen lock; not secure server-side authentication.
-    const TEMP_ADMIN_CODE = "adnanbcahub@2008";
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm";
+    const supabase = createClient(
+      "https://efbkhmfekfujbwfdpfhk.supabase.co",
+      "sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH"
+    );
     const loginPanel = document.getElementById("loginPanel");
     const uploadPanel = document.getElementById("uploadPanel");
-    document.getElementById("loginForm").addEventListener("submit", (event) => {
-      event.preventDefault();
-      const entered = document.getElementById("accessCode").value;
-      if (entered === TEMP_ADMIN_CODE) {
-        loginPanel.hidden = true;
-        uploadPanel.hidden = false;
-        document.getElementById("loginError").textContent = "";
-      } else {
-        document.getElementById("loginError").textContent = "Incorrect code. Please try again.";
+    const loginError = document.getElementById("loginError");
+
+    async function showAdminForSession() {
+      const { data: { user }, error } = await supabase.auth.getUser();
+      if (error || !user) return false;
+      const appMeta = user.app_metadata || {};
+      const isAdmin = appMeta.role === "admin" || appMeta.admin === true;
+      if (!isAdmin) {
+        await supabase.auth.signOut();
+        loginError.textContent = "This account does not have administrator permission.";
+        return false;
       }
+      loginPanel.hidden = true;
+      uploadPanel.hidden = false;
+      loginError.textContent = "";
+      return true;
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      loginError.textContent = "Checking administrator account…";
+      const email = document.getElementById("adminEmail").value.trim();
+      const password = document.getElementById("adminPassword").value;
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        loginError.textContent = "Sign-in failed. Check your email and password.";
+        return;
+      }
+      if (await showAdminForSession()) document.getElementById("adminPassword").value = "";
     });
+
+    showAdminForSession();
 
     const subjectLists = {
       "semester-1": [
@@ -181,10 +207,11 @@
       if (!confirm('Open GitHub to delete "' + fileName + '"? You will review and confirm the deletion on GitHub.')) return;
       window.open("https://github.com/mrjojo07/BCA-HUB/delete/main/" + path.split("/").map(encodeURIComponent).join("/"), "_blank", "noopener");
     });
-    document.getElementById("logoutButton").addEventListener("click", () => {
+    document.getElementById("logoutButton").addEventListener("click", async () => {
+      await supabase.auth.signOut();
       uploadPanel.hidden = true;
       loginPanel.hidden = false;
-      document.getElementById("accessCode").value = "";
+      document.getElementById("adminPassword").value = "";
     });
     document.getElementById("category").addEventListener("change", loadExistingFiles);
     subjectSelect.addEventListener("change", loadExistingFiles);
