@@ -77,7 +77,16 @@ async function showMaterials(category) {
       link.rel = 'noopener noreferrer';
       link.className = 'subject-arrow';
       link.textContent = 'Open ↗';
-      row.append(title, link);
+      const save = document.createElement('button');
+      save.type = 'button';
+      save.className = 'resource-save' + (isResourceSaved(link.href) ? ' is-saved' : '');
+      save.textContent = isResourceSaved(link.href) ? '★ Saved' : '☆ Save';
+      save.setAttribute('aria-pressed', String(isResourceSaved(link.href)));
+      save.addEventListener('click', () => toggleSavedResource({
+        name: file.name, url: link.href, subject: currentSubject,
+        category: labels[category], semester: currentSemester
+      }, save));
+      row.append(title, link, save);
       list.appendChild(row);
       if (/\.(png|jpe?g|webp|gif)$/i.test(file.name)) {
         const preview = document.createElement('img');
@@ -176,6 +185,65 @@ semesterGrid?.addEventListener("click", (event) => {
   if (card) showSemester(Number(card.dataset.semester));
 });
 
+
+const savedResourcesKey = "bca-hub-saved-resources";
+function readSavedResources() {
+  try {
+    const value = JSON.parse(localStorage.getItem(savedResourcesKey) || "[]");
+    return Array.isArray(value) ? value : [];
+  } catch (_) { return []; }
+}
+function writeSavedResources(items) {
+  localStorage.setItem(savedResourcesKey, JSON.stringify(items));
+  renderSavedResources();
+}
+function isResourceSaved(url) {
+  return readSavedResources().some(item => item.url === url);
+}
+function renderSavedResources() {
+  const section = document.getElementById("savedResourcesSection");
+  const list = document.getElementById("savedResourcesList");
+  if (!section || !list) return;
+  const items = readSavedResources();
+  list.replaceChildren();
+  section.hidden = items.length === 0;
+  items.forEach((item, index) => {
+    const row = document.createElement("article");
+    row.className = "saved-resource-item";
+    const info = document.createElement("div");
+    info.className = "saved-resource-info";
+    const title = document.createElement("strong");
+    title.textContent = item.name;
+    const meta = document.createElement("small");
+    meta.textContent = item.subject + " · " + item.category;
+    info.append(title, meta);
+    const actions = document.createElement("div");
+    actions.className = "saved-resource-actions";
+    const open = document.createElement("a");
+    open.href = item.url; open.target = "_blank"; open.rel = "noopener noreferrer";
+    open.className = "saved-open"; open.textContent = "Open ↗";
+    const remove = document.createElement("button");
+    remove.type = "button"; remove.className = "saved-remove";
+    remove.dataset.removeSaved = String(index); remove.textContent = "Remove";
+    actions.append(open, remove);
+    row.append(info, actions);
+    list.append(row);
+  });
+}
+function toggleSavedResource(item, button) {
+  const items = readSavedResources();
+  const existing = items.findIndex(saved => saved.url === item.url);
+  if (existing >= 0) items.splice(existing, 1);
+  else items.push(item);
+  writeSavedResources(items);
+  if (button) {
+    const saved = existing < 0;
+    button.textContent = saved ? "★ Saved" : "☆ Save";
+    button.classList.toggle("is-saved", saved);
+    button.setAttribute("aria-pressed", String(saved));
+  }
+}
+
 const progressTasks = [
   ["notes", "Study notes completed"],
   ["important", "Important questions completed"],
@@ -201,6 +269,16 @@ subjectBrowser?.addEventListener("change", (event) => {
   const oldTracker = subjectBrowser.querySelector(".learning-progress");
   if (oldTracker) oldTracker.outerHTML = progressTrackerMarkup(currentSubject);
 });
+
+
+document.getElementById("savedResourcesList")?.addEventListener("click", event => {
+  const button = event.target.closest("[data-remove-saved]");
+  if (!button) return;
+  const items = readSavedResources();
+  items.splice(Number(button.dataset.removeSaved), 1);
+  writeSavedResources(items);
+});
+renderSavedResources();
 
 subjectBrowser?.addEventListener("click", (event) => {
   const close = event.target.closest(".browser-close");
