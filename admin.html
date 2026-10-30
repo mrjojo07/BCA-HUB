@@ -18,14 +18,14 @@
   <main class="admin-main">
     <div class="eyebrow">SITE OWNER TOOLS</div>
     <h1 class="admin-title">BCA HUB <span>Admin</span></h1>
-    <section id="accessGate" class="admin-timetable" style="max-width:440px;margin:24px auto;">
+    <section id="loginPanel" class="admin-login">
       <h2>Admin access</h2>
-      <p class="admin-intro">Enter the BCA HUB admin access code to continue.</p>
-      <form id="accessCodeForm" class="admin-form">
-        <label for="accessCodeInput">Access code</label>
-        <input id="accessCodeInput" type="password" autocomplete="current-password" required>
-        <p id="accessCodeError" class="admin-intro" role="alert" style="color:#ff8d8d;display:none;">Incorrect access code. Please try again.</p>
+      <p class="admin-intro">Enter your temporary access code to open the upload panel.</p>
+      <form id="loginForm">
+        <label for="accessCode">Secret code</label>
+        <input id="accessCode" type="password" autocomplete="current-password" required placeholder="Enter admin code">
         <button class="admin-action" type="submit">Unlock Admin Panel</button>
+        <p id="loginError" class="admin-error" aria-live="polite"></p>
       </form>
     </section>
     <section id="uploadPanel" hidden>
@@ -65,24 +65,24 @@
         <p class="admin-footnote">Use “Open on GitHub” to reply, add labels, or close a completed request. Requests are stored as public GitHub Issues.</p>
       </section>
       <p class="admin-footnote">Remove opens GitHub's delete confirmation page for the selected file. Sign in and confirm the commit there.</p>
+      <button class="admin-back-button" id="logoutButton" type="button">Lock Admin Panel</button>
     </section>
     <a class="admin-home-link" href="index.html">← Return to BCA HUB homepage</a>
   </main>
   <script>
-    // Basic client-side access gate. This is not secure server-side authentication.
-    const ACCESS_CODE = "adnanbcahub@2008";
-    const accessGate = document.getElementById("accessGate");
+    // Basic client-side screen lock; not secure server-side authentication.
+    const TEMP_ADMIN_CODE = "adnanbcahub@2008";
+    const loginPanel = document.getElementById("loginPanel");
     const uploadPanel = document.getElementById("uploadPanel");
-    document.getElementById("accessCodeForm").addEventListener("submit", (event) => {
+    document.getElementById("loginForm").addEventListener("submit", (event) => {
       event.preventDefault();
-      const enteredCode = document.getElementById("accessCodeInput").value;
-      if (enteredCode === ACCESS_CODE) {
-        accessGate.hidden = true;
+      const entered = document.getElementById("accessCode").value;
+      if (entered === TEMP_ADMIN_CODE) {
+        loginPanel.hidden = true;
         uploadPanel.hidden = false;
+        document.getElementById("loginError").textContent = "";
       } else {
-        document.getElementById("accessCodeError").style.display = "block";
-        document.getElementById("accessCodeInput").value = "";
-        document.getElementById("accessCodeInput").focus();
+        document.getElementById("loginError").textContent = "Incorrect code. Please try again.";
       }
     });
 
@@ -179,6 +179,11 @@
       const fileName = path.split("/").pop();
       if (!confirm('Open GitHub to delete "' + fileName + '"? You will review and confirm the deletion on GitHub.')) return;
       window.open("https://github.com/mrjojo07/BCA-HUB/delete/main/" + path.split("/").map(encodeURIComponent).join("/"), "_blank", "noopener");
+    });
+    document.getElementById("logoutButton").addEventListener("click", () => {
+      uploadPanel.hidden = true;
+      loginPanel.hidden = false;
+      document.getElementById("accessCode").value = "";
     });
     document.getElementById("category").addEventListener("change", loadExistingFiles);
     subjectSelect.addEventListener("change", loadExistingFiles);
