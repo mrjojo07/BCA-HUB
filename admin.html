@@ -54,12 +54,14 @@
           <p id="fileListStatus" class="admin-intro" aria-live="polite">Choose a semester, subject and material type to load files.</p>
         </div>
       </form>
+      <section class="admin-timetable"><h2>Exam timetable</h2><p class="admin-intro">Add exam names and dates, then publish the generated timetable to GitHub.</p><form id="examForm" class="admin-form"><label for="examTitle">Exam / paper name</label><input id="examTitle" required><label for="examDate">Exam date</label><input id="examDate" type="date" required><button class="admin-action" type="submit">＋ Add exam date</button></form><div id="examEntries"></div><textarea id="examJson" rows="8" readonly></textarea><div class="admin-toolbar"><button class="admin-back-button" id="copyExam" type="button">Copy timetable data</button><button class="admin-action" id="publishExam" type="button">Open GitHub to publish</button></div><p class="admin-footnote">Paste the copied data into exam-timetable.json on GitHub and commit it to update the public countdown.</p></section>
       <p class="admin-footnote">Remove opens GitHub's delete confirmation page for the selected file. Sign in and confirm the commit there.</p>
       <button class="admin-back-button" id="logoutButton" type="button">Lock Admin Panel</button>
     </section>
     <a class="admin-home-link" href="index.html">← Return to BCA HUB homepage</a>
   </main>
   <script>
+    let exams=[];const jsonBox=document.getElementById("examJson");const entries=document.getElementById("examEntries");function draw(){jsonBox.value=JSON.stringify(exams,null,2);entries.replaceChildren();exams.forEach((x,i)=>{const p=document.createElement("p");p.textContent=x.date+" — "+x.title+" ";const b=document.createElement("button");b.type="button";b.textContent="Remove";b.onclick=()=>{exams.splice(i,1);draw();};p.append(b);entries.append(p);});}fetch("exam-timetable.json").then(r=>r.ok?r.json():[]).then(x=>{exams=Array.isArray(x)?x:[];draw();}).catch(draw);document.getElementById("examForm").addEventListener("submit",e=>{e.preventDefault();exams.push({title:document.getElementById("examTitle").value.trim(),date:document.getElementById("examDate").value});e.target.reset();draw();});document.getElementById("copyExam").onclick=async()=>{try{await navigator.clipboard.writeText(jsonBox.value);alert("Copied timetable data.");}catch(e){jsonBox.select();alert("Copy the selected timetable data.");}};document.getElementById("publishExam").onclick=()=>{jsonBox.select();window.open("https://github.com/mrjojo07/BCA-HUB/edit/main/exam-timetable.json","_blank","noopener");};
     const TEMP_ADMIN_CODE = "adnanbcahub@2008";
     const loginPanel = document.getElementById("loginPanel");
     const uploadPanel = document.getElementById("uploadPanel");
