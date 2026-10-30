@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=8">
-  <script src="script.js?v=14" defer></script>
+  <script src="script.js?v=15" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -18,7 +18,7 @@
     <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
     <nav class="nav-links" id="navLinks">
       <a href="#semesters">Subjects</a><a href="#semesters">Semesters</a><a href="#about">About</a>
-      <a class="nav-admin" href="admin.html">Admin Panel <span>↗</span></a><button class="nav-saved" id="savedResourcesButton" type="button">★ Saved</button><a class="nav-cta" href="#semesters">Explore semesters <span>↗</span></a>
+      <a class="nav-admin" href="admin.html">Admin Panel <span>↗</span></a><button class="nav-saved" id="savedResourcesButton" type="button" aria-expanded="false" aria-controls="savedResourcesSection">★ Saved</button><a class="nav-cta" href="#semesters">Explore semesters <span>↗</span></a>
     </nav>
   </header>
   <main>
@@ -58,7 +58,7 @@
 
     <section class="countdown-section" id="examCountdown"><div class="section-heading"><div><div class="eyebrow">STAY EXAM-READY</div><h2>Exam <span>countdown.</span></h2></div><p>Upcoming exam dates published by the BCA HUB admin.</p></div><div id="examCountdownList" class="countdown-list">No exam timetable published yet.</div></section>
     <section class="saved-resources-section" id="savedResourcesSection" hidden>
-      <div class="section-heading"><div><div class="eyebrow">YOUR PERSONAL LIBRARY</div><h2>My <span>Saved Resources.</span></h2></div><p>Quick access to the study materials you have bookmarked on this device.</p></div>
+      <div class="saved-panel-heading"><div><div class="eyebrow">YOUR PERSONAL LIBRARY</div><h2>My <span>Saved Resources.</span></h2></div><button type="button" class="saved-panel-close" id="closeSavedResources" aria-label="Close saved resources">×</button></div>
       <div class="saved-resources-list" id="savedResourcesList"></div>
     </section>
     <section class="about-section" id="about"><div class="about-mark">B</div><div><div class="eyebrow dark-eyebrow">ABOUT BCA HUB</div><h2>One hub. <span>More possibilities.</span></h2><p>BCA HUB is a learning space designed to make study resources easier to discover and use. Our goal is simple: help students learn concepts, practise skills and prepare with confidence.</p></div></section>
