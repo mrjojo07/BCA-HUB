@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#05080e">
   <title>Admin Panel | BCA HUB</title>
-  <link rel="stylesheet" href="style.css?v=4">
+  <link rel="stylesheet" href="style.css?v=5">
 </head>
 <body class="admin-page">
   <header class="site-header">
@@ -34,11 +34,17 @@
           <option value="">Choose semester</option>
           <option value="semester-1">Semester 1</option><option value="semester-2">Semester 2</option><option value="semester-3">Semester 3</option><option value="semester-4">Semester 4</option><option value="semester-5">Semester 5</option><option value="semester-6">Semester 6</option><option value="semester-7">Semester 7</option><option value="semester-8">Semester 8</option>
         </select>
-        <label for="subject">Subject name</label>
-        <input id="subject" required maxlength="80" placeholder="e.g. Programming in C">
+        <label for="subject">Subject</label>
+        <select id="subject" required disabled>
+          <option value="">Choose semester first</option>
+        </select>
+        <p id="subjectHint" class="admin-intro">Select a semester to view its subjects.</p>
         <label for="category">Material type</label>
         <select id="category" required>
-          <option value="notes">Notes</option><option value="question-papers">Question Paper</option><option value="lab">Lab / Programs</option><option value="important-questions">Important Questions</option>
+          <option value="notes">Notes</option>
+          <option value="important-questions">Important Questions</option>
+          <option value="previous-year-questions">Previous Year Questions</option>
+          <option value="exam-preparation">Exam Preparation</option>
         </select>
         <p class="admin-intro">After you press Add, GitHub opens the selected folder. Sign in to your own GitHub account, choose your PDF or image, and commit the upload.</p>
       </form>
@@ -62,12 +68,38 @@
         document.getElementById("loginError").textContent = "Incorrect code. Please try again.";
       }
     });
+    const subjectLists = {
+      "semester-1": [
+        "Fundamentals of Computers and Computational Thinking",
+        "Introduction to Computers and Office Automation",
+        "Mathematical Foundation for Computer Applications",
+        "Discrete Structures for Computer Applications",
+        "Creativity, Innovation and Business Development"
+      ]
+    };
+    const semesterSelect = document.getElementById("semester");
+    const subjectSelect = document.getElementById("subject");
+    const subjectHint = document.getElementById("subjectHint");
+    semesterSelect.addEventListener("change", () => {
+      const subjects = subjectLists[semesterSelect.value] || [];
+      subjectSelect.innerHTML = '<option value="">Choose subject</option>';
+      subjects.forEach((subjectName) => {
+        const option = document.createElement("option");
+        option.value = subjectName;
+        option.textContent = subjectName;
+        subjectSelect.appendChild(option);
+      });
+      subjectSelect.disabled = subjects.length === 0;
+      subjectHint.textContent = subjects.length
+        ? subjects.length + " subjects available."
+        : "This semester's subject list has not been added yet. Send the subject list to enable this dropdown.";
+    });
     document.getElementById("addButton").addEventListener("click", () => {
-      const semester = document.getElementById("semester").value;
-      const subject = document.getElementById("subject").value.trim();
+      const semester = semesterSelect.value;
+      const subject = subjectSelect.value;
       const category = document.getElementById("category").value;
       if (!semester || !subject) {
-        alert("Please choose a semester and enter the subject name.");
+        alert("Please choose a semester and a subject.");
         return;
       }
       const slug = subject.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
