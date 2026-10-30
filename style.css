@@ -254,3 +254,5 @@ main .about-section#about p{font-size:10px!important;line-height:1.5!important;m
 .dashboard-page .site-footer{margin-top:auto}
 @media(max-width:760px){.dashboard-welcome{grid-template-columns:1fr}.dashboard-membership{max-width:100%}.dashboard-columns{grid-template-columns:1fr}}
 @media(max-width:520px){.dashboard-main{padding:30px 15px 48px}.dashboard-stat-grid{gap:8px}.dashboard-stat{padding:13px 10px}.dashboard-stat>span{font-size:8px}.dashboard-stat strong{font-size:25px}.dashboard-panel{padding:17px}.dashboard-nav{gap:10px}.dashboard-nav>a{font-size:10px}.dashboard-nav .auth-secondary-button{font-size:10px;padding:8px}}
+
+.header-dashboard{margin-left:auto;margin-right:12px;white-space:nowrap;color:#dceaff;font-size:12px;font-weight:700;text-decoration:none;padding:9px 12px;border:1px solid #244568;border-radius:9px;background:#0b1b2c}.header-dashboard:hover{background:#123354;color:#fff}@media(min-width:651px){.header-dashboard{margin-left:0;margin-right:0}}
