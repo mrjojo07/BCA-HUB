@@ -206,7 +206,12 @@ function renderSavedResources() {
   if (!section || !list) return;
   const items = readSavedResources();
   list.replaceChildren();
-  section.hidden = items.length === 0;
+  if (!items.length) {
+    const empty = document.createElement("p");
+    empty.className = "saved-empty";
+    empty.textContent = "You have not saved any resources yet. Open a subject and tap ☆ Save on a file.";
+    list.append(empty);
+  }
   items.forEach((item, index) => {
     const row = document.createElement("article");
     row.className = "saved-resource-item";
@@ -279,6 +284,15 @@ document.getElementById("savedResourcesList")?.addEventListener("click", event =
   writeSavedResources(items);
 });
 renderSavedResources();
+document.getElementById("savedResourcesButton")?.addEventListener("click", () => {
+  const section = document.getElementById("savedResourcesSection");
+  if (!section) return;
+  section.hidden = false;
+  renderSavedResources();
+  section.scrollIntoView({ behavior: "smooth", block: "start" });
+  navLinks?.classList.remove("open");
+  menuToggle?.setAttribute("aria-expanded", "false");
+});
 
 subjectBrowser?.addEventListener("click", (event) => {
   const close = event.target.closest(".browser-close");
