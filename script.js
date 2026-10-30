@@ -167,7 +167,6 @@ function renderMcqQuestion() {
   subjectBrowser.append(heading,panel);
 }
 function renderMcqResult() {
-  saveQuizResult(currentSubject, quizScore);
   subjectBrowser.innerHTML='';
   const heading=document.createElement('div');heading.className='browser-heading';
   heading.innerHTML='<div><div class="eyebrow">QUIZ COMPLETED</div><h3>'+currentSubject+'</h3></div>';
@@ -265,90 +264,6 @@ function progressTrackerMarkup(subject) {
   const percent = Math.round(done / progressTasks.length * 100);
   return '<section class="learning-progress"><div class="progress-heading"><div><div class="eyebrow">YOUR LEARNING JOURNEY</div><h4>Subject progress</h4></div><strong class="progress-percent">'+percent+'%</strong></div><div class="learning-progress-track"><span style="width:'+percent+'%"></span></div><div class="progress-checklist">'+progressTasks.map(([key,label])=>'<label><input type="checkbox" data-progress-task="'+key+'" '+(saved[key]?'checked':'')+'><span>'+label+'</span></label>').join('')+'</div><p>Your progress is saved on this device.</p></section>';
 }
-
-const quizResultsKey = "bca-hub-quiz-results";
-function readQuizResults() {
-  try {
-    const value = JSON.parse(localStorage.getItem(quizResultsKey) || "{}");
-    return value && typeof value === "object" ? value : {};
-  } catch (_) { return {}; }
-}
-function saveQuizResult(subject, score) {
-  const results = readQuizResults();
-  const previous = results[subject] || {bestScore:0, attempts:0, lastScore:0};
-  results[subject] = {
-    bestScore: Math.max(Number(previous.bestScore) || 0, score),
-    attempts: (Number(previous.attempts) || 0) + 1,
-    lastScore: score
-  };
-  try { localStorage.setItem(quizResultsKey, JSON.stringify(results)); } catch (_) {}
-  if (dashboardPanel && !dashboardPanel.hidden) renderStudentDashboard();
-}
-const dashboardPanel = document.getElementById("studentDashboard");
-function renderStudentDashboard() {
-  if (!dashboardPanel) return;
-  const savedCount = readSavedResources().length;
-  const quizResults = readQuizResults();
-  let completedTasks = 0;
-  let startedSubjects = 0;
-  const subjectRows = semesterSubjects[1].map(subject => {
-    let progress = {};
-    try { progress = JSON.parse(localStorage.getItem(progressStorageKey(subject)) || "{}"); } catch (_) {}
-    const done = progressTasks.filter(([key]) => Boolean(progress[key])).length;
-    const percent = Math.round(done / progressTasks.length * 100);
-    const quiz = quizResults[subject] || {bestScore:0, attempts:0};
-    completedTasks += done;
-    if (done > 0 || quiz.attempts > 0) startedSubjects++;
-    return {subject, percent, quiz};
-  });
-  const totalAttempts = subjectRows.reduce((sum, row) => sum + (Number(row.quiz.attempts) || 0), 0);
-  const stats = [
-    ["★", savedCount, "Saved resources"],
-    ["◫", startedSubjects + "/4", "Subjects started"],
-    ["✓", completedTasks + "/12", "Tasks completed"],
-    ["◎", totalAttempts, "Quiz attempts"]
-  ];
-  const statsBox = document.getElementById("dashboardStats");
-  const subjectBox = document.getElementById("dashboardSubjectList");
-  if (!statsBox || !subjectBox) return;
-  statsBox.replaceChildren();
-  stats.forEach(([icon, value, label]) => {
-    const card = document.createElement("article"); card.className = "dashboard-stat";
-    const symbol = document.createElement("span"); symbol.className = "dashboard-stat-icon"; symbol.textContent = icon;
-    const number = document.createElement("strong"); number.textContent = value;
-    const caption = document.createElement("small"); caption.textContent = label;
-    card.append(symbol, number, caption); statsBox.append(card);
-  });
-  subjectBox.replaceChildren();
-  subjectRows.forEach(({subject, percent, quiz}) => {
-    const row = document.createElement("article"); row.className = "dashboard-subject-row";
-    const info = document.createElement("div"); info.className = "dashboard-subject-info";
-    const name = document.createElement("strong"); name.textContent = subject;
-    const meta = document.createElement("small"); meta.textContent = "Quiz best: " + (quiz.attempts ? quiz.bestScore + "/10" : "Not attempted") + " · " + (quiz.attempts || 0) + " attempt(s)";
-    info.append(name, meta);
-    const track = document.createElement("div"); track.className = "dashboard-progress-track";
-    const fill = document.createElement("span"); fill.style.width = percent + "%"; track.append(fill);
-    const value = document.createElement("b"); value.className = "dashboard-progress-value"; value.textContent = percent + "%";
-    row.append(info, track, value); subjectBox.append(row);
-  });
-}
-function openStudentDashboard() {
-  if (!dashboardPanel) return;
-  dashboardPanel.hidden = false;
-  renderStudentDashboard();
-  navLinks?.classList.remove("open");
-  menuToggle?.setAttribute("aria-expanded", "false");
-  dashboardPanel.scrollIntoView({behavior:"smooth", block:"start"});
-}
-function closeStudentDashboard() {
-  if (dashboardPanel) dashboardPanel.hidden = true;
-}
-document.getElementById("dashboardNavLink")?.addEventListener("click", event => {
-  event.preventDefault();
-  openStudentDashboard();
-});
-document.getElementById("closeDashboard")?.addEventListener("click", closeStudentDashboard);
-document.getElementById("dashboardBrowseSubjects")?.addEventListener("click", () => closeStudentDashboard());
 
 subjectBrowser?.addEventListener("change", (event) => {
   const checkbox = event.target.closest("[data-progress-task]");
