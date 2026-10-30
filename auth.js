@@ -94,8 +94,8 @@ signupForm.addEventListener("submit", async (event) => {
     showStatus("Your account is ready. Your 3-day trial has started.", "success");
     await showAccount(data.user);
   } else {
-    showStatus("Account created. Check your inbox and verify your email before logging in. Your 3-day trial starts now.", "success");
     showForm("login");
+    showStatus("Account created. Check your inbox and verify your email before logging in. Your 3-day trial starts when the account is created.", "success");
   }
 });
 
@@ -131,8 +131,8 @@ newPasswordForm.addEventListener("submit", async (event) => {
   if (password !== confirm) return showStatus("The passwords do not match.", "error");
   const { error } = await supabase.auth.updateUser({ password });
   if (error) return showStatus(readableError(error), "error");
-  showStatus("Password updated. You can now use your new password.", "success");
   showForm("login");
+  showStatus("Password updated. You can now use your new password.", "success");
 });
 
 $("logoutButton").addEventListener("click", async () => {
@@ -148,7 +148,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
   if (event === "PASSWORD_RECOVERY") {
     showForm("newPassword");
   } else if (session?.user && event === "SIGNED_IN") {
-    await showAccount(session.user);
+    queueMicrotask(() => showAccount(session.user));
   } else if (event === "SIGNED_OUT") {
     formsPanel.hidden = false;
     accountPanel.hidden = true;
