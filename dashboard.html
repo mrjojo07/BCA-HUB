@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#05080e">
+  <meta name="description" content="Your personal BCA HUB student dashboard.">
+  <title>Student Dashboard | BCA HUB</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=20">
+  <script type="module" src="dashboard.js?v=1"></script>
+</head>
+<body class="dashboard-page">
+  <header class="site-header">
+    <a class="brand" href="index.html"><span class="brand-mark">B</span><span>BCA <b>HUB</b></span></a>
+    <nav class="dashboard-nav"><a href="index.html">Website</a><a href="login.html">Account</a><button id="dashboardLogout" class="auth-secondary-button" type="button">Log out</button></nav>
+  </header>
+  <main class="dashboard-main">
+    <div id="dashboardStatus" class="auth-status" role="status" aria-live="polite">Loading your student dashboard…</div>
+    <section id="dashboardContent" hidden>
+      <div class="dashboard-welcome">
+        <div><div class="eyebrow">YOUR LEARNING SPACE</div><h1>Welcome back, <span id="studentName">Student</span>.</h1><p id="studentEmail"></p></div>
+        <div class="membership-card dashboard-membership"><span class="membership-label">YOUR MEMBERSHIP</span><strong id="studentPlan">Loading…</strong><p id="studentPlanInfo"></p></div>
+      </div>
+      <div class="dashboard-stat-grid">
+        <article class="dashboard-stat"><span>LEARNING TASKS DONE</span><strong id="progressCount">0</strong><small>Completed items</small></article>
+        <article class="dashboard-stat"><span>QUIZ ATTEMPTS</span><strong id="quizCount">0</strong><small>Recorded attempts</small></article>
+        <article class="dashboard-stat"><span>SAVED RESOURCES</span><strong id="savedCount">0</strong><small>In your library</small></article>
+      </div>
+      <div class="dashboard-columns">
+        <section class="dashboard-panel"><div class="dashboard-panel-heading"><div><div class="eyebrow">KEEP LEARNING</div><h2>Learning progress</h2></div><a href="index.html#semesters">Browse subjects ↗</a></div><div id="progressList" class="dashboard-list"><p class="dashboard-empty">No learning progress saved yet.</p></div></section>
+        <section class="dashboard-panel"><div class="dashboard-panel-heading"><div><div class="eyebrow">YOUR RECENT RESULTS</div><h2>Quiz history</h2></div></div><div id="quizList" class="dashboard-list"><p class="dashboard-empty">No quiz attempts recorded yet.</p></div></section>
+      </div>
+      <section class="dashboard-panel dashboard-saved-panel"><div class="dashboard-panel-heading"><div><div class="eyebrow">YOUR PERSONAL LIBRARY</div><h2>Saved resources</h2></div><a href="index.html#semesters">Find more resources ↗</a></div><div id="savedList" class="dashboard-list"><p class="dashboard-empty">No saved resources yet.</p></div></section>
+      <p class="dashboard-footnote">Your dashboard information is private to your account. Learning progress and quiz history appear here when the website saves them to your account.</p>
+    </section>
+  </main>
+  <footer class="site-footer"><a class="brand footer-brand" href="index.html"><span class="brand-mark">B</span><span>BCA <b>HUB</b></span></a><span class="copyright">© <span id="year"></span> BCA HUB</span></footer>
+</body>
+</html>
