@@ -30,6 +30,19 @@
         <p id="loginError" class="admin-error" aria-live="polite"></p>
       </form>
     </section>
+    <section id="mfaPanel" class="admin-login" hidden>
+      <h2 id="mfaTitle">Admin verification</h2>
+      <p class="admin-intro" id="mfaInstructions">Complete authenticator setup or enter your verification code.</p>
+      <img id="mfaQr" alt="Authenticator setup QR code" hidden style="display:none;max-width:220px;width:100%;background:#fff;padding:12px;border-radius:10px;margin:12px auto">
+      <form id="mfaForm">
+        <label for="mfaCode">6-digit authenticator code</label>
+        <input id="mfaCode" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required placeholder="000000">
+        <button class="admin-action" id="mfaVerifyButton" type="submit">Verify code</button>
+        <p id="mfaError" class="admin-error" aria-live="polite"></p>
+      </form>
+      <button class="admin-back-button" id="mfaCancelButton" type="button">Cancel and sign out</button>
+      <p class="admin-footnote">Keep your authenticator access private. Never share your one-time code.</p>
+    </section>
     <section id="uploadPanel" hidden>
       <div class="admin-warning"><strong>GitHub sign-in required:</strong> This panel is open to view, but uploading, editing, or deleting files requires signing in to GitHub with an account that has write access to this repository. Do not upload private or sensitive files.</div>
       <div class="admin-toolbar"><div><h2>Bulk Upload Manager</h2><p class="admin-intro">Upload multiple learning materials to the selected semester, subject and category in one GitHub commit.</p></div><button class="admin-action add-button" id="addButton" type="button">＋ Open Bulk Uploader</button></div><div class="admin-bulk-guide"><div class="admin-bulk-step"><strong>1. Choose destination</strong>Select the semester, subject and material type below.</div><div class="admin-bulk-step"><strong>2. Select multiple files</strong>GitHub upload page lets you choose or drag in several PDFs and images together.</div><div class="admin-bulk-step"><strong>3. Review and publish</strong>Check filenames, then commit the upload to add them to BCA HUB.</div></div>
@@ -82,20 +95,84 @@
     const uploadPanel = document.getElementById("uploadPanel");
     const loginError = document.getElementById("loginError");
 
+    const mfaPanel = document.getElementById("mfaPanel");
+    const mfaQr = document.getElementById("mfaQr");
+    const mfaTitle = document.getElementById("mfaTitle");
+    const mfaInstructions = document.getElementById("mfaInstructions");
+    const mfaError = document.getElementById("mfaError");
+    let activeFactorId = "";
+
+    function showMfaScreen(title, instructions, qr = "") {
+      loginPanel.hidden = true;
+      uploadPanel.hidden = true;
+      mfaPanel.hidden = false;
+      mfaTitle.textContent = title;
+      mfaInstructions.textContent = instructions;
+      mfaQr.hidden = !qr;
+      mfaQr.style.display = qr ? "block" : "none";
+      if (qr) mfaQr.src = qr;
+      mfaError.textContent = "";
+      document.getElementById("mfaCode").value = "";
+    }
+
+    async function startMfaEnrollment() {
+      const { data: factorsData, error: listError } = await supabase.auth.mfa.listFactors();
+      if (listError) throw listError;
+      const factors = factorsData?.totp || [];
+      for (const factor of factors.filter(item => item.status !== "verified")) {
+        const { error } = await supabase.auth.mfa.unenroll({ factorId: factor.id });
+        if (error) throw error;
+      }
+      const { data, error } = await supabase.auth.mfa.enroll({
+        factorType: "totp",
+        friendlyName: "BCA HUB Admin"
+      });
+      if (error) throw error;
+      activeFactorId = data.id;
+      showMfaScreen(
+        "Set up Admin MFA",
+        "Scan this QR code with your authenticator app, then enter its current 6-digit code.",
+        data.totp.qr_code
+      );
+    }
+
     async function showAdminForSession() {
       const { data: { user }, error } = await supabase.auth.getUser();
-      if (error || !user) return false;
+      if (error || !user) {
+        loginPanel.hidden = false;
+        mfaPanel.hidden = true;
+        uploadPanel.hidden = true;
+        return false;
+      }
       const appMeta = user.app_metadata || {};
       const isAdmin = appMeta.role === "admin" || appMeta.admin === true;
       if (!isAdmin) {
         await supabase.auth.signOut();
+        loginPanel.hidden = false;
+        mfaPanel.hidden = true;
+        uploadPanel.hidden = true;
         loginError.textContent = "This account does not have administrator permission.";
         return false;
       }
-      loginPanel.hidden = true;
-      uploadPanel.hidden = false;
       loginError.textContent = "";
-      return true;
+      const { data: assurance, error: assuranceError } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+      if (assuranceError) throw assuranceError;
+      if (assurance.currentLevel === "aal2") {
+        loginPanel.hidden = true;
+        mfaPanel.hidden = true;
+        uploadPanel.hidden = false;
+        return true;
+      }
+      const { data: factorsData, error: factorsError } = await supabase.auth.mfa.listFactors();
+      if (factorsError) throw factorsError;
+      const verified = (factorsData?.totp || []).find(item => item.status === "verified");
+      if (verified) {
+        activeFactorId = verified.id;
+        showMfaScreen("Admin verification", "Open your authenticator app and enter the current 6-digit code.");
+      } else {
+        await startMfaEnrollment();
+      }
+      return false;
     }
 
     document.getElementById("loginForm").addEventListener("submit", async (event) => {
@@ -108,10 +185,66 @@
         loginError.textContent = "Sign-in failed. Check your email and password.";
         return;
       }
-      if (await showAdminForSession()) document.getElementById("adminPassword").value = "";
+      document.getElementById("adminPassword").value = "";
+      try {
+        await showAdminForSession();
+      } catch (mfaError) {
+        loginPanel.hidden = false;
+        mfaPanel.hidden = true;
+        loginError.textContent = "Could not start MFA verification. Please try again.";
+        console.error("Admin MFA setup error:", mfaError);
+      }
     });
 
-    showAdminForSession();
+    showAdminForSession().catch(error => {
+      loginError.textContent = "Could not verify Admin access. Please sign in again.";
+      console.error("Admin session check error:", error);
+    });
+
+    document.getElementById("mfaForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      const code = document.getElementById("mfaCode").value.trim();
+      if (!/^[0-9]{6}$/.test(code) || !activeFactorId) {
+        mfaError.textContent = "Enter the 6-digit code from your authenticator app.";
+        return;
+      }
+      const button = document.getElementById("mfaVerifyButton");
+      button.disabled = true;
+      mfaError.textContent = "Verifying code…";
+      try {
+        const { data: challenge, error: challengeError } = await supabase.auth.mfa.challenge({ factorId: activeFactorId });
+        if (challengeError) throw challengeError;
+        const { error: verifyError } = await supabase.auth.mfa.verify({
+          factorId: activeFactorId,
+          challengeId: challenge.id,
+          code
+        });
+        if (verifyError) throw verifyError;
+        const { data: aal, error: aalError } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+        if (aalError) throw aalError;
+        if (aal.currentLevel !== "aal2") throw new Error("MFA verification did not reach aal2.");
+        mfaPanel.hidden = true;
+        uploadPanel.hidden = false;
+        mfaQr.removeAttribute("src");
+        document.getElementById("mfaCode").value = "";
+      } catch (error) {
+        mfaError.textContent = "Verification failed. Check the current code and try again.";
+        console.error("Admin MFA verification error:", error);
+      } finally {
+        button.disabled = false;
+      }
+    });
+
+    document.getElementById("mfaCancelButton").addEventListener("click", async () => {
+      await supabase.auth.signOut();
+      mfaPanel.hidden = true;
+      uploadPanel.hidden = true;
+      loginPanel.hidden = false;
+      mfaQr.removeAttribute("src");
+      document.getElementById("mfaCode").value = "";
+      document.getElementById("adminPassword").value = "";
+      loginError.textContent = "";
+    });
 
     const subjectLists = {
       "semester-1": [
@@ -210,7 +343,10 @@
     document.getElementById("logoutButton").addEventListener("click", async () => {
       await supabase.auth.signOut();
       uploadPanel.hidden = true;
+      mfaPanel.hidden = true;
       loginPanel.hidden = false;
+      mfaQr.removeAttribute("src");
+      document.getElementById("mfaCode").value = "";
       document.getElementById("adminPassword").value = "";
     });
     document.getElementById("category").addEventListener("change", loadExistingFiles);
