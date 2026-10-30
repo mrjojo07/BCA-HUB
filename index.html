@@ -9,15 +9,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=12">
-  <script src="script.js?v=16" defer></script>
+  <link rel="stylesheet" href="style.css?v=13">
+  <script src="script.js?v=17" defer></script>
 </head>
 <body>
   <header class="site-header">
     <a class="brand" href="#" aria-label="BCA HUB home"><span class="brand-mark">B</span><span>BCA <b>HUB</b></span></a>
     <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
     <nav class="nav-links" id="navLinks">
-      <a href="#studentDashboard" id="dashboardNavLink">Dashboard</a><a href="#semesters">Subjects</a><a href="#semesters">Semesters</a><a href="#about">About</a>
+      <a href="#semesters">Subjects</a><a href="#semesters">Semesters</a><a href="#about">About</a>
       <button class="nav-saved" id="savedResourcesButton" type="button" aria-expanded="false" aria-controls="savedResourcesSection">★ Saved</button><a class="nav-admin" href="admin.html">Admin Panel <span>↗</span></a>
     </nav>
   </header>
@@ -37,12 +37,6 @@
         <div class="floating-chip chip-notes">▤ <span>Study notes</span></div><div class="floating-chip chip-code">⌘ <span>Code &amp; practice</span></div>
         <div class="sparkle sparkle-a">✦</div><div class="sparkle sparkle-b">✧</div>
       </div>
-    </section>
-    <section class="student-dashboard" id="studentDashboard" hidden aria-live="polite">
-      <div class="section-heading dashboard-heading"><div><div class="eyebrow">YOUR LEARNING SPACE</div><h2>Student <span>Dashboard.</span></h2></div><button class="dashboard-close" id="closeDashboard" type="button">Hide dashboard ×</button></div>
-      <div class="dashboard-stats" id="dashboardStats"></div>
-      <div class="dashboard-subjects"><div class="dashboard-subject-heading"><div><div class="eyebrow">SEMESTER 01</div><h3>Subject overview</h3></div><a href="#semesters" id="dashboardBrowseSubjects">Browse subjects ↗</a></div><div class="dashboard-subject-list" id="dashboardSubjectList"></div></div>
-      <p class="dashboard-note">Your dashboard data is saved on this device and browser. It is not synced between devices.</p>
     </section>
     <section class="stats-strip" aria-label="What you can find"><div><strong>01</strong><span>Study notes</span></div><div><strong>02</strong><span>Question papers</span></div><div><strong>03</strong><span>Lab resources</span></div><div><strong>04</strong><span>Exam prep</span></div></section>
     <section class="semester-section" id="semesters">
