@@ -162,3 +162,20 @@ main .about-section#about p{font-size:10px!important;line-height:1.5!important;m
 .saved-panel-close{flex:0 0 32px;width:32px;height:32px;border:1px solid #354963;border-radius:8px;background:#142235;color:#e8f2ff;font-size:22px;line-height:1;cursor:pointer}
 .saved-resources-list{margin-top:16px}
 @media(max-width:600px){.saved-resources-section{top:72px;right:10px;width:calc(100vw - 20px);max-height:calc(100vh - 84px);padding:17px}}
+
+
+/* Resource Request System */
+.resource-request-section{max-width:1120px;margin:0 auto;padding:64px 24px}
+.resource-request-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:26px;padding:24px;border:1px solid #26364c;border-radius:16px;background:#0d1725}
+.request-field{display:grid;gap:8px}
+.request-field label{color:#dce8f8;font-size:12px;font-weight:700}
+.request-field select,.request-field textarea{width:100%;box-sizing:border-box;border:1px solid #30445e;border-radius:9px;background:#09111d;color:#eef5ff;padding:12px 13px;font:13px "DM Sans",sans-serif}
+.request-field select:focus,.request-field textarea:focus{outline:2px solid #168cff;outline-offset:2px}
+.request-field textarea{resize:vertical;min-height:100px}
+.request-field-wide{grid-column:1/-1}
+.request-submit-row{grid-column:1/-1;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.request-submit-row p,.request-feedback{margin:0;color:#91a0b5;font-size:11px;line-height:1.6}
+.request-feedback{grid-column:1/-1;color:#9bcaff}
+.request-view-link{display:inline-block;margin-top:16px;color:#8fc4ff;font-size:12px;text-decoration:none}
+.request-view-link:hover{text-decoration:underline}
+@media(max-width:650px){.resource-request-section{padding:46px 20px}.resource-request-form{grid-template-columns:1fr;padding:17px}.request-field-wide,.request-submit-row,.request-feedback{grid-column:1}.request-submit-row{align-items:flex-start;flex-direction:column}}
