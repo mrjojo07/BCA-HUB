@@ -283,3 +283,15 @@ main .about-section#about p{font-size:10px!important;line-height:1.5!important;m
 
 #menuLogout{font-family:"DM Sans",sans-serif;background:transparent;color:#ff4d5d;border:1px solid #168cff66;cursor:pointer}
 #menuLogout:hover{background:#10233a;color:#ff6674}
+
+
+/* Full-screen image preview with a visible top close button */
+.image-viewer{position:fixed;inset:0;z-index:2000;background:#03070df5;display:flex;flex-direction:column}
+.image-viewer[hidden]{display:none!important}
+.image-viewer-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 18px;background:#0b1421;border-bottom:1px solid #26364c}
+.image-viewer-title{font-size:13px;font-weight:700;color:#dce8f8}
+.image-viewer-close{border:1px solid #416080;border-radius:8px;background:#142943;color:#fff;padding:10px 15px;font:700 13px "DM Sans",sans-serif;cursor:pointer}
+.image-viewer-close:hover{background:#1b4167;border-color:#55aaff}
+.image-viewer-content{flex:1;min-height:0;display:grid;place-items:center;overflow:auto;padding:16px}
+.image-viewer-content img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain}
+body.image-viewer-open{overflow:hidden}
