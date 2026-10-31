@@ -44,8 +44,8 @@
       <p class="admin-footnote">Keep your authenticator access private. Never share your one-time code.</p>
     </section>
     <section id="uploadPanel" hidden>
-      <div class="admin-warning"><strong>GitHub sign-in required:</strong> This panel is open to view, but uploading, editing, or deleting files requires signing in to GitHub with an account that has write access to this repository. Do not upload private or sensitive files.</div>
-      <div class="admin-toolbar"><div><h2>Bulk Upload Manager</h2><p class="admin-intro">Upload multiple learning materials to the selected semester, subject and category in one GitHub commit.</p></div><button class="admin-action add-button" id="addButton" type="button">＋ Open Bulk Uploader</button></div><div class="admin-bulk-guide"><div class="admin-bulk-step"><strong>1. Choose destination</strong>Select the semester, subject and material type below.</div><div class="admin-bulk-step"><strong>2. Select multiple files</strong>GitHub upload page lets you choose or drag in several PDFs and images together.</div><div class="admin-bulk-step"><strong>3. Review and publish</strong>Check filenames, then commit the upload to add them to BCA HUB.</div></div>
+      <div class="admin-warning"><strong>Direct upload enabled:</strong> Upload PDFs and images here. Published materials appear on the website without a GitHub commit. Admin MFA verification is required.</div>
+      <div class="admin-toolbar"><div><h2>Learning Materials Upload</h2><p class="admin-intro">Upload Notes, Important Questions and Previous Year Papers directly from this panel.</p></div></div><div class="admin-bulk-guide"><div class="admin-bulk-step"><strong>1. Choose destination</strong>Select semester, subject and material type.</div><div class="admin-bulk-step"><strong>2. Select files</strong>Choose one or more PDF or image files.</div><div class="admin-bulk-step"><strong>3. Upload &amp; publish</strong>Files are immediately available on the website.</div></div>
       <form id="materialForm" class="admin-form">
         <label for="semester">Semester</label>
         <select id="semester" required>
@@ -64,7 +64,7 @@
           <option value="previous-year-questions">Previous Year Questions</option>
           
         </select>
-        <p class="admin-intro">Open Bulk Uploader to open the selected GitHub folder. On GitHub, select multiple PDFs or images together, review the file list, and commit the upload. Files become available on BCA HUB after the website updates.</p>
+        <label for="materialFiles">Select files (PDF, images, documents)</label><input id="materialFiles" type="file" multiple accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.txt,.docx,.pptx,.xlsx"><div class="admin-toolbar"><button class="admin-action" id="uploadMaterials" type="button">↑ Upload &amp; Publish</button></div><p id="materialUploadStatus" class="admin-intro" aria-live="polite">Choose files to upload directly to BCA HUB.</p>
         <div class="admin-remove-area">
           <label for="existingFiles">Existing files</label>
           <select id="existingFiles" disabled><option value="">Choose semester and subject first</option></select>
@@ -300,37 +300,68 @@
         fileListStatus.textContent = "Choose a semester, subject and material type to load files.";
         return;
       }
-      fileListStatus.textContent = "Checking GitHub folder...";
+      fileListStatus.textContent = "Checking published materials…";
       try {
-        const response = await fetch("https://api.github.com/repos/mrjojo07/BCA-HUB/contents/" + folder);
-        if (!response.ok) throw new Error(response.status === 404 ? "No files found in this folder yet." : "Could not load the file list. Please try Refresh.");
-        const items = await response.json();
-        const files = Array.isArray(items) ? items.filter(item => item.type === "file") : [];
+        const [githubResponse, storageResult] = await Promise.all([
+          fetch("https://api.github.com/repos/mrjojo07/BCA-HUB/contents/" + folder),
+          supabase.storage.from("bca-hub-materials").list(folder, { limit: 100, sortBy: { column: "name", order: "asc" } })
+        ]);
+        const githubFiles = githubResponse.ok ? (await githubResponse.json()).filter(item => item.type === "file") : [];
+        if (storageResult.error) throw storageResult.error;
+        const storageFiles = (storageResult.data || []).filter(item => item.name && item.id).map(item => ({ name: item.name, path: "storage:" + item.name }));
         existingFiles.innerHTML = '<option value="">Choose a file to remove</option>';
-        files.forEach(file => {
+        [...githubFiles.map(file => ({ name: file.name, path: file.path, storage: false })),
+          ...storageFiles.map(file => ({ name: file.name, path: file.path, storage: true }))].forEach(file => {
           const option = document.createElement("option");
           option.value = file.path;
-          option.textContent = file.name;
+          option.textContent = file.name + (file.storage ? " · Direct upload" : " · GitHub");
           existingFiles.appendChild(option);
         });
-        existingFiles.disabled = files.length === 0;
-        fileListStatus.textContent = files.length ? files.length + " file(s) found. Select a file to rename or remove it." : "No files in this folder yet.";
+        existingFiles.disabled = existingFiles.options.length <= 1;
+        fileListStatus.textContent = (githubFiles.length + storageFiles.length) + " file(s) found. Direct uploads can be removed here; older GitHub files remain managed through GitHub.";
       } catch (error) {
-        existingFiles.innerHTML = '<option value="">No files available</option>';
-        fileListStatus.textContent = error.message;
+        existingFiles.innerHTML = '<option value="">Could not load files</option>';
+        fileListStatus.textContent = error.message || "Could not load files.";
       }
     }
-    document.getElementById("addButton").addEventListener("click", () => {
+    document.getElementById("uploadMaterials").addEventListener("click", async () => {
       const folder = selectedFolder();
-      if (!folder) {
-        alert("Please choose a semester and a subject.");
-        return;
+      const files = [...(document.getElementById("materialFiles").files || [])];
+      const status = document.getElementById("materialUploadStatus");
+      const button = document.getElementById("uploadMaterials");
+      if (!folder) { status.textContent = "Choose semester and subject first."; return; }
+      if (!files.length) { status.textContent = "Select at least one file to upload."; return; }
+      const maxSize = 50 * 1024 * 1024;
+      const allowed = /\.(pdf|png|jpe?g|webp|gif|txt|docx|pptx|xlsx)$/i;
+      const invalid = files.find(file => !allowed.test(file.name) || file.size > maxSize);
+      if (invalid) { status.textContent = invalid.name + " is not supported or exceeds the 50 MB limit."; return; }
+      button.disabled = true;
+      let uploaded = 0;
+      try {
+        for (const file of files) {
+          status.textContent = "Uploading " + (uploaded + 1) + " of " + files.length + ": " + file.name;
+          const safeName = file.name.normalize("NFKD").replace(/[^a-zA-Z0-9._-]+/g, "-").replace(/^-+|-+$/g, "");
+          const path = folder + "/" + crypto.randomUUID() + "-" + safeName;
+          const { error } = await supabase.storage.from("bca-hub-materials").upload(path, file, {
+            contentType: file.type || "application/octet-stream",
+            upsert: false
+          });
+          if (error) throw error;
+          uploaded++;
+        }
+        document.getElementById("materialFiles").value = "";
+        await loadExistingFiles();
+        status.textContent = uploaded + " file(s) uploaded and published successfully.";
+      } catch (error) {
+        status.textContent = uploaded + " file(s) uploaded. Upload stopped: " + (error.message || "Please try again.");
+        await loadExistingFiles();
+      } finally {
+        button.disabled = false;
       }
-      window.open("https://github.com/mrjojo07/BCA-HUB/upload/main/" + folder, "_blank", "noopener");
     });
     existingFiles.addEventListener("change", () => {
       removeButton.disabled = !existingFiles.value;
-      renameButton.disabled = !existingFiles.value;
+      renameButton.disabled = !existingFiles.value || existingFiles.value.startsWith("storage:");
     });
     renameButton.addEventListener("click", () => {
       const path = existingFiles.value;
@@ -339,12 +370,23 @@
       window.open("https://github.com/mrjojo07/BCA-HUB/edit/main/" + path.split("/").map(encodeURIComponent).join("/"), "_blank", "noopener");
     });
     document.getElementById("refreshFiles").addEventListener("click", loadExistingFiles);
-    removeButton.addEventListener("click", () => {
-      const path = existingFiles.value;
-      if (!path) return;
-      const fileName = path.split("/").pop();
+    removeButton.addEventListener("click", async () => {
+      const selected = existingFiles.value;
+      if (!selected) return;
+      if (selected.startsWith("storage:")) {
+        const fileName = selected.slice(8);
+        const path = selectedFolder() + "/" + fileName;
+        if (!confirm('Delete "' + fileName + '" from the published website?')) return;
+        removeButton.disabled = true;
+        const { error } = await supabase.storage.from("bca-hub-materials").remove([path]);
+        if (error) { fileListStatus.textContent = "Could not delete file: " + error.message; removeButton.disabled = false; return; }
+        await loadExistingFiles();
+        fileListStatus.textContent = "File deleted from the website.";
+        return;
+      }
+      const fileName = selected.split("/").pop();
       if (!confirm('Open GitHub to delete "' + fileName + '"? You will review and confirm the deletion on GitHub.')) return;
-      window.open("https://github.com/mrjojo07/BCA-HUB/delete/main/" + path.split("/").map(encodeURIComponent).join("/"), "_blank", "noopener");
+      window.open("https://github.com/mrjojo07/BCA-HUB/delete/main/" + selected.split("/").map(encodeURIComponent).join("/"), "_blank", "noopener");
     });
     document.getElementById("logoutButton").addEventListener("click", async () => {
       await supabase.auth.signOut();
