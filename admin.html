@@ -81,6 +81,11 @@
   </main>
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm";
+    // Avoid restoring a stale Admin Panel view from the browser back-forward cache.
+    window.addEventListener("pageshow", event => {
+      if (event.persisted) window.location.reload();
+    });
+
     const supabase = createClient(
       "https://efbkhmfekfujbwfdpfhk.supabase.co",
       "sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH"
