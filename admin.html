@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#05080e">
-  <title>Admin Panel | BCA HUB</title>
+  <title>Admin Panel | BCA Studify</title>
   <link rel="stylesheet" href="style.css?v=8">
   <style>
 .admin-bulk-guide{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0;padding:14px;border:1px solid #26364c;border-radius:12px;background:#0b1421}.admin-bulk-step{font-size:12px;line-height:1.6;color:#c4d0e0}.admin-bulk-step strong{display:block;color:#eaf2ff;font-size:13px;margin-bottom:4px}@media(max-width:620px){.admin-bulk-guide{grid-template-columns:1fr}}.admin-resource-requests{display:grid;gap:12px;margin-top:16px}.admin-request-card{padding:16px;border:1px solid #26364c;border-radius:12px;background:#0b1421}.admin-request-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.admin-request-top strong{font-size:13px;color:#eaf2ff}.admin-request-state{flex:none;padding:4px 8px;border-radius:20px;font-size:10px;font-weight:700}.admin-request-state.is-open{background:#123b2c;color:#86e0b1}.admin-request-state.is-closed{background:#263448;color:#aebbd0}.admin-request-body{white-space:pre-wrap;overflow-wrap:anywhere;color:#c4d0e0;font-size:12px;line-height:1.6;margin:10px 0 14px}
@@ -12,15 +12,15 @@
 </head>
 <body class="admin-page">
   <header class="site-header">
-    <a class="brand" href="index.html"><span class="brand-mark">B</span><span>BCA <b>HUB</b></span></a>
+    <a class="brand" href="index.html"><span class="brand-mark">B</span><span>BCA <b>STUDIFY</b></span></a>
     <a class="admin-back" href="index.html">← Back to website</a>
   </header>
   <main class="admin-main">
     <div class="eyebrow">SITE OWNER TOOLS</div>
-    <h1 class="admin-title">BCA HUB <span>Admin</span></h1>
+    <h1 class="admin-title">BCA Studify <span>Admin</span></h1>
     <section id="loginPanel" class="admin-login" hidden>
       <h2>Admin access</h2>
-      <p class="admin-intro">Sign in with your approved BCA HUB administrator account.</p>
+      <p class="admin-intro">Sign in with your approved BCA Studify administrator account.</p>
       <form id="loginForm">
         <label for="adminEmail">Admin email</label>
         <input id="adminEmail" type="email" autocomplete="username" required placeholder="Enter admin email">
@@ -75,7 +75,7 @@
           <option value="previous-year-questions">Previous Year Questions</option>
           
         </select>
-        <label for="materialFiles">Select files (PDF, images, documents)</label><input id="materialFiles" type="file" multiple accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.txt,.docx,.pptx,.xlsx"><div class="admin-toolbar"><button class="admin-action" id="uploadMaterials" type="button">↑ Upload &amp; Publish</button></div><p id="materialUploadStatus" class="admin-intro" aria-live="polite">Choose files to upload directly to BCA HUB.</p>
+        <label for="materialFiles">Select files (PDF, images, documents)</label><input id="materialFiles" type="file" multiple accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.txt,.docx,.pptx,.xlsx"><div class="admin-toolbar"><button class="admin-action" id="uploadMaterials" type="button">↑ Upload &amp; Publish</button></div><p id="materialUploadStatus" class="admin-intro" aria-live="polite">Choose files to upload directly to BCA Studify.</p>
         <div class="admin-remove-area">
           <label for="existingFiles">Existing files</label>
           <select id="existingFiles" disabled><option value="">Choose semester and subject first</option></select>
@@ -84,11 +84,11 @@
         </div>
       </form>
       <section class="admin-timetable"><h2>Exam timetable</h2><p class="admin-intro">Add or edit exam dates here. Save &amp; Publish updates the website directly — no GitHub commit needed.</p><form id="examForm" class="admin-form"><label for="examTitle">Exam / paper name</label><input id="examTitle" maxlength="160" required placeholder="e.g. Data Structures"><label for="examDate">Exam date</label><input id="examDate" type="date" required><div class="admin-toolbar"><button class="admin-action" id="saveExamButton" type="submit">＋ Save &amp; Publish</button><button class="admin-back-button" id="cancelExamEdit" type="button" hidden>Cancel edit</button></div></form><p id="examAdminStatus" class="admin-intro" aria-live="polite">Loading timetable…</p><div id="examEntries"></div></section>
-      <section class="admin-timetable" id="feedbackManagerPanel"><div class="admin-toolbar"><div><h2>Student feedback</h2><p class="admin-intro">Feedback submitted through the homepage appears here.</p></div><button class="admin-back-button" id="refreshFeedback" type="button">↻ Refresh feedback</button></div><p class="admin-intro" id="feedbackAdminStatus" aria-live="polite">Loading feedback…</p><div id="adminFeedbackList" class="admin-resource-requests"></div><p class="admin-footnote">Feedback is stored privately in BCA HUB and visible only to approved administrators.</p></section>
+      <section class="admin-timetable" id="feedbackManagerPanel"><div class="admin-toolbar"><div><h2>Student feedback</h2><p class="admin-intro">Feedback submitted through the homepage appears here.</p></div><button class="admin-back-button" id="refreshFeedback" type="button">↻ Refresh feedback</button></div><p class="admin-intro" id="feedbackAdminStatus" aria-live="polite">Loading feedback…</p><div id="adminFeedbackList" class="admin-resource-requests"></div><p class="admin-footnote">Feedback is stored privately in BCA Studify and visible only to approved administrators.</p></section>
       <p class="admin-footnote">Directly uploaded files can be removed here. Older files stored in GitHub still use GitHub for rename or deletion.</p>
       <button class="admin-back-button" id="logoutButton" type="button">Lock Admin Panel</button>
     </section>
-    <a class="admin-home-link" href="index.html">← Return to BCA HUB homepage</a>
+    <a class="admin-home-link" href="index.html">← Return to BCA Studify homepage</a>
   </main>
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm";
@@ -137,7 +137,7 @@
         factorType: "totp",
         // Supabase requires each factor friendly name to be unique per user.
         // A fresh setup name avoids conflicts with abandoned unverified enrollments.
-        friendlyName: "BCA HUB Admin " + Date.now()
+        friendlyName: "BCA Studify Admin " + Date.now()
       });
       if (error) throw error;
       activeFactorId = data.id;
