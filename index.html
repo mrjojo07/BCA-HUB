@@ -40,7 +40,7 @@
       const semester = event.target.closest(".semester-card");
       const subject = event.target.closest(".subject-item");
       const material = event.target.closest(".material-type");
-      if (semester) trackActivity("semester_view", semester.textContent.replace(/\\s+/g, " ").trim());
+      if (semester) trackActivity("semester_view", semester.textContent.replace(/\s+/g, " ").trim());
       else if (subject) trackActivity("subject_view", subject.querySelector("strong")?.textContent || subject.textContent);
       else if (material) trackActivity("material_view", material.querySelector("h4")?.textContent || material.textContent);
     });
