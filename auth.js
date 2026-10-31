@@ -43,7 +43,19 @@ function readableError(error) {
   if (/user already registered/i.test(message)) return "An account already exists for this email. Please log in.";
   return message;
 }
+function isAdminUser(user) {
+  const appMeta = user?.app_metadata || {};
+  return appMeta.role === "admin" || appMeta.admin === true;
+}
+function openAdminPanel(user) {
+  if (isAdminUser(user)) {
+    window.location.replace("admin.html");
+    return true;
+  }
+  return false;
+}
 async function showAccount(user) {
+  if (openAdminPanel(user)) return;
   formsPanel.hidden = true;
   accountPanel.hidden = false;
   $("accountName").textContent = user.user_metadata?.display_name || user.email?.split("@")[0] || "Student";
@@ -90,6 +102,7 @@ loginForm.addEventListener("submit", async (event) => {
   });
   button.disabled = false; button.textContent = "Log in";
   if (error) return showStatus(readableError(error), "error");
+  if (openAdminPanel(data.user)) return;
   await showAccount(data.user);
 });
 
@@ -141,7 +154,8 @@ if (params.get("mode") === "recovery") {
   showForm("newPassword");
 } else {
   const { data: { session } } = await supabase.auth.getSession();
-  if (session?.user) await showAccount(session.user);
-  else showForm("login");
+  if (session?.user) {
+    if (!openAdminPanel(session.user)) await showAccount(session.user);
+  } else showForm("login");
   if (params.get("verified") === "1") showStatus("Email verified. You can now log in.", "success");
 }
