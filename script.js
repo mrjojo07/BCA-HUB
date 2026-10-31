@@ -324,39 +324,6 @@ subjectBrowser?.addEventListener("click", (event) => {
 
 
 
-/* Resource requests are submitted as GitHub Issues so the admin can review them. */
-const resourceRequestForm = document.getElementById("resourceRequestForm");
-resourceRequestForm?.addEventListener("submit", event => {
-  event.preventDefault();
-  const semester = document.getElementById("requestSemester").value;
-  const subject = document.getElementById("requestSubject").value;
-  const type = document.getElementById("requestType").value;
-  const details = document.getElementById("requestDetails").value.trim();
-  const feedback = document.getElementById("requestFeedback");
-  if (!semester || !subject || !type || !details) {
-    feedback.textContent = "Please complete all fields before submitting.";
-    return;
-  }
-  const title = "[Resource Request] " + semester + " — " + type;
-  const body = [
-    "### Resource request",
-    "- **Semester:** " + semester,
-    "- **Subject:** " + subject,
-    "- **Resource type:** " + type,
-    "",
-    "### Details",
-    details,
-    "",
-    "---",
-    "Submitted through the BCA HUB website."
-  ].join("\n");
-  const issueUrl = "https://github.com/mrjojo07/BCA-HUB/issues/new?title=" +
-    encodeURIComponent(title) + "&body=" + encodeURIComponent(body);
-  feedback.textContent = "Opening GitHub to review and submit your request…";
-  window.open(issueUrl, "_blank", "noopener,noreferrer");
-});
-
-
 /* Feedback is submitted as a GitHub Issue for admin review. */
 const feedbackForm = document.getElementById("feedbackForm");
 feedbackForm?.addEventListener("submit", event => {
