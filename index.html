@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=18">
+  <link rel="stylesheet" href="style.css?v=19">
   <style>html{visibility:hidden}</style>
   <script type="module" src="session-guard.js?v=3"></script>
   <script src="script.js?v=27" defer></script>
@@ -28,6 +28,22 @@
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm";
     const supabase = createClient("https://efbkhmfekfujbwfdpfhk.supabase.co", "sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH");
+    // Record aggregate page and content activity only; never collect IPs or personal identifiers.
+    const trackActivity = (eventType, label = null) => {
+      supabase.from("website_analytics_events").insert({
+        event_type: eventType,
+        event_label: label ? String(label).trim().slice(0, 160) : null
+      }).then(({ error }) => { if (error) console.debug("Analytics event was not recorded."); });
+    };
+    trackActivity("page_view");
+    document.addEventListener("click", event => {
+      const semester = event.target.closest(".semester-card");
+      const subject = event.target.closest(".subject-item");
+      const material = event.target.closest(".material-type");
+      if (semester) trackActivity("semester_view", semester.textContent.replace(/\\s+/g, " ").trim());
+      else if (subject) trackActivity("subject_view", subject.querySelector("strong")?.textContent || subject.textContent);
+      else if (material) trackActivity("material_view", material.querySelector("h4")?.textContent || material.textContent);
+    });
     const examBox = document.getElementById("examCountdownList");
     if (examBox) {
       try {
