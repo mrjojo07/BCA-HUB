@@ -50,10 +50,17 @@ async function showMaterials(category) {
   subjectBrowser.innerHTML = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · '+labels[category].toUpperCase()+'</div><h3>'+labels[category]+'</h3></div><button class="browser-close" data-back="subject" type="button">← Back to subject</button></div><p class="browser-empty">Loading materials…</p>';
   const folder = 'resources/semester-'+currentSemester+'/'+category+'/'+subjectSlug(currentSubject);
   const apiUrl = 'https://api.github.com/repos/mrjojo07/BCA-HUB/contents/'+folder;
+  const storageUrl = 'https://efbkhmfekfujbwfdpfhk.supabase.co/storage/v1/object/list/bca-hub-materials';
+  const publishableKey = 'sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH';
   try {
-    const response = await fetch(apiUrl, {headers:{Accept:'application/vnd.github+json'}});
-    if (!response.ok) throw new Error(response.status === 404 ? 'No files have been added to this category yet.' : 'Could not load files. Please try again.');
-    const files = (await response.json()).filter(file => file.type === 'file');
+    const [githubResponse, storageResponse] = await Promise.all([
+      fetch(apiUrl, {headers:{Accept:'application/vnd.github+json'}}),
+      fetch(storageUrl, {method:'POST',headers:{apikey:publishableKey,Authorization:'Bearer '+publishableKey,'Content-Type':'application/json'},body:JSON.stringify({prefix:folder,limit:100,offset:0,sortBy:{column:'name',order:'asc'}})})
+    ]);
+    const githubFiles = githubResponse.ok ? (await githubResponse.json()).filter(file => file.type === 'file').map(file => ({name:file.name,url:file.download_url || file.html_url,preview:file.download_url})) : [];
+    if (!storageResponse.ok) throw new Error('Could not load directly uploaded materials.');
+    const storageFiles = (await storageResponse.json()).filter(file => file.id && file.name).map(file => ({name:file.name.replace(/^[0-9a-f-]{36}-/i,''),url:'https://efbkhmfekfujbwfdpfhk.supabase.co/storage/v1/object/public/bca-hub-materials/'+folder+'/'+encodeURIComponent(file.name),preview:'https://efbkhmfekfujbwfdpfhk.supabase.co/storage/v1/object/public/bca-hub-materials/'+folder+'/'+encodeURIComponent(file.name)}));
+    const files = [...githubFiles,...storageFiles];
     const heading = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · '+labels[category].toUpperCase()+'</div><h3>'+labels[category]+'</h3></div><button class="browser-close" data-back="subject" type="button">← Back to subject</button></div>';
     if (!files.length) {
       subjectBrowser.innerHTML = heading+'<p class="browser-empty">No files have been uploaded here yet.</p>';
@@ -67,7 +74,7 @@ async function showMaterials(category) {
       const title = document.createElement('strong');
       title.textContent = file.name;
       const link = document.createElement('a');
-      link.href = file.download_url || file.html_url;
+      link.href = file.url;
       link.target = '_blank';
       link.rel = 'noopener noreferrer';
       link.className = 'subject-arrow';
@@ -85,7 +92,7 @@ async function showMaterials(category) {
       list.appendChild(row);
       if (/\.(png|jpe?g|webp|gif)$/i.test(file.name)) {
         const preview = document.createElement('img');
-        preview.src = file.download_url;
+        preview.src = file.preview;
         preview.alt = file.name;
         preview.loading = 'lazy';
         preview.style.cssText = 'display:block;max-width:100%;height:auto;border-radius:12px;margin:10px 0 18px';
