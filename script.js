@@ -324,32 +324,33 @@ subjectBrowser?.addEventListener("click", (event) => {
 
 
 
-/* Feedback is submitted as a GitHub Issue for admin review. */
+/* Feedback is stored privately in Supabase and shown in the Admin Panel. */
 const feedbackForm = document.getElementById("feedbackForm");
-feedbackForm?.addEventListener("submit", event => {
+feedbackForm?.addEventListener("submit", async event => {
   event.preventDefault();
   const topic = document.getElementById("feedbackTopic").value;
   const rating = document.getElementById("feedbackRating").value;
   const details = document.getElementById("feedbackDetails").value.trim();
   const status = document.getElementById("feedbackStatus");
-  if (!topic || !rating || !details) {
-    status.textContent = "Please complete all fields before sending.";
-    return;
-  }
-  const title = "[Feedback] " + topic;
-  const body = [
-    "### Website feedback",
-    "- **Topic:** " + topic,
-    "- **Experience:** " + rating,
-    "",
-    "### Feedback",
-    details,
-    "",
-    "---",
-    "Submitted through the BCA HUB website."
-  ].join("\\n");
-  const issueUrl = "https://github.com/mrjojo07/BCA-HUB/issues/new?title=" +
-    encodeURIComponent(title) + "&body=" + encodeURIComponent(body);
-  status.textContent = "Opening GitHub to review and submit your feedback…";
-  window.open(issueUrl, "_blank", "noopener,noreferrer");
+  const button = feedbackForm.querySelector('button[type="submit"]');
+  if (!topic || !rating || !details) { status.textContent = "Please complete all fields before sending."; return; }
+  if (details.length > 1500) { status.textContent = "Please keep your feedback under 1,500 characters."; return; }
+  button.disabled = true;
+  status.textContent = "Sending feedback…";
+  try {
+    const response = await fetch("https://efbkhmfekfujbwfdpfhk.supabase.co/rest/v1/feedback", {
+      method: "POST",
+      headers: {
+        "apikey": "sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH",
+        "Authorization": "Bearer sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH",
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal"
+      },
+      body: JSON.stringify({ topic, rating, details })
+    });
+    if (!response.ok) throw new Error("Feedback could not be sent. Please try again.");
+    feedbackForm.reset();
+    status.textContent = "Thank you! Your feedback was sent successfully."; 
+  } catch (error) { status.textContent = error.message || "Could not send feedback. Please try again."; }
+  finally { button.disabled = false; }
 });
