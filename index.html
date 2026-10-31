@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="style.css?v=18">
   <style>html{visibility:hidden}</style>
   <script type="module" src="session-guard.js?v=3"></script>
-  <script src="script.js?v=22" defer></script>
+  <script src="script.js?v=23" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -20,7 +20,7 @@
     <a class="header-dashboard" href="dashboard.html">My Dashboard</a>
     <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open navigation" aria-expanded="false" onclick="const nav=document.getElementById('navLinks');const opened=nav.classList.toggle('open');this.setAttribute('aria-expanded',String(opened));this.setAttribute('aria-label',opened?'Close navigation':'Open navigation');">☰</button>
     <nav class="nav-links" id="navLinks">
-      <a href="#semesters">Subjects</a><a href="#semesters">Semesters</a><a href="#about">About</a><a href="#resourceRequest">Request a resource</a><a class="nav-admin" href="login.html">Student Login <span>↗</span></a>
+      <a href="#semesters">Subjects</a><a href="#semesters">Semesters</a><a href="#about">About</a><a class="nav-admin" href="login.html">Student Login <span>↗</span></a>
       <button class="nav-saved" id="savedResourcesButton" type="button" aria-expanded="false" aria-controls="savedResourcesSection">★ Saved</button><a class="nav-admin" href="admin.html">Admin Panel <span>↗</span></a>
     </nav>
   </header>
@@ -63,53 +63,6 @@
     <section class="saved-resources-section" id="savedResourcesSection" hidden>
       <div class="saved-panel-heading"><div><div class="eyebrow">YOUR PERSONAL LIBRARY</div><h2>My <span>Saved Resources.</span></h2></div><button type="button" class="saved-panel-close" id="closeSavedResources" aria-label="Close saved resources">×</button></div>
       <div class="saved-resources-list" id="savedResourcesList"></div>
-    </section>
-    <section class="resource-request-section" id="resourceRequest">
-      <div class="section-heading">
-        <div><div class="eyebrow">HELP US IMPROVE BCA HUB</div><h2>Request a <span>resource.</span></h2></div>
-        <p>Can’t find the notes or question paper you need? Send a request to the BCA HUB admin.</p>
-      </div>
-      <form class="resource-request-form" id="resourceRequestForm">
-        <div class="request-field">
-          <label for="requestSemester">Semester</label>
-          <select id="requestSemester" required>
-            <option value="">Choose semester</option>
-            <option value="Semester 1">Semester 1</option><option value="Semester 2">Semester 2</option><option value="Semester 3">Semester 3</option><option value="Semester 4">Semester 4</option><option value="Semester 5">Semester 5</option><option value="Semester 6">Semester 6</option><option value="Semester 7">Semester 7</option><option value="Semester 8">Semester 8</option>
-          </select>
-        </div>
-        <div class="request-field">
-          <label for="requestSubject">Subject</label>
-          <select id="requestSubject" required>
-            <option value="">Choose subject</option>
-            <option>Fundamentals of Computers and Computational Thinking</option>
-            <option>Introduction to Computers and Office Automation</option>
-            <option>Mathematical Foundation for Computer Applications</option>
-            <option>Discrete Structures for Computer Applications</option>
-            <option>Other / Not listed</option>
-          </select>
-        </div>
-        <div class="request-field">
-          <label for="requestType">Resource type</label>
-          <select id="requestType" required>
-            <option value="">Choose resource type</option>
-            <option>Study Notes</option>
-            <option>Important Questions</option>
-            <option>Previous Year Question Paper</option>
-            <option>Practical / Lab Material</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div class="request-field request-field-wide">
-          <label for="requestDetails">What resource do you need?</label>
-          <textarea id="requestDetails" rows="4" maxlength="1000" required placeholder="Mention the unit, topic, year or any useful details…"></textarea>
-        </div>
-        <div class="request-submit-row">
-          <button class="button button-gold" type="submit">Submit resource request ↗</button>
-          <p>Requests open in GitHub. You’ll need to sign in to submit. Don’t include private information.</p>
-        </div>
-        <p class="request-feedback" id="requestFeedback" role="status" aria-live="polite"></p>
-      </form>
-      <a class="request-view-link" href="https://github.com/mrjojo07/BCA-HUB/issues" target="_blank" rel="noopener noreferrer">View submitted requests ↗</a>
     </section>
     <section class="resource-request-section" id="feedback">
       <div class="section-heading">
