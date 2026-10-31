@@ -370,3 +370,33 @@ if (savedNotesButton) {
   if (document.readyState === "complete") revealSavedNotes();
   else window.addEventListener("load", revealSavedNotes, { once: true });
 }
+
+
+// Open image resources in an in-page viewer with a clear close control.
+const imageViewer = document.createElement("div");
+imageViewer.className = "image-viewer";
+imageViewer.hidden = true;
+imageViewer.innerHTML = '<div class="image-viewer-toolbar"><span class="image-viewer-title">Image preview</span><button type="button" class="image-viewer-close" aria-label="Close image preview">✕ Close</button></div><div class="image-viewer-content"><img alt="Image preview"></div>';
+document.body.appendChild(imageViewer);
+const imageViewerImage = imageViewer.querySelector("img");
+function closeImageViewer() {
+  imageViewer.hidden = true;
+  imageViewerImage.removeAttribute("src");
+  document.body.classList.remove("image-viewer-open");
+}
+subjectBrowser?.addEventListener("click", event => {
+  const imageLink = event.target.closest('a.subject-arrow[href]');
+  if (!imageLink || !/\\.(png|jpe?g|webp|gif)(?:[?#].*)?$/i.test(imageLink.href)) return;
+  event.preventDefault();
+  imageViewerImage.src = imageLink.href;
+  imageViewerImage.alt = imageLink.closest(".subject-item")?.querySelector("strong")?.textContent || "Image preview";
+  imageViewer.hidden = false;
+  document.body.classList.add("image-viewer-open");
+});
+imageViewer.querySelector(".image-viewer-close")?.addEventListener("click", closeImageViewer);
+imageViewer.addEventListener("click", event => {
+  if (event.target === imageViewer) closeImageViewer();
+});
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && !imageViewer.hidden) closeImageViewer();
+});
