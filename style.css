@@ -280,3 +280,6 @@ main .about-section#about p{font-size:10px!important;line-height:1.5!important;m
 @media(max-width:520px){
   .dashboard-nav>a.dashboard-website-link{font-size:12px;padding:10px 12px;gap:5px}
 }
+
+#menuLogout{font-family:"DM Sans",sans-serif;background:transparent;color:#ff4d5d;border:1px solid #168cff66;cursor:pointer}
+#menuLogout:hover{background:#10233a;color:#ff6674}
