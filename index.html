@@ -22,8 +22,28 @@
     <nav class="nav-links" id="navLinks">
       <a href="#semesters">Subjects</a><a href="#semesters">Semesters</a><a href="#about">About</a><a class="nav-admin" href="login.html">Student Login <span>↗</span></a>
 <a class="nav-admin" href="admin.html">Admin Panel <span>↗</span></a>
+      <button class="nav-admin" id="menuLogout" type="button" hidden>Log out</button>
     </nav>
   </header>
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm";
+    const supabase = createClient("https://efbkhmfekfujbwfdpfhk.supabase.co", "sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH");
+    const logoutButton = document.getElementById("menuLogout");
+    const { data } = await supabase.auth.getSession();
+    if (data?.session) logoutButton.hidden = false;
+    logoutButton?.addEventListener("click", async () => {
+      logoutButton.disabled = true;
+      logoutButton.textContent = "Logging out…";
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        logoutButton.disabled = false;
+        logoutButton.textContent = "Log out";
+        alert("Could not log out. Please try again.");
+        return;
+      }
+      window.location.href = "login.html";
+    });
+  </script>
   <main>
     <section class="hero">
       <div class="hero-glow"></div>
