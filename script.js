@@ -1,4 +1,9 @@
 const menuToggle = document.getElementById("menuToggle");
+
+// If the browser restores this page from its back-forward cache, reload it cleanly.
+window.addEventListener("pageshow", event => {
+  if (event.persisted) window.location.reload();
+});
 const navLinks = document.getElementById("navLinks");
 
 navLinks?.querySelectorAll("a").forEach((link) => {
