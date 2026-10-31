@@ -133,7 +133,8 @@
     }
 
     async function showAdminForSession() {
-      const { data: { user }, error } = await supabase.auth.getUser();
+      const { data: { session }, error } = await supabase.auth.getSession();
+      const user = session?.user;
       if (error || !user) {
         loginPanel.hidden = false;
         mfaPanel.hidden = true;
@@ -157,6 +158,7 @@
         loginPanel.hidden = true;
         mfaPanel.hidden = true;
         uploadPanel.hidden = false;
+        loadAdminFeedback();
         return true;
       }
       const { data: factorsData, error: factorsError } = await supabase.auth.mfa.listFactors();
@@ -226,6 +228,7 @@
         if (aal.currentLevel !== "aal2") throw new Error("MFA verification did not reach aal2.");
         mfaPanel.hidden = true;
         uploadPanel.hidden = false;
+        loadAdminFeedback();
         mfaQr.removeAttribute("src");
         document.getElementById("mfaCode").value = "";
       } catch (error) {
@@ -443,7 +446,6 @@
       } catch (error) { feedbackStatus.textContent = error.message || "Could not load feedback. Check Admin access and MFA."; }
     }
     document.getElementById("refreshFeedback")?.addEventListener("click", loadAdminFeedback);
-    loadAdminFeedback();
   </script>
 </body>
 </html>
