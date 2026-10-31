@@ -307,3 +307,28 @@ body.image-viewer-open{overflow:hidden}
 #examCountdown .countdown-card h3{font-size:14px;margin:0 0 5px}
 #examCountdown .countdown-days{font-size:19px;margin-top:7px}
 @media(max-width:600px){#examCountdown.countdown-section{padding:15px 5vw}#examCountdown .countdown-list{grid-template-columns:repeat(auto-fit,minmax(135px,1fr))}}
+
+
+/* Medium-width exam timetable section */
+#examCountdown.countdown-section{
+  width:min(900px,calc(100% - 40px));
+  margin:24px auto;
+  padding:20px 24px;
+  border:1px solid #263b55;
+  border-radius:16px;
+  box-sizing:border-box;
+}
+#examCountdown .countdown-list{
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:12px;
+}
+@media(max-width:600px){
+  #examCountdown.countdown-section{
+    width:calc(100% - 28px);
+    margin:18px auto;
+    padding:16px;
+  }
+  #examCountdown .countdown-list{
+    grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  }
+}
