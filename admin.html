@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#05080e">
   <title>Admin Panel | BCA HUB</title>
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=7">
   <style>
 .admin-bulk-guide{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0;padding:14px;border:1px solid #26364c;border-radius:12px;background:#0b1421}.admin-bulk-step{font-size:12px;line-height:1.6;color:#c4d0e0}.admin-bulk-step strong{display:block;color:#eaf2ff;font-size:13px;margin-bottom:4px}@media(max-width:620px){.admin-bulk-guide{grid-template-columns:1fr}}.admin-resource-requests{display:grid;gap:12px;margin-top:16px}.admin-request-card{padding:16px;border:1px solid #26364c;border-radius:12px;background:#0b1421}.admin-request-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.admin-request-top strong{font-size:13px;color:#eaf2ff}.admin-request-state{flex:none;padding:4px 8px;border-radius:20px;font-size:10px;font-weight:700}.admin-request-state.is-open{background:#123b2c;color:#86e0b1}.admin-request-state.is-closed{background:#263448;color:#aebbd0}.admin-request-body{white-space:pre-wrap;overflow-wrap:anywhere;color:#c4d0e0;font-size:12px;line-height:1.6;margin:10px 0 14px}
 </style>
@@ -44,6 +44,17 @@
       <p class="admin-footnote">Keep your authenticator access private. Never share your one-time code.</p>
     </section>
     <section id="uploadPanel" hidden>
+      <section class="admin-timetable" id="analyticsPanel">
+        <div class="admin-toolbar"><div><h2>Website Analytics</h2><p class="admin-intro">Privacy-friendly aggregate activity from the last 30 days. No IP addresses or personal visitor profiles are stored.</p></div><button class="admin-back-button" id="refreshAnalytics" type="button">↻ Refresh analytics</button></div>
+        <div class="analytics-stat-grid">
+          <article class="analytics-stat"><span>PAGE VIEWS · 30 DAYS</span><strong id="analyticsTotal">—</strong></article>
+          <article class="analytics-stat"><span>PAGE VIEWS · TODAY</span><strong id="analyticsToday">—</strong></article>
+          <article class="analytics-stat"><span>SUBJECT OPENS · 30 DAYS</span><strong id="analyticsSubjects">—</strong></article>
+          <article class="analytics-stat"><span>MATERIAL OPENS · 30 DAYS</span><strong id="analyticsMaterials">—</strong></article>
+        </div>
+        <div class="analytics-columns"><div><h3>Popular subjects</h3><div id="analyticsTopSubjects" class="analytics-ranking">Loading…</div></div><div><h3>Popular materials</h3><div id="analyticsTopMaterials" class="analytics-ranking">Loading…</div></div></div>
+        <p class="admin-intro" id="analyticsStatus" aria-live="polite">Loading website analytics…</p>
+      </section>
       <div class="admin-warning"><strong>Direct upload enabled:</strong> Upload PDFs and images here. Published materials appear on the website without a GitHub commit. Admin MFA verification is required.</div>
       <div class="admin-toolbar"><div><h2>Learning Materials Upload</h2><p class="admin-intro">Upload Notes, Important Questions and Previous Year Papers directly from this panel.</p></div></div><div class="admin-bulk-guide"><div class="admin-bulk-step"><strong>1. Choose destination</strong>Select semester, subject and material type.</div><div class="admin-bulk-step"><strong>2. Select files</strong>Choose one or more PDF or image files.</div><div class="admin-bulk-step"><strong>3. Upload &amp; publish</strong>Files are immediately available on the website.</div></div>
       <form id="materialForm" class="admin-form">
@@ -165,6 +176,7 @@
         uploadPanel.hidden = false;
         loadAdminFeedback();
         loadExamTimetable();
+        loadWebsiteAnalytics();
         return true;
       }
       const { data: factorsData, error: factorsError } = await supabase.auth.mfa.listFactors();
@@ -236,6 +248,7 @@
         uploadPanel.hidden = false;
         loadAdminFeedback();
         loadExamTimetable();
+        loadWebsiteAnalytics();
         mfaQr.removeAttribute("src");
         document.getElementById("mfaCode").value = "";
       } catch (error) {
@@ -535,6 +548,53 @@
       } catch (error) { feedbackStatus.textContent = error.message || "Could not load feedback. Check Admin access and MFA."; }
     }
     document.getElementById("refreshFeedback")?.addEventListener("click", loadAdminFeedback);
+    const analyticsStatus = document.getElementById("analyticsStatus");
+    const analyticsNumber = id => document.getElementById(id);
+    function renderAnalyticsRanking(targetId, entries) {
+      const target = analyticsNumber(targetId);
+      target.replaceChildren();
+      const sorted = [...entries.entries()].sort((x,y) => y[1]-x[1]).slice(0,5);
+      if (!sorted.length) { target.textContent = "No activity recorded yet."; return; }
+      sorted.forEach(([label,count]) => {
+        const row = document.createElement("div"); row.className = "analytics-rank-row";
+        const name = document.createElement("span"); name.textContent = label;
+        const value = document.createElement("strong"); value.textContent = String(count);
+        row.append(name,value); target.append(row);
+      });
+    }
+    async function loadWebsiteAnalytics() {
+      analyticsStatus.textContent = "Loading activity for the last 30 days…";
+      try {
+        const since = new Date(Date.now() - 30 * 86400000).toISOString();
+        const { data, error } = await supabase.from("website_analytics_events")
+          .select("event_type,event_label,created_at")
+          .gte("created_at", since)
+          .order("created_at", { ascending: false })
+          .limit(5000);
+        if (error) throw error;
+        const events = data || [];
+        const today = new Date().toLocaleDateString();
+        const pageViews = events.filter(e => e.event_type === "page_view");
+        const todayViews = pageViews.filter(e => new Date(e.created_at).toLocaleDateString() === today);
+        const subjects = events.filter(e => e.event_type === "subject_view");
+        const materials = events.filter(e => e.event_type === "material_view");
+        analyticsNumber("analyticsTotal").textContent = String(pageViews.length);
+        analyticsNumber("analyticsToday").textContent = String(todayViews.length);
+        analyticsNumber("analyticsSubjects").textContent = String(subjects.length);
+        analyticsNumber("analyticsMaterials").textContent = String(materials.length);
+        const subjectCounts = new Map();
+        subjects.forEach(e => subjectCounts.set(e.event_label || "Unknown", (subjectCounts.get(e.event_label || "Unknown") || 0) + 1));
+        const materialCounts = new Map();
+        materials.forEach(e => materialCounts.set(e.event_label || "Unknown", (materialCounts.get(e.event_label || "Unknown") || 0) + 1));
+        renderAnalyticsRanking("analyticsTopSubjects", subjectCounts);
+        renderAnalyticsRanking("analyticsTopMaterials", materialCounts);
+        analyticsStatus.textContent = "Showing " + events.length + " recorded event(s) from the last 30 days. " + (events.length === 5000 ? "Display limit reached; counts may be incomplete." : "");
+      } catch (error) {
+        analyticsStatus.textContent = "Could not load analytics: " + (error.message || "Check Admin access and MFA.");
+      }
+    }
+    document.getElementById("refreshAnalytics")?.addEventListener("click", loadWebsiteAnalytics);
+
   </script>
 </body>
 </html>
