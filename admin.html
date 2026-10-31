@@ -125,7 +125,9 @@
       }
       const { data, error } = await supabase.auth.mfa.enroll({
         factorType: "totp",
-        friendlyName: "BCA HUB Admin"
+        // Supabase requires each factor friendly name to be unique per user.
+        // A fresh setup name avoids conflicts with abandoned unverified enrollments.
+        friendlyName: "BCA HUB Admin " + Date.now()
       });
       if (error) throw error;
       activeFactorId = data.id;
@@ -191,7 +193,9 @@
       } catch (mfaError) {
         loginPanel.hidden = false;
         mfaPanel.hidden = true;
-        loginError.textContent = "Could not start MFA verification. Please try again.";
+        loginError.textContent = mfaError?.message
+          ? "MFA setup failed: " + mfaError.message
+          : "Could not start MFA verification. Please try again.";
         console.error("Admin MFA setup error:", mfaError);
       }
     });
