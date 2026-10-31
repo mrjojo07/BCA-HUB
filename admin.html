@@ -18,7 +18,7 @@
   <main class="admin-main">
     <div class="eyebrow">SITE OWNER TOOLS</div>
     <h1 class="admin-title">BCA HUB <span>Admin</span></h1>
-    <section id="loginPanel" class="admin-login">
+    <section id="loginPanel" class="admin-login" hidden>
       <h2>Admin access</h2>
       <p class="admin-intro">Sign in with your approved BCA HUB administrator account.</p>
       <form id="loginForm">
@@ -201,6 +201,9 @@
     });
 
     showAdminForSession().catch(error => {
+      loginPanel.hidden = false;
+      mfaPanel.hidden = true;
+      uploadPanel.hidden = true;
       loginError.textContent = "Could not verify Admin access. Please sign in again.";
       console.error("Admin session check error:", error);
     });
