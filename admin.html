@@ -73,12 +73,6 @@
         </div>
       </form>
       <section class="admin-timetable"><h2>Exam timetable</h2><p class="admin-intro">Add exam names and dates, then publish the generated timetable to GitHub.</p><form id="examForm" class="admin-form"><label for="examTitle">Exam / paper name</label><input id="examTitle" required><label for="examDate">Exam date</label><input id="examDate" type="date" required><button class="admin-action" type="submit">＋ Add exam date</button></form><div id="examEntries"></div><textarea id="examJson" rows="8" readonly></textarea><div class="admin-toolbar"><button class="admin-back-button" id="copyExam" type="button">Copy timetable data</button><button class="admin-action" id="publishExam" type="button">Open GitHub to publish</button></div><p class="admin-footnote">Paste the copied data into exam-timetable.json on GitHub and commit it to update the public countdown.</p></section>
-      <section class="admin-timetable" id="resourceRequestsPanel">
-        <div class="admin-toolbar"><div><h2>Resource requests</h2><p class="admin-intro">Requests submitted from the website appear here automatically.</p></div><button class="admin-back-button" id="refreshRequests" type="button">↻ Refresh requests</button></div>
-        <p class="admin-intro" id="requestAdminStatus" aria-live="polite">Loading requests…</p>
-        <div id="adminResourceRequests" class="admin-resource-requests"></div>
-        <p class="admin-footnote">Use “Open on GitHub” to reply, add labels, or close a completed request. Requests are stored as public GitHub Issues.</p>
-      </section>
       <section class="admin-timetable" id="feedbackManagerPanel"><div class="admin-toolbar"><div><h2>Student feedback</h2><p class="admin-intro">Feedback submitted through the homepage appears here.</p></div><button class="admin-back-button" id="refreshFeedback" type="button">↻ Refresh feedback</button></div><p class="admin-intro" id="feedbackAdminStatus" aria-live="polite">Loading feedback…</p><div id="adminFeedbackList" class="admin-resource-requests"></div><p class="admin-footnote">Feedback is stored privately in BCA HUB and visible only to approved administrators.</p></section>
       <p class="admin-footnote">Remove opens GitHub's delete confirmation page for the selected file. Sign in and confirm the commit there.</p>
       <button class="admin-back-button" id="logoutButton" type="button">Lock Admin Panel</button>
@@ -421,42 +415,6 @@
     document.getElementById("publishExam").addEventListener("click", () => {
       window.open("https://github.com/mrjojo07/BCA-HUB/edit/main/exam-timetable.json", "_blank", "noopener");
     });
-
-    // Load public resource-request issues into the admin panel.
-    const requestList = document.getElementById("adminResourceRequests");
-    const requestStatus = document.getElementById("requestAdminStatus");
-    async function loadAdminResourceRequests() {
-      requestStatus.textContent = "Loading requests from GitHub…";
-      requestList.replaceChildren();
-      try {
-        const response = await fetch("https://api.github.com/repos/mrjojo07/BCA-HUB/issues?state=all&per_page=100&sort=created&direction=desc");
-        if (!response.ok) throw new Error("GitHub could not load requests (HTTP " + response.status + "). Please try again.");
-        const issues = await response.json();
-        const requests = issues.filter(item => !item.pull_request && item.title && item.title.startsWith("[Resource Request]"));
-        if (!requests.length) { requestStatus.textContent = "No resource requests yet."; return; }
-        requestStatus.textContent = requests.length + " request(s) found.";
-        requests.forEach(item => {
-          const card = document.createElement("article");
-          card.className = "admin-request-card";
-          const top = document.createElement("div"); top.className = "admin-request-top";
-          const title = document.createElement("strong"); title.textContent = item.title;
-          const state = document.createElement("span");
-          state.className = "admin-request-state " + (item.state === "open" ? "is-open" : "is-closed");
-          state.textContent = item.state === "open" ? "Open" : "Closed";
-          top.append(title, state);
-          const meta = document.createElement("p"); meta.className = "admin-intro";
-          meta.textContent = "#" + item.number + " · " + new Date(item.created_at).toLocaleString() + " · " + (item.user?.login || "GitHub user");
-          const details = document.createElement("p"); details.className = "admin-request-body";
-          details.textContent = (item.body || "No details provided.").slice(0, 1200);
-          const link = document.createElement("a"); link.className = "admin-back-button";
-          link.href = item.html_url; link.target = "_blank"; link.rel = "noopener noreferrer";
-          link.textContent = "Open on GitHub ↗";
-          card.append(top, meta, details, link); requestList.append(card);
-        });
-      } catch (error) { requestStatus.textContent = error.message || "Could not load requests."; }
-    }
-    document.getElementById("refreshRequests")?.addEventListener("click", loadAdminResourceRequests);
-    loadAdminResourceRequests();
 
     const feedbackList = document.getElementById("adminFeedbackList");
     const feedbackStatus = document.getElementById("feedbackAdminStatus");
