@@ -20,7 +20,7 @@
     <a class="header-dashboard" href="dashboard.html">My Dashboard</a>
     <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open navigation" aria-expanded="false" onclick="const nav=document.getElementById('navLinks');const opened=nav.classList.toggle('open');this.setAttribute('aria-expanded',String(opened));this.setAttribute('aria-label',opened?'Close navigation':'Open navigation');">☰</button>
     <nav class="nav-links" id="navLinks">
-      <a href="#semesters">Subjects</a><a href="#semesters">Semesters</a><a href="#feedback">Feedback</a><a href="#about">About</a><a class="nav-admin" id="studentLoginMenu" href="login.html">Student Login <span>↗</span></a>
+      <a href="#semesters">Subjects</a><a href="#semesters">Semesters</a><a href="#feedback" id="openFeedbackMenu">Feedback</a><a href="#about">About</a><a class="nav-admin" id="studentLoginMenu" href="login.html">Student Login <span>↗</span></a>
 <a class="nav-admin" href="admin.html">Admin Panel <span>↗</span></a>
       <button class="nav-admin" id="menuLogout" type="button" hidden>Log out</button>
     </nav>
@@ -87,7 +87,7 @@
       <div class="saved-panel-heading"><div><div class="eyebrow">YOUR PERSONAL LIBRARY</div><h2>My <span>Saved Resources.</span></h2></div><button type="button" class="saved-panel-close" id="closeSavedResources" aria-label="Close saved resources">×</button></div>
       <div class="saved-resources-list" id="savedResourcesList"></div>
     </section>
-    <section class="resource-request-section" id="feedback">
+    <section class="resource-request-section" id="feedback" hidden>
       <div class="section-heading">
         <div><div class="eyebrow">SHARE YOUR THOUGHTS</div><h2>Send us <span>feedback.</span></h2></div>
         <p>Tell us what works well or what we can improve. Please do not include private information.</p>
@@ -119,6 +119,18 @@
     </section>
     <section class="about-section" id="about"><div class="about-mark">B</div><div><div class="eyebrow dark-eyebrow">ABOUT BCA HUB</div><h2>One hub. <span>More possibilities.</span></h2><p>BCA HUB is a learning space designed to make study resources easier to discover and use. Our goal is simple: help students learn concepts, practise skills and prepare with confidence.</p></div></section>
   </main>
+  <script>
+    (() => {
+      const feedbackLink = document.getElementById("openFeedbackMenu");
+      const feedbackSection = document.getElementById("feedback");
+      if (!feedbackLink || !feedbackSection) return;
+      feedbackLink.addEventListener("click", (event) => {
+        event.preventDefault();
+        feedbackSection.hidden = false;
+        feedbackSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    })();
+  </script>
   <footer class="site-footer"><a class="brand footer-brand" href="#"><span class="brand-mark">B</span><span>BCA <b>HUB</b></span></a><p></p><span class="copyright">© <span id="year"></span> BCA HUB</span></footer>
 </body>
 </html>
