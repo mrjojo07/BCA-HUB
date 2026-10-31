@@ -354,3 +354,12 @@ feedbackForm?.addEventListener("submit", async event => {
   } catch (error) { status.textContent = error.message || "Could not send feedback. Please try again."; }
   finally { button.disabled = false; }
 });
+
+
+// Reveal Saved Notes only after the homepage has fully loaded.
+const savedNotesButton = document.getElementById("savedNotesHeroButton");
+if (savedNotesButton) {
+  const revealSavedNotes = () => { savedNotesButton.hidden = false; };
+  if (document.readyState === "complete") revealSavedNotes();
+  else window.addEventListener("load", revealSavedNotes, { once: true });
+}
