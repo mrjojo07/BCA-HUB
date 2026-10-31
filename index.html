@@ -28,6 +28,36 @@
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm";
     const supabase = createClient("https://efbkhmfekfujbwfdpfhk.supabase.co", "sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH");
+    const examBox = document.getElementById("examCountdownList");
+    if (examBox) {
+      try {
+        const { data: exams, error } = await supabase.from("exam_timetable")
+          .select("title,exam_date").order("exam_date", { ascending: true });
+        if (error) throw error;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        examBox.replaceChildren();
+        (exams || []).forEach(exam => {
+          const d = new Date(exam.exam_date + "T00:00:00");
+          const daysLeft = Math.ceil((d - today) / 86400000);
+          const card = document.createElement("article");
+          card.className = "countdown-card";
+          const title = document.createElement("h3");
+          title.textContent = exam.title;
+          const date = document.createElement("p");
+          date.textContent = d.toLocaleDateString();
+          const days = document.createElement("strong");
+          days.className = "countdown-days";
+          days.textContent = daysLeft < 0 ? "Exam completed" : daysLeft === 0 ? "Exam is today" : daysLeft + " days left";
+          card.append(date, title, days);
+          examBox.append(card);
+        });
+        if (!examBox.children.length) examBox.textContent = "No upcoming exams have been added yet.";
+      } catch (error) {
+        examBox.textContent = "Exam timetable is currently unavailable.";
+        console.error("Exam timetable load error:", error);
+      }
+    }
     const logoutButton = document.getElementById("menuLogout");
     const { data } = await supabase.auth.getSession();
     if (data?.session) {
