@@ -295,3 +295,15 @@ main .about-section#about p{font-size:10px!important;line-height:1.5!important;m
 .image-viewer-content{flex:1;min-height:0;display:grid;place-items:center;overflow:auto;padding:16px}
 .image-viewer-content img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain}
 body.image-viewer-open{overflow:hidden}
+
+
+/* Compact exam timetable on the homepage */
+#examCountdown.countdown-section{padding:18px 6vw}
+#examCountdown .section-heading{margin-bottom:12px;gap:10px}
+#examCountdown .section-heading h2{font-size:clamp(20px,3vw,28px)}
+#examCountdown .section-heading p{font-size:12px;line-height:1.45}
+#examCountdown .countdown-list{grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:9px}
+#examCountdown .countdown-card{padding:11px 13px;border-radius:10px}
+#examCountdown .countdown-card h3{font-size:14px;margin:0 0 5px}
+#examCountdown .countdown-days{font-size:19px;margin-top:7px}
+@media(max-width:600px){#examCountdown.countdown-section{padding:15px 5vw}#examCountdown .countdown-list{grid-template-columns:repeat(auto-fit,minmax(135px,1fr))}}
