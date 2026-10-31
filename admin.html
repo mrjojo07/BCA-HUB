@@ -72,7 +72,7 @@
           <p id="fileListStatus" class="admin-intro" aria-live="polite">Choose a semester, subject and material type to load files.</p>
         </div>
       </form>
-      <section class="admin-timetable"><h2>Exam timetable</h2><p class="admin-intro">Add exam names and dates, then publish the generated timetable to GitHub.</p><form id="examForm" class="admin-form"><label for="examTitle">Exam / paper name</label><input id="examTitle" required><label for="examDate">Exam date</label><input id="examDate" type="date" required><button class="admin-action" type="submit">＋ Add exam date</button></form><div id="examEntries"></div><textarea id="examJson" rows="8" readonly></textarea><div class="admin-toolbar"><button class="admin-back-button" id="copyExam" type="button">Copy timetable data</button><button class="admin-action" id="publishExam" type="button">Open GitHub to publish</button></div><p class="admin-footnote">Paste the copied data into exam-timetable.json on GitHub and commit it to update the public countdown.</p></section>
+      <section class="admin-timetable"><h2>Exam timetable</h2><p class="admin-intro">Add or edit exam dates here. Save &amp; Publish updates the website directly — no GitHub commit needed.</p><form id="examForm" class="admin-form"><label for="examTitle">Exam / paper name</label><input id="examTitle" maxlength="160" required placeholder="e.g. Data Structures"><label for="examDate">Exam date</label><input id="examDate" type="date" required><div class="admin-toolbar"><button class="admin-action" id="saveExamButton" type="submit">＋ Save &amp; Publish</button><button class="admin-back-button" id="cancelExamEdit" type="button" hidden>Cancel edit</button></div></form><p id="examAdminStatus" class="admin-intro" aria-live="polite">Loading timetable…</p><div id="examEntries"></div></section>
       <section class="admin-timetable" id="feedbackManagerPanel"><div class="admin-toolbar"><div><h2>Student feedback</h2><p class="admin-intro">Feedback submitted through the homepage appears here.</p></div><button class="admin-back-button" id="refreshFeedback" type="button">↻ Refresh feedback</button></div><p class="admin-intro" id="feedbackAdminStatus" aria-live="polite">Loading feedback…</p><div id="adminFeedbackList" class="admin-resource-requests"></div><p class="admin-footnote">Feedback is stored privately in BCA HUB and visible only to approved administrators.</p></section>
       <p class="admin-footnote">Remove opens GitHub's delete confirmation page for the selected file. Sign in and confirm the commit there.</p>
       <button class="admin-back-button" id="logoutButton" type="button">Lock Admin Panel</button>
@@ -159,6 +159,7 @@
         mfaPanel.hidden = true;
         uploadPanel.hidden = false;
         loadAdminFeedback();
+        loadExamTimetable();
         return true;
       }
       const { data: factorsData, error: factorsError } = await supabase.auth.mfa.listFactors();
@@ -229,6 +230,7 @@
         mfaPanel.hidden = true;
         uploadPanel.hidden = false;
         loadAdminFeedback();
+        loadExamTimetable();
         mfaQr.removeAttribute("src");
         document.getElementById("mfaCode").value = "";
       } catch (error) {
@@ -361,63 +363,103 @@
     const examTitle = document.getElementById("examTitle");
     const examDate = document.getElementById("examDate");
     const examEntries = document.getElementById("examEntries");
-    const examJson = document.getElementById("examJson");
+    const examAdminStatus = document.getElementById("examAdminStatus");
+    const saveExamButton = document.getElementById("saveExamButton");
+    const cancelExamEdit = document.getElementById("cancelExamEdit");
     let examItems = [];
+    let editingExamId = null;
+
+    async function loadExamTimetable() {
+      examAdminStatus.textContent = "Loading timetable…";
+      try {
+        const { data, error } = await supabase.from("exam_timetable")
+          .select("id,title,exam_date").order("exam_date", { ascending: true });
+        if (error) throw error;
+        examItems = data || [];
+        renderExamItems();
+        examAdminStatus.textContent = examItems.length
+          ? examItems.length + " exam(s) published."
+          : "No exams added yet.";
+      } catch (error) {
+        examAdminStatus.textContent = "Could not load timetable: " + (error.message || "Please refresh.");
+      }
+    }
+
+    function resetExamEditor() {
+      editingExamId = null;
+      examForm.reset();
+      saveExamButton.textContent = "＋ Save & Publish";
+      cancelExamEdit.hidden = true;
+    }
 
     function renderExamItems() {
       examEntries.replaceChildren();
-      examItems.forEach((exam, index) => {
+      examItems.forEach(exam => {
         const row = document.createElement("div");
         row.className = "exam-admin-row";
         const label = document.createElement("span");
-        label.textContent = exam.title + " — " + exam.date;
+        label.textContent = exam.title + " — " + exam.exam_date;
+        const edit = document.createElement("button");
+        edit.type = "button";
+        edit.className = "admin-back-button";
+        edit.textContent = "Edit";
+        edit.addEventListener("click", () => {
+          editingExamId = exam.id;
+          examTitle.value = exam.title;
+          examDate.value = exam.exam_date;
+          saveExamButton.textContent = "Save Changes & Publish";
+          cancelExamEdit.hidden = false;
+          examTitle.focus();
+        });
         const remove = document.createElement("button");
         remove.type = "button";
         remove.className = "admin-back-button";
         remove.textContent = "Remove";
-        remove.addEventListener("click", () => {
-          examItems.splice(index, 1);
-          renderExamItems();
+        remove.addEventListener("click", async () => {
+          if (!confirm("Remove this exam from the published timetable?")) return;
+          remove.disabled = true;
+          const { error } = await supabase.from("exam_timetable").delete().eq("id", exam.id);
+          if (error) {
+            examAdminStatus.textContent = "Could not remove exam: " + error.message;
+            remove.disabled = false;
+            return;
+          }
+          if (editingExamId === exam.id) resetExamEditor();
+          await loadExamTimetable();
+          examAdminStatus.textContent = "Exam removed from the website.";
         });
-        row.append(label, remove);
+        row.append(label, edit, remove);
         examEntries.append(row);
       });
-      examJson.value = JSON.stringify(examItems, null, 2);
     }
 
-    fetch("exam-timetable.json?v=" + Date.now())
-      .then(response => response.ok ? response.json() : [])
-      .then(data => {
-        examItems = Array.isArray(data) ? data.filter(item => item && item.title && item.date) : [];
-        renderExamItems();
-      })
-      .catch(() => renderExamItems());
-
-    examForm.addEventListener("submit", event => {
+    examForm.addEventListener("submit", async event => {
       event.preventDefault();
       const title = examTitle.value.trim();
       const date = examDate.value;
       if (!title || !date) return;
-      examItems.push({ title, date });
-      examItems.sort((a, b) => a.date.localeCompare(b.date));
-      examForm.reset();
-      renderExamItems();
-    });
-
-    document.getElementById("copyExam").addEventListener("click", async () => {
+      saveExamButton.disabled = true;
+      examAdminStatus.textContent = "Publishing timetable…";
+      const record = {
+        id: editingExamId || crypto.randomUUID(),
+        title,
+        exam_date: date,
+        updated_at: new Date().toISOString()
+      };
       try {
-        await navigator.clipboard.writeText(examJson.value);
-        alert("Timetable data copied. Open GitHub, edit exam-timetable.json, paste and commit.");
+        const { error } = await supabase.from("exam_timetable").upsert(record, { onConflict: "id" });
+        if (error) throw error;
+        resetExamEditor();
+        await loadExamTimetable();
+        examAdminStatus.textContent = "Published successfully. The website will show the updated timetable.";
       } catch (error) {
-        examJson.focus();
-        examJson.select();
-        alert("Copy was blocked by the browser. The JSON is selected; copy it manually.");
+        examAdminStatus.textContent = "Publish failed: " + (error.message || "Please try again.");
+      } finally {
+        saveExamButton.disabled = false;
       }
     });
 
-    document.getElementById("publishExam").addEventListener("click", () => {
-      window.open("https://github.com/mrjojo07/BCA-HUB/edit/main/exam-timetable.json", "_blank", "noopener");
-    });
+    cancelExamEdit.addEventListener("click", resetExamEditor);
 
     const feedbackList = document.getElementById("adminFeedbackList");
     const feedbackStatus = document.getElementById("feedbackAdminStatus");
