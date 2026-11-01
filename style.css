@@ -520,3 +520,20 @@ body.image-viewer-open{overflow:hidden}
   #analyticsPanel .analytics-stat span{font-size:8px;letter-spacing:.7px}
   #analyticsPanel .analytics-columns>div{padding:14px}
 }
+
+
+/* Circular learning progress score on the student dashboard */
+.dashboard-progress-item{align-items:center}
+.dashboard-progress-ring{
+  --progress:0%;flex:0 0 62px;width:62px;height:62px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;gap:2px;
+  background:conic-gradient(#2997f5 var(--progress),#26364c 0);
+  position:relative;color:#f3f7ff;font:700 17px "Space Grotesk";
+}
+.dashboard-progress-ring::before{
+  content:"";position:absolute;inset:5px;border-radius:50%;background:#0d1725;
+}
+.dashboard-progress-ring>span,.dashboard-progress-ring>small{position:relative;z-index:1}
+.dashboard-progress-ring>small{font:600 8px "DM Sans";color:#91a0b5}
+.dashboard-progress-ring.is-complete{background:conic-gradient(#22c55e 100%,#26364c 0);color:#86efac}
+.dashboard-progress-ring.is-complete>small{color:#86efac}
