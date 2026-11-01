@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=24">
-  <script type="module" src="dashboard.js?v=5"></script>
+  <link rel="stylesheet" href="style.css?v=25">
+  <script type="module" src="dashboard.js?v=6"></script>
 </head>
 <body class="dashboard-page">
   <header class="site-header">
@@ -28,6 +28,36 @@
         <article class="dashboard-stat"><span>QUIZ ATTEMPTS</span><strong id="quizCount">0</strong><small>Recorded attempts</small></article>
         <article class="dashboard-stat"><span>SAVED RESOURCES</span><strong id="savedCount">0</strong><small>In your library</small></article>
       </div>
+      <section class="dashboard-panel ai-study-panel" aria-labelledby="aiStudyTitle">
+        <div class="dashboard-panel-heading">
+          <div><div class="eyebrow">YOUR AI LEARNING PARTNER</div><h2 id="aiStudyTitle">BCA HUB AI Study Assistant</h2></div>
+          <span class="ai-online-label"><i></i> AI Tutor</span>
+        </div>
+        <p class="ai-study-intro">Ask your BCA doubts in Malayalam or English. Get simple explanations, examples, coding help and practice questions.</p>
+        <div class="ai-language-row">
+          <label for="aiLanguage">Reply language</label>
+          <select id="aiLanguage" class="ai-language-select">
+            <option value="Auto">Auto detect</option>
+            <option value="Malayalam">Malayalam</option>
+            <option value="English">English</option>
+          </select>
+          <button id="aiClearChat" class="ai-clear-button" type="button">New chat</button>
+        </div>
+        <div id="aiChatMessages" class="ai-chat-messages" role="log" aria-live="polite" aria-label="AI chat messages">
+          <div class="ai-message ai-message-assistant"><strong>BCA HUB AI</strong><p>നമസ്കാരം! നിങ്ങളുടെ BCA doubts മലയാളത്തിലോ English-ലോ ചോദിക്കാം. What would you like to learn today?</p></div>
+        </div>
+        <div class="ai-suggestions" aria-label="Suggested questions">
+          <button type="button" data-ai-prompt="Explain the difference between hardware and software with examples.">Hardware vs Software</button>
+          <button type="button" data-ai-prompt="Discrete mathematics-ൽ sets എന്താണെന്ന് simple ആയി explain ചെയ്യൂ.">Explain Sets</button>
+          <button type="button" data-ai-prompt="Give me 5 beginner MCQ questions on computer fundamentals.">Practice MCQs</button>
+        </div>
+        <form id="aiChatForm" class="ai-chat-form">
+          <label class="sr-only" for="aiChatInput">Ask your study question</label>
+          <textarea id="aiChatInput" rows="2" maxlength="2000" placeholder="Ask your BCA question… / നിങ്ങളുടെ സംശയം ചോദിക്കൂ" required></textarea>
+          <button id="aiSendButton" type="submit"><span>Send</span><span aria-hidden="true">↗</span></button>
+        </form>
+        <p id="aiChatStatus" class="ai-chat-status" role="status" aria-live="polite">AI answers are for learning support. Check important facts with your course materials.</p>
+      </section>
       <div class="dashboard-columns">
         <section class="dashboard-panel"><div class="dashboard-panel-heading"><div><div class="eyebrow">KEEP LEARNING</div><h2>Learning progress</h2></div><a href="index.html#semesters">Browse subjects ↗</a></div><div id="progressList" class="dashboard-list"><p class="dashboard-empty">No learning progress saved yet.</p></div></section>
         <section class="dashboard-panel"><div class="dashboard-panel-heading"><div><div class="eyebrow">YOUR RECENT RESULTS</div><h2>Quiz history</h2></div></div><div id="quizList" class="dashboard-list"><p class="dashboard-empty">No quiz attempts recorded yet.</p></div></section>
