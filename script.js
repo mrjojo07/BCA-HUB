@@ -71,7 +71,7 @@ async function showMaterials(category) {
     if (!storageResponse.ok) throw new Error('Could not load directly uploaded materials.');
     const storageFiles = (await storageResponse.json()).filter(file => file.id && file.name)
       .sort((a,b) => new Date(b.created_at || 0) - new Date(a.created_at || 0))
-      .map(file => ({name:file.name.replace(/^[0-9a-f-]{36}-/i,''),url:'https://efbkhmfekfujbwfdpfhk.supabase.co/storage/v1/object/public/bca-hub-materials/'+folder+'/'+encodeURIComponent(file.name),preview:'https://efbkhmfekfujbwfdpfhk.supabase.co/storage/v1/object/public/bca-hub-materials/'+folder+'/'+encodeURIComponent(file.name)}));
+      .map(file => { const publicUrl = 'https://efbkhmfekfujbwfdpfhk.supabase.co/storage/v1/object/public/bca-hub-materials/'+folder+'/'+encodeURIComponent(file.name); const cacheVersion = encodeURIComponent(file.updated_at || file.created_at || Date.now()); return {name:file.name.replace(/^[0-9a-f-]{36}-/i,''),url:publicUrl+'?v='+cacheVersion,preview:publicUrl+'?v='+cacheVersion}; });
     // Show one entry per filename, preferring the newest direct upload.
     const uniqueFiles = new Map();
     for (const file of storageFiles) {
