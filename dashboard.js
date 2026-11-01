@@ -30,19 +30,40 @@ function renderProgress(rows) {
   const target = $("progressList");
   if (!rows.length) return addEmpty(target, "No learning progress saved yet. Progress will appear here when you complete learning tasks while signed in.");
   target.replaceChildren();
-  rows.slice(0, 8).forEach((item) => {
+
+  // Each subject has three trackable tasks: notes, important questions and MCQ quiz.
+  const subjects = new Map();
+  rows.forEach((item) => {
+    const key = item.semester + ":" + item.subject_slug;
+    if (!subjects.has(key)) subjects.set(key, { semester: item.semester, subject_slug: item.subject_slug, completed: new Set() });
+    if (item.completed) subjects.get(key).completed.add(item.category);
+  });
+
+  [...subjects.values()].slice(0, 8).forEach((item) => {
+    const done = item.completed.size;
+    const percent = Math.round(done / 3 * 100);
     const line = document.createElement("div");
-    line.className = "dashboard-list-item";
+    line.className = "dashboard-list-item dashboard-progress-item";
+
     const info = document.createElement("div");
     const heading = document.createElement("strong");
     heading.textContent = titleFromSlug(item.subject_slug);
     const detail = document.createElement("small");
-    detail.textContent = "Semester " + item.semester + " · " + titleFromSlug(item.category);
+    detail.textContent = "Semester " + item.semester + " · " + done + " of 3 tasks completed";
     info.append(heading, detail);
-    const state = document.createElement("span");
-    state.className = item.completed ? "dashboard-state done" : "dashboard-state";
-    state.textContent = item.completed ? "Completed" : "In progress";
-    line.append(info, state);
+
+    const ring = document.createElement("div");
+    ring.className = "dashboard-progress-ring" + (percent === 100 ? " is-complete" : "");
+    ring.style.setProperty("--progress", percent + "%");
+    ring.setAttribute("role", "img");
+    ring.setAttribute("aria-label", percent + " out of 100 percent complete");
+    const value = document.createElement("span");
+    value.textContent = percent;
+    const suffix = document.createElement("small");
+    suffix.textContent = " / 100";
+    ring.append(value, suffix);
+
+    line.append(info, ring);
     target.append(line);
   });
 }
