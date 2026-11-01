@@ -24,7 +24,7 @@
     <nav class="nav-links" id="navLinks">
       <a href="#semesters">Semesters</a><a href="#feedback" id="openFeedbackMenu">Feedback</a><a href="#about">About</a><a class="nav-admin" id="studentLoginMenu" href="login.html">Student Login <span>↗</span></a>
 <a class="nav-admin" href="admin.html">Admin Panel <span>↗</span></a>
-      <button class="nav-admin" id="menuLogout" type="button">Log out</button>
+      <button class="nav-admin" id="menuLogout" type="button" hidden>Log out</button>
     </nav>
   </header>
   <script type="module">
@@ -160,12 +160,16 @@
         submit.disabled = false;
       }
     });
-\n    const logoutButton = document.getElementById("menuLogout");
+    const logoutButton = document.getElementById("menuLogout");
+    const loginLink = document.getElementById("studentLoginMenu");
+    const updateMenuAuth = (session) => {
+      const signedIn = Boolean(session?.user);
+      if (loginLink) loginLink.hidden = signedIn;
+      if (logoutButton) logoutButton.hidden = !signedIn;
+    };
     const { data } = await supabase.auth.getSession();
-    if (data?.session) {
-      logoutButton.hidden = false;
-      document.getElementById("studentLoginMenu").hidden = true;
-    }
+    updateMenuAuth(data?.session);
+    supabase.auth.onAuthStateChange((_event, session) => updateMenuAuth(session));
     logoutButton?.addEventListener("click", async () => {
       logoutButton.disabled = true;
       logoutButton.textContent = "Logging out…";
