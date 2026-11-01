@@ -874,3 +874,38 @@ body.image-viewer-open{overflow:hidden}
 .dashboard-score{border-color:#28527a;background:#102b45;color:#a9d6ff}
 .dashboard-open-link{color:#70c6ff}
 .dashboard-page .site-footer{background:#05080e;border-top-color:#202a38}
+
+
+/* Restore the dashboard's first original colour palette and Website glow */
+.dashboard-page{background:#05080e!important}
+.dashboard-page .site-header{background:#05080e!important;border-bottom:1px solid #1b2431!important;box-shadow:none!important;backdrop-filter:none!important}
+.dashboard-page .brand-mark{background:#087de0!important;box-shadow:none!important}
+.dashboard-welcome{border-color:#26364c!important;background:#0d1725!important;box-shadow:none!important}
+.dashboard-welcome:after{border-color:#ffffff18!important;box-shadow:none!important}
+.dashboard-welcome .eyebrow,.dashboard-panel-heading .eyebrow{color:#55aaff!important}
+.dashboard-welcome .dashboard-student-name{color:#55aaff!important;text-shadow:none!important}
+.dashboard-stat{border-color:#26364c!important;background:#0d1725!important;box-shadow:none!important}
+.dashboard-stat:hover{border-color:#168cff!important}
+.dashboard-panel{border-color:#26364c!important;background:#0d1725!important;box-shadow:none!important}
+.dashboard-panel-heading>a{border:0!important;background:transparent!important;color:#8fc4ff!important;box-shadow:none!important}
+.ai-study-panel{border-color:#26364c!important;background:#0d1725!important;box-shadow:none!important}
+.ai-chat-messages{border-color:#26364c!important;background:#080f19!important}
+.ai-chat-form textarea{background:#080f19!important;border-color:#354963!important}
+.dashboard-page .site-footer{background:#05080e!important;border-top:1px solid #1b2431!important}
+.dashboard-nav>a.dashboard-website-link{
+  position:relative;display:inline-flex;align-items:center;gap:7px;
+  padding:11px 17px;border:1px solid #168cff;border-radius:10px;
+  color:#fff!important;background:linear-gradient(110deg,#0756a5,#087fe8,#0756a5);
+  background-size:200% 100%;font-size:13px;font-weight:800;
+  box-shadow:0 0 0 1px #168cff55,0 0 14px #168cff88;
+  animation:websiteLinkGlow 1.8s ease-in-out infinite,websiteLinkShine 3s linear infinite;
+}
+.dashboard-nav>a.dashboard-website-link span{font-size:15px}
+.dashboard-nav>a.dashboard-website-link:hover{color:#fff!important;transform:translateY(-1px);box-shadow:0 0 0 2px #65baff88,0 0 22px #168cffcc}
+@keyframes websiteLinkGlow{
+  0%,100%{box-shadow:0 0 0 1px #168cff55,0 0 10px #168cff66}
+  50%{box-shadow:0 0 0 2px #65baffaa,0 0 22px #168cffdd}
+}
+@keyframes websiteLinkShine{to{background-position:200% 0}}
+@media(prefers-reduced-motion:reduce){.dashboard-nav>a.dashboard-website-link{animation:none}}
+@media(max-width:520px){.dashboard-nav>a.dashboard-website-link{font-size:12px;padding:10px 12px;gap:5px}}
