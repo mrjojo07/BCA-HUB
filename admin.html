@@ -74,6 +74,7 @@
           <option value="previous-year-questions">Previous Year Questions</option>
           
         </select>
+        <div id="notesModuleField" hidden><label for="notesModule">Notes module</label><select id="notesModule"><option value="module-1">Module 1</option><option value="module-2">Module 2</option><option value="module-3">Module 3</option><option value="module-4">Module 4</option><option value="module-5">Module 5</option><option value="module-6">Module 6</option></select></div>
         <label for="materialFiles">Select files (PDF, images, documents)</label><input id="materialFiles" type="file" multiple accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.txt,.docx,.pptx,.xlsx"><div class="admin-toolbar"><button class="admin-action" id="uploadMaterials" type="button">↑ Upload &amp; Publish</button></div><p id="materialUploadStatus" class="admin-intro" aria-live="polite">Choose files to upload directly to BCA HUB.</p>
         <div class="admin-remove-area">
           <label for="existingFiles">Existing files</label>
@@ -300,8 +301,14 @@
       const category = document.getElementById("category").value;
       if (!semester || !subject) return "";
       const slug = subject.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-      return "resources/" + semester + "/" + category + "/" + slug;
+      const modulePart = category === "notes" ? "/" + document.getElementById("notesModule").value : "";
+      return "resources/" + semester + "/" + category + "/" + slug + modulePart;
     }
+    const categorySelect = document.getElementById("category");
+    const notesModuleField = document.getElementById("notesModuleField");
+    function updateNotesModuleVisibility() { notesModuleField.hidden = categorySelect.value !== "notes"; }
+    categorySelect.addEventListener("change", () => { updateNotesModuleVisibility(); loadExistingFiles(); });
+    updateNotesModuleVisibility();
     const existingFiles = document.getElementById("existingFiles");
     const fileListStatus = document.getElementById("fileListStatus");
     const removeButton = document.getElementById("removeButton");
