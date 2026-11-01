@@ -226,7 +226,7 @@ main .about-section#about p{font-size:10px!important;line-height:1.5!important;m
 .dashboard-main{width:min(1120px,100%);margin:0 auto;padding:46px 24px 70px;flex:1}
 .dashboard-main>.auth-status{margin-bottom:18px}
 .dashboard-welcome{display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,330px);align-items:center;gap:24px;margin-bottom:28px}
-.dashboard-welcome h1{font:700 clamp(30px,5vw,48px) "Space Grotesk";letter-spacing:-1.8px;margin:12px 0 8px;color:#f3f7ff}
+.dashboard-welcome h1{font:700 clamp(22px,3.5vw,30px) "Space Grotesk";letter-spacing:-1px;margin:0 0 2px;color:#f3f7ff}
 .dashboard-welcome h1 span{color:#55aaff}
 .dashboard-welcome>div>p{font-size:12px;color:#91a0b5;overflow-wrap:anywhere}
 .dashboard-membership{margin:0}
@@ -543,7 +543,8 @@ body.image-viewer-open{overflow:hidden}
 .dashboard-welcome .dashboard-student-name{
   margin:0 0 8px;
   color:#55aaff;
-  font:700 clamp(26px,4vw,38px) "Space Grotesk";
-  letter-spacing:-1px;
+  font:700 clamp(32px,5vw,44px) "Space Grotesk";
+  letter-spacing:-1.2px;
+  line-height:1.08;
   overflow-wrap:anywhere;
 }
