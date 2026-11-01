@@ -54,11 +54,9 @@ async function showMaterials(category) {
   if (category === "previous-year-questions") {
     const heading = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER 1 · PREVIOUS YEAR QUESTIONS</div><h3>Previous Year Questions</h3></div><button class="browser-close" data-back="subject" type="button">← Back to subject</button></div>';
     const papers = [
-      {name:"2020–2021 · BCA Semester 1 question papers",note:"University of Calicut · CHMK Library · Older CBCSS scheme",url:"https://scholar.uoc.ac.in/bitstreams/766fc6e7-51ef-42db-9688-7fb991d93c47/download"},
-      {name:"2021 · BCA Semester 1 question papers",note:"University of Calicut · CHMK Library · Older syllabus archive",url:"https://scholar.uoc.ac.in/bitstreams/86e89400-e6ea-446a-9a84-56ac027b503b/download"},
-      {name:"2019–20 onwards · BCA model question papers",note:"University of Calicut · CBCSS scheme model papers",url:"https://littleflowercollege.edu.in/upload/pdf_upload/71a12d70e6842147227cf064f71bb519.pdf"},
-      {name:"2024 admission onwards · BCA CUFYUGP syllabus & model papers",note:"Current scheme · Includes Semester 1 model question papers",url:"https://krsnc.edu.in/wp-content/uploads/2025/02/2024-06-22-17_03_40_syl1852.pdf"}
-    ];
+      {name:"2024 onwards · Official BCA CUFYUGP syllabus & model question papers",note:"University of Calicut · Current scheme · Includes Semester 1",url:"https://docs.uoc.ac.in/website/syllabus/2024-06-22%2017%3A03%3A40_syl1852.pdf"},
+      {name:"2024 admission · Semester 1 model question paper (BCA1CJ101)",note:"Fundamentals of Computers and Computational Thinking · Model paper",url:"https://smcp.ac.in/images/syllabus/FYUGP/2025bca.pdf"}
+
     subjectBrowser.innerHTML = heading;
     const list = document.createElement("div");
     list.className = "subject-list";
@@ -86,7 +84,7 @@ async function showMaterials(category) {
     subjectBrowser.append(list);
     const note = document.createElement("p");
     note.className = "browser-empty";
-    note.textContent = "Note: The 2020–2021 papers follow the older syllabus. Use them for practice only after comparing topics with your 2026 CUFYUGP syllabus. More verified year-wise papers will be added when available.";
+    note.textContent = "Only 2024 admission onwards CUFYUGP resources are listed here. The official University PDF contains the current syllabus and model question papers. Actual year-wise Semester 1 exam papers for later years will be added when verified.";
     subjectBrowser.append(note);
     subjectBrowser.scrollIntoView({behavior:"smooth",block:"start"});
     return;
