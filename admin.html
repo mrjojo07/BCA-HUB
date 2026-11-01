@@ -180,7 +180,8 @@
         loginPanel.hidden = true;
         mfaPanel.hidden = true;
         uploadPanel.hidden = false;
-        loadAdminFeedback();\n        loadCommunityUploads();
+        loadAdminFeedback();
+        loadCommunityUploads();
         loadExamTimetable();
         loadWebsiteAnalytics();
         return true;
@@ -252,7 +253,8 @@
         if (aal.currentLevel !== "aal2") throw new Error("MFA verification did not reach aal2.");
         mfaPanel.hidden = true;
         uploadPanel.hidden = false;
-        loadAdminFeedback();\n        loadCommunityUploads();
+        loadAdminFeedback();
+        loadCommunityUploads();
         loadExamTimetable();
         loadWebsiteAnalytics();
         mfaQr.removeAttribute("src");
@@ -658,7 +660,8 @@
       }catch(error){communityAdminStatus.textContent="Could not load submissions: "+(error.message||"Check Admin access and MFA.");}
     }
     document.getElementById("refreshCommunityUploads")?.addEventListener("click",loadCommunityUploads);
-\n    const analyticsStatus = document.getElementById("analyticsStatus");
+
+    const analyticsStatus = document.getElementById("analyticsStatus");
     const analyticsNumber = id => document.getElementById(id);
     function renderAnalyticsRanking(targetId, entries) {
       const target = analyticsNumber(targetId);
