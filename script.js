@@ -56,8 +56,8 @@ function showCategories(name) {
 }
 function showNotesModules() {
   const heading = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · NOTES</div><h3>'+currentSubject+'</h3></div><button class="browser-close" data-back="subject" type="button">← Back to subject</button></div>';
-  const cards = '<div class="material-grid">'+Array.from({length:6}, (_, i) => i + 1).map(number => '<button type="button" class="material-type" data-module="'+number+'"><span>▤</span><h4>Module '+number+'</h4><p>Open Module '+number+' notes and study materials.</p><small>Open module ↗</small></button>').join('')+'</div>';
-  subjectBrowser.innerHTML = heading + cards;
+  const modules = '<div class="subject-list">'+Array.from({length:6}, (_, i) => i + 1).map(number => '<button type="button" class="subject-item" data-module="'+number+'"><span class="subject-number">'+String(number).padStart(2,"0")+'</span><strong>Module '+number+'</strong><span class="subject-arrow">↗</span></button>').join('')+'</div>';
+  subjectBrowser.innerHTML = heading + modules;
   subjectBrowser.scrollIntoView({behavior:"smooth",block:"start"});
 }
 async function showMaterials(category, moduleNumber = 0) {
