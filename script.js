@@ -1,3 +1,6 @@
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm";
+const supabase = createClient("https://efbkhmfekfujbwfdpfhk.supabase.co", "sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH");
+
 const menuToggle = document.getElementById("menuToggle");
 
 // If the browser restores this page from its back-forward cache, reload it cleanly.
@@ -47,6 +50,7 @@ function showCategories(name) {
   currentSubject = name;
   const quizCard = '<button type="button" class="material-type" data-material="mcq"><span>✓</span><h4>MCQ Quiz</h4><p>Take a 10-question random quiz from 30 important questions.</p><small>Start quiz ↗</small></button>';
   subjectBrowser.innerHTML = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · SUBJECT</div><h3>'+name+'</h3></div><button class="browser-close" data-back="subjects" type="button">← Subjects</button></div><div class="material-grid"><button type="button" class="material-type" data-material="notes"><span>▤</span><h4>Notes</h4><p>Study notes and topic-wise learning materials.</p><small>Open category ↗</small></button><button type="button" class="material-type" data-material="important-questions"><span>✦</span><h4>Important Questions</h4><p>Key questions for revision and exam preparation.</p><small>Open category ↗</small></button><button type="button" class="material-type" data-material="previous-year-questions"><span>▧</span><h4>Previous Year Questions</h4><p>Previous examination question papers.</p><small>Open category ↗</small></button>'+quizCard+'</div>'+progressTrackerMarkup(name);
+  loadSubjectProgress(name);
   subjectBrowser.scrollIntoView({behavior:"smooth",block:"start"});
 }
 async function showMaterials(category) {
@@ -185,6 +189,20 @@ function renderMcqResult() {
   const detail=document.createElement('p');detail.textContent='You answered '+quizScore+' out of 10 questions correctly.';
   const again=document.createElement('button');again.className='quiz-next';again.type='button';again.textContent='Try another random set';again.addEventListener('click',startMcqQuiz);
   panel.append(score,message,detail,again);subjectBrowser.append(heading,panel);
+  supabase.auth.getUser().then(async ({data:{user}}) => {
+    if (!user) return;
+    const {error} = await supabase.from("quiz_attempts").insert({
+      user_id:user.id, semester:currentSemester, subject_slug:subjectSlug(currentSubject),
+      score:quizScore, total_questions:10
+    });
+    if (error) console.warn("Quiz result was not saved:", error.message);
+  });
+  const slug = subjectSlug(currentSubject);
+  const cache = progressCache[slug] || {};
+  if (!cache.quiz) {
+    const checkbox = subjectBrowser.querySelector("[data-progress-task=quiz]");
+    if (checkbox) { checkbox.checked = true; checkbox.dispatchEvent(new Event("change", {bubbles:true})); }
+  }
 }
 
 semesterGrid?.addEventListener("click", (event) => {
@@ -257,30 +275,65 @@ function toggleSavedResource(item, button) {
 }
 
 const progressTasks = [
-  ["notes", "Study notes completed"],
-  ["important", "Important questions completed"],
-  ["quiz", "MCQ quiz completed"]
+  ["notes", "Study notes completed", "notes"],
+  ["important", "Important questions completed", "important-questions"],
+  ["quiz", "MCQ quiz completed", "mcq-quiz"]
 ];
-function progressStorageKey(subject) {
-  return "bca-hub-progress-" + subjectSlug(subject);
+let progressCache = {};
+async function loadSubjectProgress(subject) {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+  const { data, error } = await supabase.from("learning_progress")
+    .select("category,completed").eq("user_id", user.id)
+    .eq("semester", currentSemester).eq("subject_slug", subjectSlug(subject));
+  if (error) { console.warn("Could not load learning progress:", error.message); return; }
+  progressCache[subjectSlug(subject)] = Object.fromEntries(
+    progressTasks.map(([key,,category]) => [key, !!data.find(row => row.category === category)?.completed])
+  );
+  const tracker = subjectBrowser.querySelector(".learning-progress");
+  if (tracker && currentSubject === subject) tracker.outerHTML = progressTrackerMarkup(subject);
 }
 function progressTrackerMarkup(subject) {
-  let saved = {};
-  try { saved = JSON.parse(localStorage.getItem(progressStorageKey(subject)) || "{}"); } catch (_) {}
+  const saved = progressCache[subjectSlug(subject)] || {};
   const done = progressTasks.filter(([key]) => saved[key]).length;
   const percent = Math.round(done / progressTasks.length * 100);
-  return '<section class="learning-progress"><div class="progress-heading"><div><div class="eyebrow">YOUR LEARNING JOURNEY</div><h4>Subject progress</h4></div><strong class="progress-percent">'+percent+'%</strong></div><div class="learning-progress-track"><span style="width:'+percent+'%"></span></div><div class="progress-checklist">'+progressTasks.map(([key,label])=>'<label><input type="checkbox" data-progress-task="'+key+'" '+(saved[key]?'checked':'')+'><span>'+label+'</span></label>').join('')+'</div><p>Your progress is saved on this device.</p></section>';
+  return '<section class="learning-progress"><div class="progress-heading"><div><div class="eyebrow">YOUR LEARNING JOURNEY</div><h4>Subject progress</h4></div><strong class="progress-percent">'+percent+'%</strong></div><div class="learning-progress-track"><span style="width:'+percent+'%"></span></div><div class="progress-checklist">'+progressTasks.map(([key,label])=>'<label><input type="checkbox" data-progress-task="'+key+'" '+(saved[key]?'checked':'')+'><span>'+label+'</span></label>').join('')+'</div><p>Progress is saved to your student account.</p></section>';
 }
-
-subjectBrowser?.addEventListener("change", (event) => {
+subjectBrowser?.addEventListener("change", async (event) => {
   const checkbox = event.target.closest("[data-progress-task]");
   if (!checkbox || !currentSubject) return;
-  let saved = {};
-  try { saved = JSON.parse(localStorage.getItem(progressStorageKey(currentSubject)) || "{}"); } catch (_) {}
-  saved[checkbox.dataset.progressTask] = checkbox.checked;
-  localStorage.setItem(progressStorageKey(currentSubject), JSON.stringify(saved));
-  const oldTracker = subjectBrowser.querySelector(".learning-progress");
-  if (oldTracker) oldTracker.outerHTML = progressTrackerMarkup(currentSubject);
+  const task = progressTasks.find(([key]) => key === checkbox.dataset.progressTask);
+  if (!task) return;
+  const [key,,category] = task;
+  const subject = currentSubject;
+  const slug = subjectSlug(subject);
+  const previous = !!(progressCache[slug] || {})[key];
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    checkbox.checked = previous;
+    alert("Please log in to save your learning progress.");
+    return;
+  }
+  const lookup = await supabase.from("learning_progress").select("id")
+    .eq("user_id", user.id).eq("semester", currentSemester)
+    .eq("subject_slug", slug).eq("category", category).maybeSingle();
+  let result;
+  if (lookup.error) result = lookup;
+  else if (lookup.data) result = await supabase.from("learning_progress")
+    .update({completed: checkbox.checked, updated_at: new Date().toISOString()}).eq("id", lookup.data.id);
+  else result = await supabase.from("learning_progress").insert({
+    user_id: user.id, semester: currentSemester, subject_slug: slug,
+    category, completed: checkbox.checked
+  });
+  if (result.error) {
+    checkbox.checked = previous;
+    alert("Could not save progress. Please try again.");
+    console.error("Progress save error:", result.error.message);
+    return;
+  }
+  progressCache[slug] = {...(progressCache[slug] || {}), [key]: checkbox.checked};
+  const tracker = subjectBrowser.querySelector(".learning-progress");
+  if (tracker) tracker.outerHTML = progressTrackerMarkup(subject);
 });
 
 
