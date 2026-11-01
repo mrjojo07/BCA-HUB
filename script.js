@@ -63,7 +63,9 @@ function showNotesModules() {
 async function showMaterials(category, moduleNumber = 0) {
   if (category === "mcq") { startMcqQuiz(); return; }
   const labels = {"notes":"Notes","important-questions":"Important Questions","previous-year-questions":"Previous Year Questions","mcq":"MCQ"};
-  subjectBrowser.innerHTML = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · '+labels[category].toUpperCase()+'</div><h3>'+labels[category]+'</h3></div><button class="browser-close" data-back="subject" type="button">← Back to subject</button></div><p class="browser-empty">Loading materials…</p>';
+  const backTarget = category === "notes" && moduleNumber ? "modules" : "subject";
+  const backLabel = backTarget === "modules" ? "← Back to modules" : "← Back to subject";
+  subjectBrowser.innerHTML = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · '+labels[category].toUpperCase()+'</div><h3>'+labels[category]+'</h3></div><button class="browser-close" data-back="'+backTarget+'" type="button">'+backLabel+'</button></div><p class="browser-empty">Loading materials…</p>';
   const baseFolder = 'resources/semester-'+currentSemester+'/'+category+'/'+subjectSlug(currentSubject);
   const folder = category === "notes" && moduleNumber ? baseFolder + "/module-" + moduleNumber : baseFolder;
   const apiUrl = 'https://api.github.com/repos/mrjojo07/BCA-HUB/contents/'+folder;
@@ -90,7 +92,7 @@ async function showMaterials(category, moduleNumber = 0) {
       if (!uniqueFiles.has(key)) uniqueFiles.set(key, file);
     }
     const files = [...uniqueFiles.values()];
-    const heading = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · '+labels[category].toUpperCase()+'</div><h3>'+labels[category]+'</h3></div><button class="browser-close" data-back="subject" type="button">← Back to subject</button></div>';
+    const heading = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · '+labels[category].toUpperCase()+'</div><h3>'+labels[category]+'</h3></div><button class="browser-close" data-back="'+backTarget+'" type="button">'+backLabel+'</button></div>';
     if (!files.length) {
       subjectBrowser.innerHTML = heading+'<p class="browser-empty">No files have been uploaded here yet.</p>';
       return;
@@ -437,6 +439,7 @@ subjectBrowser?.addEventListener("click", (event) => {
   const close = event.target.closest(".browser-close");
   if (close) {
     if (close.dataset.back === "subjects") showSemester(currentSemester);
+    else if (close.dataset.back === "modules") showNotesModules();
     else if (close.dataset.back === "subject") showCategories(currentSubject);
     else subjectBrowser.hidden = true;
     return;
