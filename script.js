@@ -56,6 +56,7 @@ async function showMaterials(category) {
     const papers = [
       {name:"2024 onwards · Official BCA CUFYUGP syllabus & model question papers",note:"University of Calicut · Current scheme · Includes Semester 1",url:"https://docs.uoc.ac.in/website/syllabus/2024-06-22%2017%3A03%3A40_syl1852.pdf"},
       {name:"2024 admission · Semester 1 model question paper (BCA1CJ101)",note:"Fundamentals of Computers and Computational Thinking · Model paper",url:"https://smcp.ac.in/images/syllabus/FYUGP/2025bca.pdf"}
+    ];
 
     subjectBrowser.innerHTML = heading;
     const list = document.createElement("div");
