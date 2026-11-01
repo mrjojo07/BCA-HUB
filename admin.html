@@ -308,6 +308,7 @@
     const notesModuleField = document.getElementById("notesModuleField");
     function updateNotesModuleVisibility() { notesModuleField.hidden = categorySelect.value !== "notes"; }
     categorySelect.addEventListener("change", () => { updateNotesModuleVisibility(); loadExistingFiles(); });
+    document.getElementById("notesModule").addEventListener("change", loadExistingFiles);
     updateNotesModuleVisibility();
     const existingFiles = document.getElementById("existingFiles");
     const fileListStatus = document.getElementById("fileListStatus");
