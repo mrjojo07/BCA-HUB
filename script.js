@@ -52,41 +52,8 @@ function showCategories(name) {
 async function showMaterials(category) {
   if (category === "mcq") { startMcqQuiz(); return; }
   if (category === "previous-year-questions") {
-    const heading = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER 1 · PREVIOUS YEAR QUESTIONS</div><h3>Previous Year Questions</h3></div><button class="browser-close" data-back="subject" type="button">← Back to subject</button></div>';
-    const papers = [
-      {name:"2024 onwards · Official BCA CUFYUGP syllabus & model question papers",note:"University of Calicut · Current scheme · Includes Semester 1",url:"https://docs.uoc.ac.in/website/syllabus/2024-06-22%2017%3A03%3A40_syl1852.pdf"},
-      {name:"2024 admission · Semester 1 model question paper (BCA1CJ101)",note:"Fundamentals of Computers and Computational Thinking · Model paper",url:"https://smcp.ac.in/images/syllabus/FYUGP/2025bca.pdf"}
-    ];
-
-    subjectBrowser.innerHTML = heading;
-    const list = document.createElement("div");
-    list.className = "subject-list";
-    papers.forEach(paper => {
-      const row = document.createElement("div");
-      row.className = "subject-item";
-      const info = document.createElement("div");
-      info.style.flex = "1";
-      const title = document.createElement("strong");
-      title.textContent = paper.name;
-      const note = document.createElement("small");
-      note.textContent = paper.note;
-      note.style.display = "block";
-      note.style.marginTop = "5px";
-      info.append(title, note);
-      const link = document.createElement("a");
-      link.href = paper.url;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-      link.className = "subject-arrow";
-      link.textContent = "Open PDF ↗";
-      row.append(info, link);
-      list.append(row);
-    });
-    subjectBrowser.append(list);
-    const note = document.createElement("p");
-    note.className = "browser-empty";
-    note.textContent = "Only 2024 admission onwards CUFYUGP resources are listed here. The official University PDF contains the current syllabus and model question papers. Actual year-wise Semester 1 exam papers for later years will be added when verified.";
-    subjectBrowser.append(note);
+    const heading = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · PREVIOUS YEAR QUESTIONS</div><h3>Previous Year Questions</h3></div><button class="browser-close" data-back="subject" type="button">← Back to subject</button></div>';
+    subjectBrowser.innerHTML = heading + '<p class="browser-empty">Verified actual Semester 1 previous-year exam papers are not available here yet. University syllabus and model question papers are listed separately in the Syllabus link on the homepage. Actual exam papers will be added when verified.</p>';
     subjectBrowser.scrollIntoView({behavior:"smooth",block:"start"});
     return;
   }
