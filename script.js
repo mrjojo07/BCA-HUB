@@ -260,14 +260,32 @@ function renderSavedResources() {
     list.append(row);
   });
 }
-function toggleSavedResource(item, button) {
-  const items = readSavedResources();
-  const existing = items.findIndex(saved => saved.url === item.url);
-  if (existing >= 0) items.splice(existing, 1);
-  else items.push(item);
-  writeSavedResources(items);
+async function toggleSavedResource(item, button) {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) { alert("Please log in to save resources to your dashboard."); return; }
+  const existing = await supabase.from("saved_resources").select("id")
+    .eq("user_id", user.id).eq("resource_path", item.url).maybeSingle();
+  if (existing.error) { alert("Could not check saved resources. Please try again."); return; }
+  let result;
+  if (existing.data) {
+    result = await supabase.from("saved_resources").delete().eq("id", existing.data.id);
+  } else {
+    result = await supabase.from("saved_resources").insert({
+      user_id:user.id, resource_path:item.url, resource_title:item.name,
+      semester:item.semester, subject_slug:subjectSlug(item.subject), category:item.category.toLowerCase().replace(/\\s+/g,"-")
+    });
+  }
+  if (result.error) { alert("Could not update saved resources. Please try again."); console.error(result.error.message); return; }
+  const rows = await supabase.from("saved_resources").select("resource_path,resource_title,semester,subject_slug,category,created_at")
+    .eq("user_id",user.id).order("created_at",{ascending:false});
+  if (!rows.error) {
+    writeSavedResources((rows.data || []).map(row => ({
+      name:row.resource_title, url:row.resource_path, subject:titleFromSlug(row.subject_slug),
+      category:titleFromSlug(row.category), semester:row.semester
+    })));
+  }
   if (button) {
-    const saved = existing < 0;
+    const saved = !existing.data;
     button.textContent = saved ? "★ Saved" : "☆ Save";
     button.classList.toggle("is-saved", saved);
     button.setAttribute("aria-pressed", String(saved));
@@ -337,14 +355,35 @@ subjectBrowser?.addEventListener("change", async (event) => {
 });
 
 
-document.getElementById("savedResourcesList")?.addEventListener("click", event => {
+document.getElementById("savedResourcesList")?.addEventListener("click", async event => {
   const button = event.target.closest("[data-remove-saved]");
   if (!button) return;
   const items = readSavedResources();
-  items.splice(Number(button.dataset.removeSaved), 1);
+  const item = items[Number(button.dataset.removeSaved)];
+  if (!item) return;
+  const {data:{user}} = await supabase.auth.getUser();
+  if (!user) return;
+  const {data:row} = await supabase.from("saved_resources").select("id")
+    .eq("user_id",user.id).eq("resource_path",item.url).maybeSingle();
+  if (!row) return;
+  const {error} = await supabase.from("saved_resources").delete().eq("id",row.id);
+  if (error) { alert("Could not remove this saved resource."); return; }
+  items.splice(Number(button.dataset.removeSaved),1);
   writeSavedResources(items);
 });
-renderSavedResources();
+async function syncSavedResourcesFromAccount() {
+  const {data:{user}} = await supabase.auth.getUser();
+  if (!user) return renderSavedResources();
+  const {data,error} = await supabase.from("saved_resources")
+    .select("resource_path,resource_title,semester,subject_slug,category,created_at")
+    .eq("user_id",user.id).order("created_at",{ascending:false});
+  if (error) { console.warn("Saved resources could not be loaded:",error.message); return renderSavedResources(); }
+  writeSavedResources((data || []).map(row => ({
+    name:row.resource_title, url:row.resource_path, subject:titleFromSlug(row.subject_slug),
+    category:titleFromSlug(row.category), semester:row.semester
+  })));
+}
+syncSavedResourcesFromAccount();
 const savedPanel = document.getElementById("savedResourcesSection");
 function closeSavedResources() {
   if (savedPanel) savedPanel.hidden = true;
