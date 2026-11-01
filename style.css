@@ -537,3 +537,13 @@ body.image-viewer-open{overflow:hidden}
 .dashboard-progress-ring>small{font:600 8px "DM Sans";color:#91a0b5}
 .dashboard-progress-ring.is-complete{background:conic-gradient(#22c55e 100%,#26364c 0);color:#86efac}
 .dashboard-progress-ring.is-complete>small{color:#86efac}
+
+
+/* Show the student's name on its own line under Welcome */
+.dashboard-welcome .dashboard-student-name{
+  margin:0 0 8px;
+  color:#55aaff;
+  font:700 clamp(26px,4vw,38px) "Space Grotesk";
+  letter-spacing:-1px;
+  overflow-wrap:anywhere;
+}
