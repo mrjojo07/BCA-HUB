@@ -306,7 +306,30 @@ async function toggleSavedResource(item, button) {
       semester:item.semester, subject_slug:subjectSlug(item.subject), category:item.category.toLowerCase().replace(/\s+/g,"-")
     });
   }
-  if (result.error) { alert("Could not update saved resources. Please try again."); console.error(result.error.message); return; }
+  if (result.error) {
+    // A quick double tap or another open tab can race the initial lookup.
+    // A duplicate-save conflict means the resource is already saved; refresh the list.
+    if (result.error.code === "23505" || result.error.code === "409") {
+      const latest = await supabase.from("saved_resources")
+        .select("resource_path,resource_title,semester,subject_slug,category,created_at")
+        .eq("user_id",user.id).order("created_at",{ascending:false});
+      if (!latest.error) {
+        writeSavedResources((latest.data || []).map(row => ({
+          name:row.resource_title, url:row.resource_path, subject:titleFromSlug(row.subject_slug),
+          category:titleFromSlug(row.category), semester:row.semester
+        })));
+        if (button) {
+          button.textContent = "★ Saved";
+          button.classList.add("is-saved");
+          button.setAttribute("aria-pressed", "true");
+        }
+        return;
+      }
+    }
+    alert("Could not update saved resources. Please try again.");
+    console.error(result.error.message);
+    return;
+  }
   const rows = await supabase.from("saved_resources").select("resource_path,resource_title,semester,subject_slug,category,created_at")
     .eq("user_id",user.id).order("created_at",{ascending:false});
   if (!rows.error) {
