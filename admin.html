@@ -84,6 +84,12 @@
         </div>
       </form>
       <section class="admin-timetable"><h2>Exam timetable</h2><p class="admin-intro">Add or edit exam dates here. Save &amp; Publish updates the website directly — no GitHub commit needed.</p><form id="examForm" class="admin-form"><label for="examTitle">Exam / paper name</label><input id="examTitle" maxlength="160" required placeholder="e.g. Data Structures"><label for="examDate">Exam date</label><input id="examDate" type="date" required><div class="admin-toolbar"><button class="admin-action" id="saveExamButton" type="submit">＋ Save &amp; Publish</button><button class="admin-back-button" id="cancelExamEdit" type="button" hidden>Cancel edit</button></div></form><p id="examAdminStatus" class="admin-intro" aria-live="polite">Loading timetable…</p><div id="examEntries"></div></section>
+
+      <section class="admin-timetable" id="communityUploadsPanel">
+        <div class="admin-toolbar"><div><h2>Community Uploads</h2><p class="admin-intro">Review student PDFs. Only approved files are published to the matching semester, subject and category.</p></div><button class="admin-back-button" id="refreshCommunityUploads" type="button">↻ Refresh</button></div>
+        <p class="admin-intro" id="communityAdminStatus" aria-live="polite">Loading submissions…</p>
+        <div id="communityAdminList" class="admin-resource-requests"></div>
+      </section>
       <section class="admin-timetable" id="feedbackManagerPanel"><div class="admin-toolbar"><div><h2>Student feedback</h2><p class="admin-intro">Feedback submitted through the homepage appears here.</p></div><button class="admin-back-button" id="refreshFeedback" type="button">↻ Refresh feedback</button></div><p class="admin-intro" id="feedbackAdminStatus" aria-live="polite">Loading feedback…</p><div id="adminFeedbackList" class="admin-resource-requests"></div><p class="admin-footnote">Feedback is stored privately in BCA HUB and visible only to approved administrators.</p></section>
       <p class="admin-footnote">Directly uploaded files can be removed here. Older files stored in GitHub still use GitHub for rename or deletion.</p>
       <button class="admin-back-button" id="logoutButton" type="button">Lock Admin Panel</button>
@@ -174,7 +180,7 @@
         loginPanel.hidden = true;
         mfaPanel.hidden = true;
         uploadPanel.hidden = false;
-        loadAdminFeedback();
+        loadAdminFeedback();\n        loadCommunityUploads();
         loadExamTimetable();
         loadWebsiteAnalytics();
         return true;
@@ -246,7 +252,7 @@
         if (aal.currentLevel !== "aal2") throw new Error("MFA verification did not reach aal2.");
         mfaPanel.hidden = true;
         uploadPanel.hidden = false;
-        loadAdminFeedback();
+        loadAdminFeedback();\n        loadCommunityUploads();
         loadExamTimetable();
         loadWebsiteAnalytics();
         mfaQr.removeAttribute("src");
@@ -582,7 +588,77 @@
       } catch (error) { feedbackStatus.textContent = error.message || "Could not load feedback. Check Admin access and MFA."; }
     }
     document.getElementById("refreshFeedback")?.addEventListener("click", loadAdminFeedback);
-    const analyticsStatus = document.getElementById("analyticsStatus");
+
+    const communityAdminStatus = document.getElementById("communityAdminStatus");
+    const communityAdminList = document.getElementById("communityAdminList");
+    const adminSubjectSlug = value => value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+    async function loadCommunityUploads() {
+      if (!communityAdminStatus || !communityAdminList) return;
+      communityAdminStatus.textContent = "Loading pending submissions…";
+      communityAdminList.replaceChildren();
+      try {
+        const {data:items,error} = await supabase.from("community_uploads")
+          .select("id,user_id,semester,subject_name,subject_slug,category,module_number,title,original_filename,storage_path,created_at")
+          .eq("status","pending").order("created_at",{ascending:true}).limit(100);
+        if (error) throw error;
+        if (!items?.length) { communityAdminStatus.textContent = "No pending community uploads."; return; }
+        communityAdminStatus.textContent = items.length + " pending submission(s).";
+        items.forEach(item => {
+          const card=document.createElement("article");card.className="admin-request-card";
+          const top=document.createElement("div");top.className="admin-request-top";
+          const title=document.createElement("strong");title.textContent=item.title;
+          const badge=document.createElement("span");badge.className="admin-request-state is-open";badge.textContent="Pending";
+          top.append(title,badge);
+          const meta=document.createElement("p");meta.className="admin-intro";
+          meta.textContent="Semester "+item.semester+" · "+item.subject_name+" · "+item.category+(item.module_number?" · Module "+item.module_number:"")+" · "+new Date(item.created_at).toLocaleString();
+          const filename=document.createElement("p");filename.className="admin-request-body";filename.textContent="File: "+item.original_filename;
+          const actions=document.createElement("div");actions.className="admin-toolbar";
+          const preview=document.createElement("button");preview.type="button";preview.className="admin-back-button";preview.textContent="Preview PDF";
+          preview.addEventListener("click",async()=>{
+            preview.disabled=true;communityAdminStatus.textContent="Preparing secure preview…";
+            try{const {data,error}=await supabase.storage.from("community-pending").download(item.storage_path);if(error)throw error;
+              const url=URL.createObjectURL(data);const opened=window.open(url,"_blank","noopener");
+              if(!opened){const a=document.createElement("a");a.href=url;a.download=item.original_filename;a.click();}
+              setTimeout(()=>URL.revokeObjectURL(url),60000);communityAdminStatus.textContent="Preview opened.";
+            }catch(e){communityAdminStatus.textContent="Preview failed: "+(e.message||"");}
+            finally{preview.disabled=false;}
+          });
+          const approve=document.createElement("button");approve.type="button";approve.className="admin-action";approve.textContent="✓ Approve & Publish";
+          approve.addEventListener("click",async()=>{
+            if(!confirm("Approve and publish this PDF to the selected semester, subject and category?"))return;
+            approve.disabled=true;reject.disabled=true;communityAdminStatus.textContent="Publishing approved PDF…";
+            let publishedPath="";
+            try{
+              const {data:blob,error:downloadError}=await supabase.storage.from("community-pending").download(item.storage_path);
+              if(downloadError)throw downloadError;
+              const folder="resources/semester-"+item.semester+"/"+item.category+"/"+item.subject_slug+(item.category==="notes"?"/module-"+item.module_number:"");
+              const safeName=item.original_filename.normalize("NFKD").replace(/[^a-zA-Z0-9._-]+/g,"-").slice(-100)||"community-note.pdf";
+              publishedPath=folder+"/"+Date.now()+"-"+safeName;
+              const {error:publishError}=await supabase.storage.from("bca-hub-materials").upload(publishedPath,blob,{contentType:"application/pdf",upsert:false});
+              if(publishError)throw publishError;
+              const {error:updateError}=await supabase.from("community_uploads").update({status:"approved",published_path:publishedPath,reviewed_at:new Date().toISOString()}).eq("id",item.id).eq("status","pending");
+              if(updateError){await supabase.storage.from("bca-hub-materials").remove([publishedPath]);throw updateError;}
+              await supabase.storage.from("community-pending").remove([item.storage_path]);
+              communityAdminStatus.textContent="Approved and published: "+item.title;
+              await loadCommunityUploads();
+            }catch(e){communityAdminStatus.textContent="Could not publish: "+(e.message||"Please try again.");approve.disabled=false;reject.disabled=false;}
+          });
+          const reject=document.createElement("button");reject.type="button";reject.className="admin-back-button";reject.textContent="Reject";
+          reject.addEventListener("click",async()=>{
+            const note=prompt("Optional reason for rejection (visible only to admins):","")||null;
+            if(!confirm("Reject this submission?"))return;
+            reject.disabled=true;approve.disabled=true;
+            const {error}=await supabase.from("community_uploads").update({status:"rejected",rejection_note:note,reviewed_at:new Date().toISOString()}).eq("id",item.id).eq("status","pending");
+            if(error){communityAdminStatus.textContent="Could not reject: "+error.message;reject.disabled=false;approve.disabled=false;return;}
+            await supabase.storage.from("community-pending").remove([item.storage_path]);
+            communityAdminStatus.textContent="Submission rejected.";await loadCommunityUploads();
+          });
+          actions.append(preview,approve,reject);card.append(top,meta,filename,actions);communityAdminList.append(card);
+        });
+      }catch(error){communityAdminStatus.textContent="Could not load submissions: "+(error.message||"Check Admin access and MFA.");}
+    }
+    document.getElementById("refreshCommunityUploads")?.addEventListener("click",loadCommunityUploads);
+\n    const analyticsStatus = document.getElementById("analyticsStatus");
     const analyticsNumber = id => document.getElementById(id);
     function renderAnalyticsRanking(targetId, entries) {
       const target = analyticsNumber(targetId);
