@@ -379,13 +379,40 @@
     });
     existingFiles.addEventListener("change", () => {
       removeButton.disabled = !existingFiles.value;
-      renameButton.disabled = !existingFiles.value || existingFiles.value.startsWith("storage:");
+      renameButton.disabled = !existingFiles.value;
     });
-    renameButton.addEventListener("click", () => {
-      const path = existingFiles.value;
-      if (!path) return;
-      if (!confirm("Open GitHub editor for the selected file? You can change its filename/path there and commit the rename.")) return;
-      window.open("https://github.com/mrjojo07/BCA-HUB/edit/main/" + path.split("/").map(encodeURIComponent).join("/"), "_blank", "noopener");
+    renameButton.addEventListener("click", async () => {
+      const selected = existingFiles.value;
+      if (!selected) return;
+      if (selected.startsWith("storage:")) {
+        const oldName = selected.slice(8);
+        const newName = prompt("Enter the new file name (keep the file extension):", oldName);
+        if (newName === null) return;
+        const cleanName = newName.trim();
+        if (!cleanName || cleanName === oldName) return;
+        if (cleanName.includes("/") || cleanName.includes("\\") || cleanName === "." || cleanName === "..") {
+          fileListStatus.textContent = "Enter a valid file name without folder separators.";
+          return;
+        }
+        if (!confirm('Rename "' + oldName + '" to "' + cleanName + '"?')) return;
+        renameButton.disabled = true;
+        fileListStatus.textContent = "Renaming file…";
+        try {
+          const folder = selectedFolder();
+          const { error } = await supabase.storage.from("bca-hub-materials").move(folder + "/" + oldName, folder + "/" + cleanName);
+          if (error) throw error;
+          await loadExistingFiles();
+          fileListStatus.textContent = "File renamed successfully.";
+        } catch (error) {
+          fileListStatus.textContent = "Could not rename file: " + (error.message || "Please try again.");
+          renameButton.disabled = false;
+        }
+        return;
+      }
+      const editUrl = "https://github.com/mrjojo07/BCA-HUB/edit/main/" + selected.split("/").map(encodeURIComponent).join("/");
+      const opened = window.open(editUrl, "_blank");
+      if (!opened) fileListStatus.textContent = "Popup blocked. Allow pop-ups for GitHub, then try Rename again.";
+      else fileListStatus.textContent = "GitHub editor opened. Rename the file there and commit the change.";
     });
     document.getElementById("refreshFiles").addEventListener("click", loadExistingFiles);
     removeButton.addEventListener("click", async () => {
