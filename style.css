@@ -831,3 +831,125 @@ body.image-viewer-open{overflow:hidden}
   .dashboard-stat strong{font-size:26px}
   .dashboard-stat small{font-size:9px}
 }
+
+
+/* Dashboard-only visual lift: restore the bright BCA HUB energy */
+.dashboard-page{
+  background:
+    radial-gradient(ellipse at 12% 3%,rgba(0,145,255,.22),transparent 31rem),
+    radial-gradient(ellipse at 88% 22%,rgba(0,220,255,.10),transparent 28rem),
+    radial-gradient(ellipse at 50% 100%,rgba(15,92,180,.10),transparent 34rem),
+    #070c14;
+}
+.dashboard-page .site-header{
+  background:rgba(5,10,18,.82);
+  border-bottom-color:rgba(76,166,255,.24);
+  box-shadow:0 8px 30px rgba(0,0,0,.18);
+  backdrop-filter:blur(18px);
+}
+.dashboard-page .brand-mark{
+  background:linear-gradient(145deg,#36b7ff 0%,#0878e8 55%,#0752b6 100%);
+  box-shadow:0 0 0 4px rgba(25,145,255,.10),0 7px 24px rgba(0,135,255,.35);
+}
+.dashboard-welcome{
+  border-color:rgba(65,165,255,.52);
+  background:
+    radial-gradient(circle at 88% 18%,rgba(31,161,255,.22),transparent 15rem),
+    linear-gradient(112deg,#12365a 0%,#0d2743 54%,#0b1b30 100%);
+  box-shadow:0 20px 55px rgba(0,0,0,.24),0 0 34px rgba(0,123,255,.10),inset 0 1px 0 rgba(255,255,255,.10);
+}
+.dashboard-welcome:after{
+  border-color:rgba(90,190,255,.30);
+  box-shadow:0 0 0 28px rgba(65,166,255,.045),0 0 0 58px rgba(65,166,255,.03),0 0 50px rgba(36,157,255,.12);
+}
+.dashboard-welcome .eyebrow{color:#79d4ff}
+.dashboard-welcome .dashboard-student-name{
+  color:#b5e6ff;
+  text-shadow:0 0 24px rgba(65,174,255,.18);
+}
+.dashboard-stat{
+  border-color:rgba(67,137,197,.40);
+  background:linear-gradient(145deg,rgba(20,43,67,.98),rgba(10,23,38,.98));
+  box-shadow:0 12px 28px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.045);
+}
+.dashboard-stat:hover{
+  border-color:#3daaff;
+  box-shadow:0 14px 34px rgba(0,0,0,.22),0 0 22px rgba(0,139,255,.12);
+}
+.dashboard-stat strong{
+  color:#f7fbff;
+  text-shadow:0 0 22px rgba(61,170,255,.14);
+}
+.dashboard-panel{
+  border-color:rgba(58,112,161,.52);
+  background:linear-gradient(155deg,rgba(17,35,54,.98),rgba(8,19,32,.98));
+  box-shadow:0 14px 34px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.035);
+}
+.dashboard-panel-heading .eyebrow{color:#69c5ff}
+.dashboard-panel-heading>a{
+  border-color:rgba(58,153,226,.58);
+  background:linear-gradient(135deg,#12385b,#102842);
+  color:#c2e7ff;
+  box-shadow:0 4px 14px rgba(0,105,195,.10);
+}
+.dashboard-panel-heading>a:hover{
+  background:linear-gradient(135deg,#175184,#12385b);
+  border-color:#58bdff;
+}
+.ai-study-panel{
+  border-color:rgba(53,160,232,.66);
+  background:
+    radial-gradient(ellipse at 92% 0%,rgba(0,166,255,.16),transparent 22rem),
+    linear-gradient(135deg,#123657 0%,#0e2741 52%,#0b1c30 100%);
+  box-shadow:0 16px 38px rgba(0,0,0,.2),0 0 28px rgba(0,137,255,.08);
+}
+.ai-online-label{
+  border:1px solid rgba(50,220,153,.28);
+  box-shadow:0 0 18px rgba(50,220,153,.08);
+}
+.ai-chat-messages{
+  border-color:rgba(65,142,201,.42);
+  background:rgba(5,17,30,.88);
+}
+.ai-chat-form button{
+  background:linear-gradient(135deg,#159cff,#0871df 58%,#0758bd);
+  box-shadow:0 7px 20px rgba(0,125,235,.27);
+  transition:transform .18s,filter .18s,box-shadow .18s;
+}
+.ai-chat-form button:hover{filter:brightness(1.12);box-shadow:0 9px 24px rgba(0,145,255,.34)}
+.ai-chat-form button:active{transform:translateY(1px)}
+.ai-suggestions button{
+  border-color:rgba(65,151,213,.42);
+  background:rgba(14,43,68,.88);
+  color:#c4e8ff;
+}
+.ai-suggestions button:hover{
+  border-color:#52baff;
+  background:#17466e;
+}
+.dashboard-progress-ring{
+  filter:drop-shadow(0 0 8px rgba(48,164,255,.18));
+}
+.dashboard-progress-ring.is-complete{
+  filter:drop-shadow(0 0 9px rgba(53,211,151,.22));
+}
+.dashboard-score{
+  border-color:rgba(69,166,235,.52);
+  background:linear-gradient(135deg,#123b60,#102944);
+  color:#c3e8ff;
+}
+.dashboard-open-link{color:#70c6ff}
+.dashboard-page .site-footer{
+  background:linear-gradient(90deg,#060d17,#091729,#060d17);
+  border-top-color:rgba(65,148,215,.22);
+}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){
+  .dashboard-welcome{animation:dashboard-rise .55s ease both}
+  .dashboard-stat{animation:dashboard-rise .5s ease both}
+  .dashboard-stat:nth-child(2){animation-delay:.06s}
+  .dashboard-stat:nth-child(3){animation-delay:.12s}
+  @keyframes dashboard-rise{
+    from{opacity:.75;transform:translateY(8px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+}
