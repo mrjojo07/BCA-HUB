@@ -956,3 +956,15 @@ body.image-viewer-open{overflow:hidden}
  #examCountdown .countdown-days{font-size:17px}
 }
 @media(max-width:350px){#examCountdown .countdown-list{grid-template-columns:1fr}}
+
+/* Student community PDF submission */
+.community-upload-section{width:min(900px,calc(100% - 32px));margin:26px auto;padding:clamp(20px,4vw,32px);border:1px solid #263b55;border-radius:20px;background:linear-gradient(145deg,#0d1929,#080e18);box-shadow:0 16px 44px rgba(0,0,0,.2)}
+.community-upload-section[hidden]{display:none}
+.community-upload-form{display:grid;gap:11px;max-width:720px}
+.community-upload-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.community-upload-form label{display:block;color:#dceaff;font-size:12px;font-weight:700;margin:6px 0}
+.community-upload-form input,.community-upload-form select{width:100%;min-width:0;padding:12px;border:1px solid #2c4564;border-radius:10px;background:#081321;color:#edf5ff;font:inherit}
+.community-upload-help,.community-upload-status{font-size:12px;line-height:1.6;color:#9fb4d2}
+.community-upload-status{padding:11px 13px;border:1px solid #243b58;border-radius:10px;background:#0a1422}
+.community-upload-form button:disabled{opacity:.55;cursor:wait}
+@media(max-width:560px){.community-upload-grid{grid-template-columns:1fr}.community-upload-section{width:calc(100% - 24px);padding:18px}}
