@@ -196,7 +196,16 @@ function renderMcqResult() {
       user_id:user.id, semester:currentSemester, subject_slug:subjectSlug(currentSubject),
       score:quizScore, total_questions:10
     });
-    if (error) console.warn("Quiz result was not saved:", error.message);
+    if (error) { console.warn("Quiz result was not saved:", error.message); return; }
+    const slug = subjectSlug(currentSubject);
+    const existing = await supabase.from("learning_progress").select("id")
+      .eq("user_id",user.id).eq("semester",currentSemester)
+      .eq("subject_slug",slug).eq("category","mcq-quiz").maybeSingle();
+    if (existing.data) {
+      await supabase.from("learning_progress").update({completed:true,updated_at:new Date().toISOString()}).eq("id",existing.data.id);
+    } else if (!existing.error) {
+      await supabase.from("learning_progress").insert({user_id:user.id,semester:currentSemester,subject_slug:slug,category:"mcq-quiz",completed:true});
+    }
   });
   const slug = subjectSlug(currentSubject);
   const cache = progressCache[slug] || {};
