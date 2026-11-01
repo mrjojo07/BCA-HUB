@@ -1044,3 +1044,96 @@ h1 span,h2 span,.section-heading h2 span,.about-section h2 span{color:#8B9EFF}
 .dashboard-nav #dashboardLogout{background:#1A2450;border-color:#3D4FA8;color:#DCE2FF}
 .dashboard-nav #dashboardLogout:hover{background:#303D78;border-color:#8B9EFF}
 @media(prefers-reduced-motion:reduce){.dashboard-welcome,.dashboard-stat{animation:none}}
+
+
+/* BCA HUB — Electric Cyan + Dark Blue theme */
+:root{
+  --navy:#041126;--navy2:#08234B;--blue:#00D9F5;--gold:#00D9F5;
+  --ink:#F2FCFF;--muted:#A9C9E8;--paper:#041126;--line:#123C68;
+}
+body{background:#041126;color:#F2FCFF}
+.site-header{background:rgba(3,13,31,.97);border-bottom-color:#10416B}
+.brand b,.nav-links a:hover,.text-link:hover,.note-icon,.sparkle,.eyebrow,.dark-eyebrow{color:#22E8FF}
+.brand-mark,.about-mark{background:linear-gradient(145deg,#00E5FF,#0079D8);box-shadow:0 7px 24px rgba(0,217,245,.3)}
+.nav-cta,.button-gold,.admin-action{background:linear-gradient(120deg,#00E5FF,#0089E8);color:#031326}
+.nav-admin{color:#72EFFF;border-color:#00A9E8}
+.nav-admin:hover{background:#0A2A52}
+.hero{background:#041126}
+.hero-glow{background:rgba(0,190,255,.25)}
+.hero:before{border-color:rgba(0,220,255,.15)}
+.eyebrow-dot{background:#22E8FF;box-shadow:0 0 14px #00D9F5}
+h1 span,h2 span,.section-heading h2 span,.about-section h2 span{color:#00D9F5}
+.text-link{background:#082B59;border-color:#00A9E8;color:#B9F8FF!important;-webkit-text-fill-color:#B9F8FF}
+.text-link:hover{background:#07518A;border-color:#22E8FF}
+.code-card{background:#08234B;border-color:rgba(0,217,245,.3);box-shadow:0 28px 70px #0009,0 0 32px rgba(0,190,255,.12)}
+.code-top i{background:#00D9F5}.code-top i:nth-child(2){background:#168BDB}.code-top i:nth-child(3){background:#54E4F5}
+.code-lines b,.code-lang,.resource-card>a,.semester-card>span,.semester-card i,.syllabus-link{color:#52EFFF}
+.code-lines strong{color:#00D9F5}
+.floating-chip{background:#08234B;border-color:#087DBA;box-shadow:0 12px 30px #0008,0 0 18px rgba(0,217,245,.1)}
+.stats-strip{background:#061B39;border-color:#123C68}
+.stats-strip strong{color:#00D9F5}
+.section,.about-section,.recent-section{background:#041126}
+.resource-card,.recent-card,.material-type,.subject-browser,.admin-guide,.admin-login,.admin-form{background:linear-gradient(145deg,#08234B,#061A37);border-color:#124574}
+.resource-card:hover,.recent-card:hover,.material-type:hover,.subject-item:hover{border-color:#00D9F5;box-shadow:0 14px 35px rgba(0,0,0,.25),0 0 20px rgba(0,217,245,.1)}
+.icon-gold,.icon-blue,.icon-purple,.icon-green,.resource-icon,.admin-card-icon{background:#0B3565;color:#42E9FF}
+.semester-section{background:#031027}
+.semester-card{background:#08234B;border-color:#124574}
+.semester-card:hover{background:#0B3565;border-color:#00D9F5}
+.recent-section{border-color:#124574}
+.recent-meta,.recent-card a,.notice,.admin-home-link{color:#69EFFF}
+.countdown-section,.admin-timetable{background:#061B39;border-color:#124574}
+.countdown-card{background:#08234B;border-color:#087DBA}
+.countdown-days{color:#00D9F5}
+.admin-page{background:#041126}
+.admin-card,.admin-guide{background:#08234B;border-color:#124574}
+.admin-card:hover{border-color:#00D9F5}
+.admin-login input,.admin-form input,.admin-form select{background:#041126;border-color:#087DBA}
+.admin-warning{background:#102B48;border-color:#087DBA;color:#B9F8FF}
+.quiz-panel{background:linear-gradient(145deg,#08234B,#041126)}
+.quiz-progress{color:#52EFFF}
+.quiz-progress-track{background:#123C68}
+.quiz-progress-track span,.quiz-next{background:linear-gradient(90deg,#00D9F5,#087FEA);color:#031326}
+.quiz-option{background:#08234B;border-color:#125080}
+.quiz-option:hover:not(:disabled){background:#0B3565;border-color:#00D9F5}
+.subject-item{background:#08234B;border-color:#124574}
+.subject-item:hover{background:#0B3565}
+.material-type{color:#F2FCFF}
+.dashboard-page{
+ background:
+  radial-gradient(ellipse at 12% 3%,rgba(0,190,255,.25),transparent 31rem),
+  radial-gradient(ellipse at 88% 22%,rgba(0,225,255,.13),transparent 28rem),
+  radial-gradient(ellipse at 50% 100%,rgba(0,95,220,.16),transparent 34rem),
+  #041126;
+}
+.dashboard-page .site-header{background:rgba(3,13,31,.93);border-bottom-color:rgba(0,217,245,.3)}
+.dashboard-page .brand-mark{background:linear-gradient(145deg,#22E8FF,#0089E8 60%,#0752B6);box-shadow:0 0 0 4px rgba(0,217,245,.1),0 7px 24px rgba(0,190,255,.3)}
+.dashboard-welcome{
+ border-color:rgba(0,217,245,.58);
+ background:radial-gradient(circle at 88% 18%,rgba(0,217,245,.22),transparent 15rem),linear-gradient(112deg,#0B3565 0%,#08234B 58%,#041126 100%);
+ box-shadow:0 20px 55px rgba(0,0,0,.25),0 0 34px rgba(0,190,255,.15),inset 0 1px 0 rgba(255,255,255,.1);
+}
+.dashboard-welcome:after{border-color:rgba(82,239,255,.35);box-shadow:0 0 0 28px rgba(0,217,245,.06),0 0 0 58px rgba(0,217,245,.035),0 0 50px rgba(0,190,255,.15)}
+.dashboard-welcome .eyebrow,.dashboard-panel-heading .eyebrow{color:#52EFFF}
+.dashboard-welcome .dashboard-student-name{color:#B9F8FF;text-shadow:0 0 24px rgba(0,217,245,.22)}
+.dashboard-stat{border-color:rgba(0,169,232,.4);background:linear-gradient(145deg,#0B2D55,#061B39)}
+.dashboard-stat:hover{border-color:#22E8FF;box-shadow:0 14px 34px rgba(0,0,0,.22),0 0 22px rgba(0,217,245,.16)}
+.dashboard-stat strong{color:#F2FCFF;text-shadow:0 0 22px rgba(0,217,245,.14)}
+.dashboard-panel{border-color:rgba(0,169,232,.48);background:linear-gradient(155deg,rgba(8,35,75,.98),rgba(4,17,38,.98))}
+.dashboard-panel-heading>a,.dashboard-score{border-color:rgba(0,217,245,.5);background:linear-gradient(135deg,#0B3565,#08234B);color:#B9F8FF}
+.dashboard-panel-heading>a:hover{background:#0B4A7C;border-color:#52EFFF}
+.ai-study-panel{border-color:rgba(0,217,245,.58);background:radial-gradient(ellipse at 92% 0%,rgba(0,217,245,.18),transparent 22rem),linear-gradient(135deg,#0B3565 0%,#08234B 52%,#041126 100%)}
+.ai-chat-messages{border-color:rgba(0,169,232,.42);background:rgba(3,13,31,.92)}
+.ai-message-assistant{background:#0B3565;border-color:#087DBA}
+.ai-message-user{background:#07518A;border-color:#00A9E8}
+.ai-message strong{color:#52EFFF}
+.ai-language-select,.ai-clear-button,.ai-chat-form textarea{background:#041126;border-color:#087DBA;color:#F2FCFF}
+.ai-suggestions button{border-color:rgba(0,169,232,.42);background:#08234B;color:#B9F8FF}
+.ai-suggestions button:hover{border-color:#52EFFF;background:#0B3565}
+.ai-chat-form button{background:linear-gradient(135deg,#00E5FF,#0089E8 58%,#0758BD);color:#031326;box-shadow:0 7px 20px rgba(0,190,255,.3)}
+.dashboard-progress-ring{background:conic-gradient(#00D9F5 var(--progress),#123C68 0);filter:drop-shadow(0 0 8px rgba(0,217,245,.22))}
+.dashboard-progress-ring::before{background:#08234B}
+.dashboard-open-link{color:#52EFFF}
+.dashboard-page .site-footer{background:linear-gradient(90deg,#031027,#08234B,#031027);border-top-color:rgba(0,217,245,.25)}
+.dashboard-nav #dashboardLogout{background:#08234B;border-color:#087DBA;color:#B9F8FF}
+.dashboard-nav #dashboardLogout:hover{background:#0B3565;border-color:#22E8FF}
+@media(prefers-reduced-motion:reduce){.dashboard-welcome,.dashboard-stat{animation:none}}
