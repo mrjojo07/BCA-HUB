@@ -19,7 +19,7 @@
     <a class="header-dashboard" href="dashboard.html">My Dashboard</a>
     <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open navigation" aria-expanded="false" onclick="const nav=document.getElementById('navLinks');const opened=nav.classList.toggle('open');this.setAttribute('aria-expanded',String(opened));this.setAttribute('aria-label',opened?'Close navigation':'Open navigation');">☰</button>
     <nav class="nav-links" id="navLinks">
-      <a href="#semesters">Semesters</a><a href="#feedback" id="openFeedbackMenu">Feedback</a><a href="#about">About</a><a class="nav-admin" id="studentLoginMenu" href="login.html">Student Login <span>↗</span></a>
+      <a href="#semesters">Semesters</a><a href="#feedback" id="openFeedbackMenu">Feedback</a><a href="#about">About</a><a href="#communityUpload" id="openCommunityUpload">↑ Upload Notes</a><a class="nav-admin" id="studentLoginMenu" href="login.html">Student Login <span>↗</span></a>
 <a class="nav-admin" href="admin.html">Admin Panel <span>↗</span></a>
       <button class="nav-admin" id="menuLogout" type="button" hidden>Log out</button>
     </nav>
@@ -73,7 +73,91 @@
         console.error("Exam timetable load error:", error);
       }
     }
-    const logoutButton = document.getElementById("menuLogout");
+
+    const communityLink = document.getElementById("openCommunityUpload");
+    const communitySection = document.getElementById("communityUpload");
+    const communityForm = document.getElementById("communityUploadForm");
+    const communityStatus = document.getElementById("communityUploadStatus");
+    const communitySemester = document.getElementById("communitySemester");
+    const communitySubject = document.getElementById("communitySubject");
+    const communityCategory = document.getElementById("communityCategory");
+    const communityModuleWrap = document.getElementById("communityModuleWrap");
+    const communitySubjects = {
+      1: [
+        "Fundamentals of Computers and Computational Thinking",
+        "Introduction to Computers and Office Automation",
+        "Mathematical Foundation for Computer Applications",
+        "Discrete Structures for Computer Applications"
+      ]
+    };
+    communityLink?.addEventListener("click", event => {
+      event.preventDefault();
+      communitySection.hidden = false;
+      document.getElementById("navLinks")?.classList.remove("open");
+      document.getElementById("menuToggle")?.setAttribute("aria-expanded","false");
+      communitySection.scrollIntoView({behavior:"smooth",block:"start"});
+    });
+    communitySemester?.addEventListener("change", () => {
+      const subjects = communitySubjects[Number(communitySemester.value)] || [];
+      communitySubject.replaceChildren(new Option("Choose subject",""));
+      subjects.forEach(name => communitySubject.add(new Option(name,name)));
+      communitySubject.disabled = !subjects.length;
+      if (!subjects.length) communityStatus.textContent = "This semester's subject list is not available yet.";
+    });
+    communityCategory?.addEventListener("change", () => {
+      communityModuleWrap.hidden = communityCategory.value !== "notes";
+    });
+    communityForm?.addEventListener("submit", async event => {
+      event.preventDefault();
+      const submit = document.getElementById("communitySubmit");
+      const file = document.getElementById("communityPdf").files?.[0];
+      const title = document.getElementById("communityTitle").value.trim();
+      const semester = Number(communitySemester.value);
+      const subjectName = communitySubject.value;
+      const category = communityCategory.value;
+      const moduleNumber = category === "notes" ? Number(document.getElementById("communityModule").value) : null;
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) {
+        communityStatus.textContent = "Please sign in with your student account before uploading.";
+        return;
+      }
+      if (!file || file.type !== "application/pdf" || !file.name.toLowerCase().endsWith(".pdf") || file.size > 10 * 1024 * 1024) {
+        communityStatus.textContent = "Choose a valid PDF file smaller than 10 MB.";
+        return;
+      }
+      if (!semester || !subjectName || !title || (category === "notes" && !(moduleNumber >= 1 && moduleNumber <= 4))) {
+        communityStatus.textContent = "Please complete all fields.";
+        return;
+      }
+      submit.disabled = true;
+      communityStatus.textContent = "Uploading securely for admin review…";
+      const safeName = file.name.normalize("NFKD").replace(/[^a-zA-Z0-9._-]+/g,"-").slice(-100) || "study-note.pdf";
+      const storagePath = session.user.id + "/" + crypto.randomUUID() + "-" + safeName;
+      try {
+        const { error: storageError } = await supabase.storage.from("community-pending").upload(storagePath,file,{contentType:"application/pdf",upsert:false});
+        if (storageError) throw storageError;
+        const subjectSlug = subjectName.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+        const { error: insertError } = await supabase.from("community_uploads").insert({
+          user_id:session.user.id,semester,subject_name:subjectName,subject_slug:subjectSlug,
+          category,module_number:moduleNumber,title,original_filename:file.name.slice(0,180),
+          storage_path:storagePath,status:"pending"
+        });
+        if (insertError) {
+          await supabase.storage.from("community-pending").remove([storagePath]);
+          throw insertError;
+        }
+        communityForm.reset();
+        communitySubject.replaceChildren(new Option("Choose semester first",""));
+        communitySubject.disabled = true;
+        communityModuleWrap.hidden = false;
+        communityStatus.textContent = "Submitted! Your PDF is waiting for admin approval. It will appear on the website only after approval.";
+      } catch (error) {
+        communityStatus.textContent = "Upload failed: " + (error.message || "Please try again.");
+      } finally {
+        submit.disabled = false;
+      }
+    });
+\n    const logoutButton = document.getElementById("menuLogout");
     const { data } = await supabase.auth.getSession();
     if (data?.session) {
       logoutButton.hidden = false;
@@ -127,7 +211,24 @@
       <a class="syllabus-link" href="https://docs.uoc.ac.in/website/syllabus/2025-06-13%2014%3A37%3A35_syl2255.pdf" target="_blank" rel="noopener noreferrer">Open University of Calicut BCA syllabus <span>↗</span></a>
     </section>
 
-    <section class="countdown-section" id="examCountdown"><div class="section-heading"><div><div class="eyebrow">STAY EXAM-READY</div><h2>Exam <span>countdown.</span></h2></div><p>Upcoming exam dates published by the BCA HUB admin.</p></div><div id="examCountdownList" class="countdown-list">No exam timetable published yet.</div></section>
+
+    <section class="community-upload-section" id="communityUpload" hidden>
+      <div class="section-heading"><div><div class="eyebrow">SHARE KNOWLEDGE</div><h2>Community <span>Upload.</span></h2></div><p>Share your study material with BCA students. Every PDF is checked by an admin before it appears on the website.</p></div>
+      <form id="communityUploadForm" class="community-upload-form">
+        <div class="community-upload-grid">
+          <div><label for="communitySemester">Semester</label><select id="communitySemester" required><option value="">Choose semester</option><option value="1">Semester 1</option><option value="2">Semester 2</option><option value="3">Semester 3</option><option value="4">Semester 4</option><option value="5">Semester 5</option><option value="6">Semester 6</option><option value="7">Semester 7</option><option value="8">Semester 8</option></select></div>
+          <div><label for="communitySubject">Subject</label><select id="communitySubject" required disabled><option value="">Choose semester first</option></select></div>
+          <div><label for="communityCategory">Category</label><select id="communityCategory" required><option value="notes">Notes</option><option value="important-questions">Important Questions</option><option value="previous-year-questions">Previous Year Questions</option></select></div>
+          <div id="communityModuleWrap"><label for="communityModule">Module</label><select id="communityModule"><option value="1">Module 1</option><option value="2">Module 2</option><option value="3">Module 3</option><option value="4">Module 4</option></select></div>
+        </div>
+        <label for="communityTitle">Note title</label><input id="communityTitle" maxlength="160" required placeholder="e.g. Module 1 – Introduction">
+        <label for="communityPdf">Choose PDF (maximum 10 MB)</label><input id="communityPdf" type="file" accept="application/pdf,.pdf" required>
+        <p class="community-upload-help">PDF files only. Upload only material you created or have permission to share. Please do not upload personal information.</p>
+        <button class="button button-gold" id="communitySubmit" type="submit">Submit for Approval ↗</button>
+        <p id="communityUploadStatus" class="community-upload-status" role="status" aria-live="polite">Sign in with your student account to submit a file.</p>
+      </form>
+    </section>
+\n    <section class="countdown-section" id="examCountdown"><div class="section-heading"><div><div class="eyebrow">STAY EXAM-READY</div><h2>Exam <span>countdown.</span></h2></div><p>Upcoming exam dates published by the BCA HUB admin.</p></div><div id="examCountdownList" class="countdown-list">No exam timetable published yet.</div></section>
     <section class="saved-resources-section" id="savedResourcesSection" hidden>
       <div class="saved-panel-heading"><div><div class="eyebrow">YOUR PERSONAL LIBRARY</div><h2>My <span>Saved Resources.</span></h2></div><button type="button" class="saved-panel-close" id="closeSavedResources" aria-label="Close saved resources">×</button></div>
       <div class="saved-resources-list" id="savedResourcesList"></div>
