@@ -50,15 +50,22 @@ function showSemester(number) {
 function showCategories(name) {
   currentSubject = name;
   const quizCard = '<button type="button" class="material-type" data-material="mcq"><span>✓</span><h4>MCQ Quiz</h4><p>Take a 10-question random quiz from 30 important questions.</p><small>Start quiz ↗</small></button>';
-  subjectBrowser.innerHTML = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · SUBJECT</div><h3>'+name+'</h3></div><button class="browser-close" data-back="subjects" type="button">← Subjects</button></div><div class="material-grid"><button type="button" class="material-type" data-material="notes"><span>▤</span><h4>Notes</h4><p>Study notes and topic-wise learning materials.</p><small>Open category ↗</small></button><button type="button" class="material-type" data-material="important-questions"><span>✦</span><h4>Important Questions</h4><p>Key questions for revision and exam preparation.</p><small>Open category ↗</small></button><button type="button" class="material-type" data-material="previous-year-questions"><span>▧</span><h4>Previous Year Questions</h4><p>Previous examination question papers.</p><small>Open category ↗</small></button>'+quizCard+'</div>'+progressTrackerMarkup(name);
+  subjectBrowser.innerHTML = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · SUBJECT</div><h3>'+name+'</h3></div><button class="browser-close" data-back="subjects" type="button">← Subjects</button></div><div class="material-grid"><button type="button" class="material-type" data-material="notes"><span>▤</span><h4>Notes</h4><p>Module-wise study notes (Modules 1–6).</p><small>Choose module ↗</small></button><button type="button" class="material-type" data-material="important-questions"><span>✦</span><h4>Important Questions</h4><p>Key questions for revision and exam preparation.</p><small>Open category ↗</small></button><button type="button" class="material-type" data-material="previous-year-questions"><span>▧</span><h4>Previous Year Questions</h4><p>Previous examination question papers.</p><small>Open category ↗</small></button>'+quizCard+'</div>'+progressTrackerMarkup(name);
   loadSubjectProgress(name);
   subjectBrowser.scrollIntoView({behavior:"smooth",block:"start"});
 }
-async function showMaterials(category) {
+function showNotesModules() {
+  const heading = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · NOTES</div><h3>'+currentSubject+'</h3></div><button class="browser-close" data-back="subject" type="button">← Back to subject</button></div>';
+  const cards = '<div class="material-grid">'+Array.from({length:6}, (_, i) => i + 1).map(number => '<button type="button" class="material-type" data-module="'+number+'"><span>▤</span><h4>Module '+number+'</h4><p>Open Module '+number+' notes and study materials.</p><small>Open module ↗</small></button>').join('')+'</div>';
+  subjectBrowser.innerHTML = heading + cards;
+  subjectBrowser.scrollIntoView({behavior:"smooth",block:"start"});
+}
+async function showMaterials(category, moduleNumber = 0) {
   if (category === "mcq") { startMcqQuiz(); return; }
   const labels = {"notes":"Notes","important-questions":"Important Questions","previous-year-questions":"Previous Year Questions","mcq":"MCQ"};
   subjectBrowser.innerHTML = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · '+labels[category].toUpperCase()+'</div><h3>'+labels[category]+'</h3></div><button class="browser-close" data-back="subject" type="button">← Back to subject</button></div><p class="browser-empty">Loading materials…</p>';
-  const folder = 'resources/semester-'+currentSemester+'/'+category+'/'+subjectSlug(currentSubject);
+  const baseFolder = 'resources/semester-'+currentSemester+'/'+category+'/'+subjectSlug(currentSubject);
+  const folder = category === "notes" && moduleNumber ? baseFolder + "/module-" + moduleNumber : baseFolder;
   const apiUrl = 'https://api.github.com/repos/mrjojo07/BCA-HUB/contents/'+folder;
   const storageUrl = 'https://efbkhmfekfujbwfdpfhk.supabase.co/storage/v1/object/list/bca-hub-materials';
   const publishableKey = 'sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH';
@@ -442,7 +449,13 @@ subjectBrowser?.addEventListener("click", (event) => {
     return;
   }
   const material = event.target.closest("[data-material]");
-  if (material) showMaterials(material.dataset.material);
+  if (material) {
+    if (material.dataset.material === "notes") showNotesModules();
+    else showMaterials(material.dataset.material);
+    return;
+  }
+  const module = event.target.closest("[data-module]");
+  if (module) showMaterials("notes", Number(module.dataset.module));
 });
 
 
