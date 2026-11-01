@@ -32,7 +32,7 @@ const semesterGrid = document.getElementById("semesterGrid");
 let currentSemester = 1;
 let currentSubject = "";
 
-function titleFromSlug(slug) { return (slug || "General").replace(/[-_]/g, " ").replace(/\\b\\w/g, letter => letter.toUpperCase()); }
+function titleFromSlug(slug) { return (slug || "General").replace(/[-_]/g, " ").replace(/\b\w/g, letter => letter.toUpperCase()); }
 function subjectSlug(name) {
   return name.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
@@ -282,7 +282,7 @@ async function toggleSavedResource(item, button) {
   } else {
     result = await supabase.from("saved_resources").insert({
       user_id:user.id, resource_path:item.url, resource_title:item.name,
-      semester:item.semester, subject_slug:subjectSlug(item.subject), category:item.category.toLowerCase().replace(/\\s+/g,"-")
+      semester:item.semester, subject_slug:subjectSlug(item.subject), category:item.category.toLowerCase().replace(/\s+/g,"-")
     });
   }
   if (result.error) { alert("Could not update saved resources. Please try again."); console.error(result.error.message); return; }
