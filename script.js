@@ -51,12 +51,6 @@ function showCategories(name) {
 }
 async function showMaterials(category) {
   if (category === "mcq") { startMcqQuiz(); return; }
-  if (category === "previous-year-questions") {
-    const heading = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · PREVIOUS YEAR QUESTIONS</div><h3>Previous Year Questions</h3></div><button class="browser-close" data-back="subject" type="button">← Back to subject</button></div>';
-    subjectBrowser.innerHTML = heading + '<p class="browser-empty">Verified actual Semester 1 previous-year exam papers are not available here yet. University syllabus and model question papers are listed separately in the Syllabus link on the homepage. Actual exam papers will be added when verified.</p>';
-    subjectBrowser.scrollIntoView({behavior:"smooth",block:"start"});
-    return;
-  }
   const labels = {"notes":"Notes","important-questions":"Important Questions","previous-year-questions":"Previous Year Questions","mcq":"MCQ"};
   subjectBrowser.innerHTML = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · '+labels[category].toUpperCase()+'</div><h3>'+labels[category]+'</h3></div><button class="browser-close" data-back="subject" type="button">← Back to subject</button></div><p class="browser-empty">Loading materials…</p>';
   const folder = 'resources/semester-'+currentSemester+'/'+category+'/'+subjectSlug(currentSubject);
