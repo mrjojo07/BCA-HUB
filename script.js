@@ -32,6 +32,7 @@ const semesterGrid = document.getElementById("semesterGrid");
 let currentSemester = 1;
 let currentSubject = "";
 
+function titleFromSlug(slug) { return (slug || "General").replace(/[-_]/g, " ").replace(/\\b\\w/g, letter => letter.toUpperCase()); }
 function subjectSlug(name) {
   return name.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
