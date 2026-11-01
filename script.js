@@ -69,8 +69,20 @@ async function showMaterials(category) {
     ]);
     const githubFiles = githubResponse.ok ? (await githubResponse.json()).filter(file => file.type === 'file').map(file => ({name:file.name,url:file.download_url || file.html_url,preview:file.download_url})) : [];
     if (!storageResponse.ok) throw new Error('Could not load directly uploaded materials.');
-    const storageFiles = (await storageResponse.json()).filter(file => file.id && file.name).map(file => ({name:file.name.replace(/^[0-9a-f-]{36}-/i,''),url:'https://efbkhmfekfujbwfdpfhk.supabase.co/storage/v1/object/public/bca-hub-materials/'+folder+'/'+encodeURIComponent(file.name),preview:'https://efbkhmfekfujbwfdpfhk.supabase.co/storage/v1/object/public/bca-hub-materials/'+folder+'/'+encodeURIComponent(file.name)}));
-    const files = [...githubFiles,...storageFiles];
+    const storageFiles = (await storageResponse.json()).filter(file => file.id && file.name)
+      .sort((a,b) => new Date(b.created_at || 0) - new Date(a.created_at || 0))
+      .map(file => ({name:file.name.replace(/^[0-9a-f-]{36}-/i,''),url:'https://efbkhmfekfujbwfdpfhk.supabase.co/storage/v1/object/public/bca-hub-materials/'+folder+'/'+encodeURIComponent(file.name),preview:'https://efbkhmfekfujbwfdpfhk.supabase.co/storage/v1/object/public/bca-hub-materials/'+folder+'/'+encodeURIComponent(file.name)}));
+    // Show one entry per filename, preferring the newest direct upload.
+    const uniqueFiles = new Map();
+    for (const file of storageFiles) {
+      const key = file.name.trim().toLowerCase();
+      if (!uniqueFiles.has(key)) uniqueFiles.set(key, file);
+    }
+    for (const file of githubFiles) {
+      const key = file.name.trim().toLowerCase();
+      if (!uniqueFiles.has(key)) uniqueFiles.set(key, file);
+    }
+    const files = [...uniqueFiles.values()];
     const heading = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · '+labels[category].toUpperCase()+'</div><h3>'+labels[category]+'</h3></div><button class="browser-close" data-back="subject" type="button">← Back to subject</button></div>';
     if (!files.length) {
       subjectBrowser.innerHTML = heading+'<p class="browser-empty">No files have been uploaded here yet.</p>';
