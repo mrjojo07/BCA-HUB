@@ -127,7 +127,7 @@ function updateAI(dt){
 }
 function update(dt){
  if(!playing||paused)return;
- kickCooldown=Math.max(0,kickCooldown-dt);\n sprintHeld=keys.has("ShiftLeft")||keys.has("ShiftRight")||sprintHeld;\n const sprinting=sprintHeld&&sprintStamina>0;\n if(sprinting)sprintStamina=Math.max(0,sprintStamina-34*dt);else sprintStamina=Math.min(100,sprintStamina+22*dt);\n const sprint=sprinting?6.8:4.35;\n updateControlMeters();
+ kickCooldown=Math.max(0,kickCooldown-dt);\n sprintHeld=keys.has("ShiftLeft")||keys.has("ShiftRight")||sprintHeld;\n const sprinting=(sprintHeld||keys.has("ShiftLeft")||keys.has("ShiftRight"))&&sprintStamina>0;\n if(sprinting)sprintStamina=Math.max(0,sprintStamina-34*dt);else sprintStamina=Math.min(100,sprintStamina+22*dt);\n const sprint=sprinting?6.8:4.35;\n updateControlMeters();
  let dx=(keys.has("KeyD")||keys.has("ArrowRight")?1:0)-(keys.has("KeyA")||keys.has("ArrowLeft")?1:0);
  let dz=(keys.has("KeyS")||keys.has("ArrowDown")?1:0)-(keys.has("KeyW")||keys.has("ArrowUp")?1:0);
  dx+=touchMove.x;dz+=touchMove.y;
