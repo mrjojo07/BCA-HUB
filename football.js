@@ -130,7 +130,7 @@ function update(dt){
  let dz=(keys.has("KeyS")||keys.has("ArrowDown")?1:0)-(keys.has("KeyW")||keys.has("ArrowUp")?1:0);
  dx+=touchMove.x;dz+=touchMove.y;
  movePlayer(player,dx,dz,sprint,dt);
- if(keys.has("Space")||touchShoot){tryKick(player,-1,1.08);touchShoot=false;}
+ if(touchShoot){tryKick(player,-1,1.08);touchShoot=false;}
  updateAI(dt);updateBall(dt);
  timeLeft=Math.max(0,timeLeft-dt);const sec=Math.ceil(timeLeft);clockEl.textContent=String(Math.floor(sec/60)).padStart(2,"0")+":"+String(sec%60).padStart(2,"0");if(timeLeft<=0)finishMatch();
 }
@@ -148,7 +148,7 @@ function setupTouch(){
  document.getElementById("sprintBtn").addEventListener("pointerup",()=>keys.delete("ShiftLeft"));
  document.getElementById("sprintBtn").addEventListener("pointercancel",()=>keys.delete("ShiftLeft"));
 }
-window.addEventListener("keydown",e=>{if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight","Space"].includes(e.code))e.preventDefault();if(e.code==="Space"&&e.repeat)return;keys.add(e.code);});
+window.addEventListener("keydown",e=>{if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight","Space"].includes(e.code))e.preventDefault();if(e.code==="Space"){if(!e.repeat)touchShoot=true;return;}keys.add(e.code);});
 window.addEventListener("keyup",e=>keys.delete(e.code));
 window.addEventListener("blur",()=>{keys.clear();touchMove.x=0;touchMove.y=0;});
 document.getElementById("aiMode").addEventListener("click",()=>{document.getElementById("aiMode").classList.add("active");document.getElementById("onlineMode").classList.remove("active");document.getElementById("modeNote").textContent="Single Player is playable now. Online rooms and live matchmaking are planned for the multiplayer phase.";});
