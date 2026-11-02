@@ -4,3 +4,29 @@
 
 /* Landscape-first match layout and fullscreen */
 .canvas-wrap{aspect-ratio:16/9;height:auto;min-height:360px;max-height:620px}.game-panel:fullscreen{width:100vw;height:100dvh;max-width:none;border:0;border-radius:0;display:flex;flex-direction:column;background:#050b13}.game-panel:fullscreen .scorebar{height:clamp(48px,9vh,68px);flex:0 0 auto}.game-panel:fullscreen .canvas-wrap{flex:1;min-height:0;max-height:none;height:auto;aspect-ratio:auto}.game-panel:fullscreen .game-controls{flex:0 0 auto;padding:8px 16px}.game-panel:fullscreen .touch-controls{display:flex}.game-panel:fullscreen .desktop-help{display:none}.game-panel:fullscreen .game-actions{margin-left:auto}.game-panel:fullscreen .control-btn{min-height:42px}.rotate-hint{display:none}@media(max-width:650px){.canvas-wrap{width:100%;aspect-ratio:16/9;height:auto;min-height:0;max-height:none}.game-panel:fullscreen .scorebar{height:46px}.game-panel:fullscreen .game-controls{gap:8px}.game-panel:fullscreen .touch-controls{flex:1;justify-content:space-between}.game-panel:fullscreen .touch-pad{width:min(19vw,104px);height:min(19vw,104px)}.game-panel:fullscreen .pad-dot{left:calc(50% - 21px);top:calc(50% - 21px)}.game-panel:fullscreen .touch-action-wrap{min-width:0}.game-panel:fullscreen .game-actions{width:auto}.game-panel:fullscreen .secondary-btn{padding:8px 10px}}@media(max-width:650px) and (orientation:portrait){.game-panel:fullscreen .rotate-hint{display:block;position:absolute;z-index:5;inset:46px 0 auto;padding:8px;text-align:center;background:#07111cdd;color:#d8eaff;font-size:11px;pointer-events:none}}
+
+/* Fullscreen game fills the viewport; joystick left and actions right */
+.game-panel:fullscreen{position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;max-width:none;margin:0;padding:0;overflow:hidden;box-sizing:border-box}
+.game-panel:fullscreen .scorebar{flex:0 0 48px;min-height:48px;box-sizing:border-box}
+.game-panel:fullscreen #canvasWrap{position:relative;flex:1 1 auto;width:100%;height:auto;min-height:0;max-height:none;aspect-ratio:auto;overflow:hidden}
+#canvasWrap canvas{display:block;width:100%;height:100%}
+.game-panel:fullscreen .game-controls{flex:0 0 auto;min-height:104px;box-sizing:border-box;padding:8px 14px}
+.game-panel:fullscreen .touch-controls{display:flex;flex:1 1 auto;width:100%;align-items:center;justify-content:space-between;gap:12px}
+.game-panel:fullscreen .touch-pad{flex:0 0 clamp(90px,18vh,145px);width:clamp(90px,18vh,145px);height:clamp(90px,18vh,145px)}
+.game-panel:fullscreen .touch-right-controls{display:flex;flex:1 1 auto;min-width:0;align-items:center;justify-content:flex-end;gap:clamp(8px,2vw,24px)}
+.game-panel:fullscreen .touch-action-wrap{width:min(38vw,300px);min-width:0}
+.game-panel:fullscreen .game-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px;width:auto;margin:0}
+.game-panel:fullscreen .secondary-btn{padding:9px 10px;white-space:nowrap}
+@media(max-width:650px){
+ .game-panel:fullscreen .scorebar{flex-basis:42px;min-height:42px}
+ .game-panel:fullscreen .game-controls{min-height:112px;padding:6px 9px}
+ .game-panel:fullscreen .touch-controls{gap:8px}
+ .game-panel:fullscreen .touch-pad{flex-basis:clamp(88px,22vw,124px);width:clamp(88px,22vw,124px);height:clamp(88px,22vw,124px)}
+ .game-panel:fullscreen .touch-right-controls{gap:8px}
+ .game-panel:fullscreen .touch-action-wrap{width:min(39vw,230px);gap:6px}
+ .game-panel:fullscreen .control-meter{grid-template-columns:58px 1fr;font-size:7px}
+ .game-panel:fullscreen .touch-actions{gap:5px}
+ .game-panel:fullscreen .control-btn{min-width:58px;min-height:42px;padding:7px 8px;font-size:9px}
+ .game-panel:fullscreen .game-actions{gap:4px}
+ .game-panel:fullscreen .secondary-btn{padding:8px 7px;font-size:9px}
+}
