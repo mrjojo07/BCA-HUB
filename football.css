@@ -38,3 +38,25 @@
 @media(min-width:701px){
  .arena-wrap{aspect-ratio:16/9;}
 }
+
+
+/* Refined illustrated football controls */
+.control-btn.icon-control{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:7px 10px;position:relative;overflow:hidden;background:linear-gradient(155deg,#1b3550,#0d1c2e);border:1px solid #42617f;box-shadow:inset 0 1px 0 #ffffff20,0 5px 12px #0005;color:#eaf5ff}
+.control-btn.icon-control svg{width:29px;height:29px;fill:none;stroke:currentColor;stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 2px 2px #0008)}
+.control-btn.icon-control span{font-size:8px;font-weight:900;letter-spacing:1px;line-height:1.1}
+.control-btn.icon-control:active{transform:translateY(2px);filter:brightness(1.25)}
+.control-btn.jump-control{color:#a9dcff;border-color:#397bb0}
+.control-btn.shoot-control{background:linear-gradient(155deg,#168cff,#0753ad);border-color:#70bdff;color:#fff;box-shadow:inset 0 1px 0 #ffffff55,0 5px 16px #087de055}
+.control-btn.shoot-control svg{width:34px;height:29px;fill:#f1f7ff;stroke:#f1f7ff;stroke-width:1.7}
+.game-actions .utility-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px}
+.utility-btn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:700px){
+ .touch-controls{align-items:center}
+ .move-controls,.action-controls{align-items:center}
+ .control-btn.icon-control{min-width:58px;min-height:58px}
+ .control-btn.icon-control svg{width:31px;height:31px}
+ .control-btn.shoot-control{min-width:72px;min-height:62px}
+ .control-btn.shoot-control svg{width:39px;height:34px}
+ .game-actions .utility-btn{gap:5px;padding:9px 10px}
+ .utility-btn svg{width:15px;height:15px}
+}
