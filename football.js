@@ -1,4 +1,14 @@
 const canvas=document.getElementById("gameCanvas"),ctx=canvas.getContext("2d");
+ // Compatibility fallback for browsers without CanvasRenderingContext2D.roundRect.
+if(ctx && !ctx.roundRect){
+  ctx.roundRect=function(x,y,w,h,r=0){
+    const radius=Math.max(0,Math.min(Number(r)||0,Math.abs(w)/2,Math.abs(h)/2));
+    this.moveTo(x+radius,y);this.lineTo(x+w-radius,y);this.quadraticCurveTo(x+w,y,x+w,y+radius);
+    this.lineTo(x+w,y+h-radius);this.quadraticCurveTo(x+w,y+h,x+w-radius,y+h);
+    this.lineTo(x+radius,y+h);this.quadraticCurveTo(x,y+h,x,y+h-radius);
+    this.lineTo(x,y+radius);this.quadraticCurveTo(x,y,x+radius,y);return this;
+  };
+}
 const $=id=>document.getElementById(id);const blueEl=$("blueScore"),redEl=$("redScore"),clockEl=$("matchClock"),loading=$("gameLoading"),panel=$("gamePanel");
 let W=960,H=540,scale=1,last=0,floor=484,remaining=300,blueScore=0,redScore=0,paused=false,ended=false,goalTimer=0,flashTimer=0;
 const gravity=1700,keys={left:false,right:false,jump:false,kick:false};
