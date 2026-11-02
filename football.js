@@ -19,17 +19,55 @@ function drawStadium(){
   ctx.fillStyle="#a8bdc6";ctx.fillRect(0,H*.59,W,H*.025);ctx.fillStyle="#1b2a39";ctx.fillRect(0,H*.615,W,H*.025);
   // Floodlight beams
   for(let i=0;i<4;i++){const x=i%2?W-25:25;const g=ctx.createRadialGradient(x,H*.08,2,x,H*.36,W*.32);g.addColorStop(0,"#fff9d955");g.addColorStop(1,"#fff9d900");ctx.fillStyle=g;ctx.fillRect(0,0,W,H*.75);ctx.fillStyle="#eaf6ff";ctx.beginPath();ctx.arc(x,H*.08,5,0,7);ctx.fill();}
-  // pitch
-  const top=H*.66;const grass=ctx.createLinearGradient(0,top,0,H);grass.addColorStop(0,"#26834d");grass.addColorStop(1,"#0d4d35");ctx.fillStyle=grass;ctx.fillRect(0,top,W,H-top);
-  for(let i=0;i<8;i++){ctx.fillStyle=i%2?"#ffffff08":"#001d1714";ctx.fillRect(i*W/8,top,W/8,H-top);}
-  ctx.strokeStyle="#e9f5dcbb";ctx.lineWidth=2;ctx.strokeRect(10,top+8,W-20,H-top-16);ctx.beginPath();ctx.moveTo(W/2,top);ctx.lineTo(W/2,H);ctx.stroke();ctx.beginPath();ctx.ellipse(W/2,(top+H)/2,Math.min(48,W*.09),22,0,0,7);ctx.stroke();
-  // penalty boxes
-  ctx.strokeRect(10,top+22,Math.min(115,W*.18),H-top-44);ctx.strokeRect(W-Math.min(125,W*.18),top+22,115,H-top-44);
+  // Detailed football pitch with mowing bands, painted markings and grass texture
+  const top=H*.655, groundH=H-top;
+  const grass=ctx.createLinearGradient(0,top,0,H);grass.addColorStop(0,"#32945a");grass.addColorStop(.42,"#197346");grass.addColorStop(1,"#073d2b");
+  ctx.fillStyle=grass;ctx.fillRect(0,top,W,groundH);
+  for(let i=0;i<12;i++){const x=i*W/12;ctx.fillStyle=i%2?"#b6ef9b0c":"#001e151e";ctx.fillRect(x,top,W/12+1,groundH);}
+  // fine turf grain
+  for(let i=0;i<520;i++){const x=(i*73%997)/997*W,y=top+((i*37%991)/991)*groundH;ctx.fillStyle=i%3?"#d6ffd00b":"#001e171c";ctx.fillRect(x,y,1.5,2.5);}
+  // subtle stadium shadow across the far touchline
+  const shade=ctx.createLinearGradient(0,top,0,top+groundH*.24);shade.addColorStop(0,"#071d1c66");shade.addColorStop(1,"#071d1c00");ctx.fillStyle=shade;ctx.fillRect(0,top,W,groundH*.24);
+  // painted white markings
+  ctx.save();ctx.strokeStyle="#f1f5dfd9";ctx.lineWidth=Math.max(1.5,W/650);ctx.shadowColor="#d9f7d955";ctx.shadowBlur=2;
+  ctx.strokeRect(9,top+7,W-18,groundH-14);
+  ctx.beginPath();ctx.moveTo(W/2,top+7);ctx.lineTo(W/2,H-7);ctx.stroke();
+  ctx.beginPath();ctx.ellipse(W/2,top+groundH*.53,Math.min(49,W*.085),groundH*.22,0,0,Math.PI*2);ctx.stroke();
+  ctx.beginPath();ctx.arc(W/2,top+groundH*.53,2.8,0,Math.PI*2);ctx.fillStyle="#f1f5df";ctx.fill();
+  const boxW=Math.min(126,W*.19),boxH=groundH*.78,boxY=top+(groundH-boxH)/2;
+  ctx.strokeRect(9,boxY,boxW,boxH);ctx.strokeRect(W-9-boxW,boxY,boxW,boxH);
+  const sixW=boxW*.42,sixH=boxH*.48,sixY=top+(groundH-sixH)/2;
+  ctx.strokeRect(9,sixY,sixW,sixH);ctx.strokeRect(W-9-sixW,sixY,sixW,sixH);
+  ctx.beginPath();ctx.arc(9+boxW*.72,top+groundH*.53,2,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(W-9-boxW*.72,top+groundH*.53,2,0,Math.PI*2);ctx.fill();
+  ctx.restore();
+  // dark apron and touchline edge
+  ctx.fillStyle="#071c18";ctx.fillRect(0,H-5,W,5);
+  ctx.fillStyle="#b9d9bb55";ctx.fillRect(0,top-2,W,2);
 }
 function drawGoal(x,dir){
-  const y=H*.68,h=H*.25,w=Math.min(76,W*.12),gx=dir<0?x-w:x;
-  ctx.save();ctx.fillStyle="#d9e5e8";ctx.fillRect(gx,y,w,5);ctx.fillRect(gx,y,5,h);ctx.fillRect(gx+w-5,y,5,h);
-  ctx.strokeStyle="#dce8e8aa";ctx.lineWidth=1;for(let i=1;i<7;i++){ctx.beginPath();ctx.moveTo(gx+5+i*(w-10)/7,y+4);ctx.lineTo(gx+5+i*(w-10)/7,y+h);ctx.stroke();}for(let i=1;i<7;i++){ctx.beginPath();ctx.moveTo(gx+4,y+i*h/7);ctx.lineTo(gx+w-4,y+i*h/7);ctx.stroke();}
+  const y=H*.685,h=H*.245,w=Math.min(92,W*.135),depth=Math.min(30,W*.045),gx=dir<0?x-w:x;
+  ctx.save();
+  // Goal shadow on the grass
+  ctx.fillStyle="#00150f66";ctx.beginPath();ctx.ellipse(gx+w/2,y+h+5,w*.72,8,0,0,Math.PI*2);ctx.fill();
+  // Net volume behind the frame
+  const backX=dir<0?gx-depth:gx+w+depth;
+  ctx.fillStyle="#d8e5e7" + "20";ctx.beginPath();ctx.moveTo(gx+5,y+5);ctx.lineTo(gx+w-5,y+5);ctx.lineTo(backX+(dir<0?depth-3:-depth+3),y+h-2);ctx.lineTo(backX+(dir<0?3:-3),y+h-2);ctx.closePath();ctx.fill();
+  ctx.strokeStyle="#e5f0ee88";ctx.lineWidth=1;
+  for(let i=0;i<=8;i++){const t=i/8;const fx=gx+5+t*(w-10);const bx=dir<0?gx-depth+4:gx+w+depth-4;ctx.beginPath();ctx.moveTo(fx,y+5);ctx.lineTo(bx+(dir<0?depth-8:-depth+8),y+h-3);ctx.stroke();}
+  for(let j=1;j<9;j++){const t=j/9,yy=y+5+t*(h-8);ctx.beginPath();ctx.moveTo(gx+5,yy);ctx.lineTo(gx+w-5,yy);ctx.stroke();}
+  // Thick metallic posts with highlights
+  const metal=ctx.createLinearGradient(gx,0,gx+w,0);metal.addColorStop(0,"#667985");metal.addColorStop(.22,"#ffffff");metal.addColorStop(.48,"#aebdc2");metal.addColorStop(.72,"#f9ffff");metal.addColorStop(1,"#667985");
+  ctx.fillStyle=metal;ctx.shadowColor="#00130f99";ctx.shadowBlur=5;ctx.shadowOffsetY=2;
+  ctx.fillRect(gx,y,w,7);ctx.fillRect(gx,y,7,h);ctx.fillRect(gx+w-7,y,7,h);
+  ctx.shadowBlur=0;ctx.shadowOffsetY=0;
+  ctx.strokeStyle="#ffffff";ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(gx+2,y+2);ctx.lineTo(gx+w-2,y+2);ctx.moveTo(gx+2,y+2);ctx.lineTo(gx+2,y+h-2);ctx.moveTo(gx+w-2,y+2);ctx.lineTo(gx+w-2,y+h-2);ctx.stroke();
+  // Net mesh across the goal mouth
+  ctx.strokeStyle="#f5fbf4b8";ctx.lineWidth=.8;
+  for(let i=1;i<12;i++){const xx=gx+i*w/12;ctx.beginPath();ctx.moveTo(xx,y+7);ctx.lineTo(xx,y+h-2);ctx.stroke();}
+  for(let j=1;j<10;j++){const yy=y+j*h/10;ctx.beginPath();ctx.moveTo(gx+6,yy);ctx.lineTo(gx+w-6,yy);ctx.stroke();}
+  // post caps and corner joints
+  ctx.fillStyle="#f8ffff";ctx.beginPath();ctx.arc(gx+3.5,y+3.5,4,0,Math.PI*2);ctx.arc(gx+w-3.5,y+3.5,4,0,Math.PI*2);ctx.fill();
   ctx.restore();
 }
 function drawPlayer(p,color,trim){
