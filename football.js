@@ -14,7 +14,7 @@ const restartBtn=document.getElementById("restartBtn");
 const keys=new Set();
 let scene,camera,renderer,clock;
 let player,opponent,ball,ballVelocity=new THREE.Vector3();
-let blueScore=0,redScore=0,timeLeft=300,playing=false,paused=false,goalTimeout=null;
+let blueScore=0,redScore=0,timeLeft=300,playing=false,paused=false,goalTimeout=null,kickCooldown=0;
 const field={width:20,length:32,goalWidth:5};
 const playerRadius=.68;
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -88,13 +88,13 @@ function buildArena(){
  resetPositions();resize();
 }
 function resize(){if(!renderer)return;const w=wrap.clientWidth,h=wrap.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
-function resetPositions(){player.position.set(0,0,9);opponent.position.set(0,0,-9);player.rotation.y=Math.PI;opponent.rotation.y=0;ball.position.set(0,.4,0);ballVelocity.set(0,0,0);}
+function resetPositions(){player.position.set(0,0,9);opponent.position.set(0,0,-9);player.rotation.y=0;opponent.rotation.y=Math.PI;ball.position.set(0,.4,0);ballVelocity.set(0,0,0);kickCooldown=0;}
 function updateScore(){blueScoreEl.textContent=blueScore;redScoreEl.textContent=redScore;}
 function showGoal(text){goalFlash.textContent=text;goalFlash.classList.add("show");clearTimeout(goalTimeout);goalTimeout=setTimeout(()=>goalFlash.classList.remove("show"),1150);}
 function scoreGoal(team){if(!playing)return;if(team==="blue"){blueScore++;showGoal("GOAL! BLUE SCORES");}else{redScore++;showGoal("RED TEAM SCORES");}updateScore();setTimeout(resetPositions,850);}
 function finishMatch(){playing=false;paused=false;pauseBtn.textContent="Pause";pauseBtn.disabled=true;restartBtn.disabled=false;resultTitle.textContent=blueScore>redScore?"You win!":blueScore<redScore?"AI wins":"It's a draw";resultScore.textContent=blueScore+" - "+redScore;resultOverlay.hidden=false;}
 function startMatch(){blueScore=0;redScore=0;timeLeft=300;playing=true;paused=false;resultOverlay.hidden=true;pauseBtn.disabled=false;restartBtn.disabled=false;pauseBtn.textContent="Pause";updateScore();clockEl.textContent="05:00";resetPositions();}
-function movePlayer(obj,dx,dz,speed,dt){const len=Math.hypot(dx,dz);if(len>.02){obj.position.x+=dx/len*speed*dt;obj.position.z+=dz/len*speed*dt;obj.rotation.y=Math.atan2(-dx,-dz);}obj.position.x=clamp(obj.position.x,-9.1,9.1);obj.position.z=clamp(obj.position.z,-14.8,14.8);}
+function movePlayer(obj,dx,dz,speed,dt){const len=Math.hypot(dx,dz);if(len>.10){const strength=Math.min(1,len);const nx=dx/len,nz=dz/len;obj.position.x+=nx*speed*strength*dt;obj.position.z+=nz*speed*strength*dt;obj.rotation.y=Math.atan2(-nx,-nz);}obj.position.x=clamp(obj.position.x,-9.1,9.1);obj.position.z=clamp(obj.position.z,-14.8,14.8);}
 function tryKick(shooter,forward,boost=1){
  const distance=shooter.position.distanceTo(v3(ball.position.x,0,ball.position.z));
  if(distance>1.85)return false;
@@ -130,7 +130,7 @@ function update(dt){
  let dz=(keys.has("KeyS")||keys.has("ArrowDown")?1:0)-(keys.has("KeyW")||keys.has("ArrowUp")?1:0);
  dx+=touchMove.x;dz+=touchMove.y;
  movePlayer(player,dx,dz,sprint,dt);
- if(keys.has("Space")||touchShoot){tryKick(player,-1,1.1);keys.delete("Space");touchShoot=false;}
+ if(keys.has("Space")||touchShoot){tryKick(player,-1,1.08);touchShoot=false;}
  updateAI(dt);updateBall(dt);
  timeLeft=Math.max(0,timeLeft-dt);const sec=Math.ceil(timeLeft);clockEl.textContent=String(Math.floor(sec/60)).padStart(2,"0")+":"+String(sec%60).padStart(2,"0");if(timeLeft<=0)finishMatch();
 }
@@ -142,13 +142,13 @@ function setupTouch(){
  pad.addEventListener("pointerdown",e=>{active=true;pointerId=e.pointerId;pad.setPointerCapture(pointerId);updatePad(e);});
  pad.addEventListener("pointermove",e=>{if(active&&e.pointerId===pointerId)updatePad(e);});
  pad.addEventListener("pointerup",reset);pad.addEventListener("pointercancel",reset);
- function updatePad(e){const r=pad.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;let x=e.clientX-cx,y=e.clientY-cy;const max=34,l=Math.hypot(x,y);if(l>max){x=x/l*max;y=y/l*max;}touchMove.x=x/max;touchMove.y=y/max;dot.style.transform="translate("+x+"px,"+y+"px)";}
+ function updatePad(e){const r=pad.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;let x=e.clientX-cx,y=e.clientY-cy;const max=Math.min(r.width,r.height)*.34,l=Math.hypot(x,y);if(l>max){x=x/l*max;y=y/l*max;}const raw=Math.min(1,Math.hypot(x,y)/max);const dead=.13;const strength=raw<dead?0:(raw-dead)/(1-dead);const angle=Math.atan2(y,x);touchMove.x=Math.cos(angle)*strength;touchMove.y=Math.sin(angle)*strength;dot.style.transform="translate("+x+"px,"+y+"px)";}
  document.getElementById("shootBtn").addEventListener("pointerdown",e=>{e.preventDefault();touchShoot=true;});
  document.getElementById("sprintBtn").addEventListener("pointerdown",()=>{keys.add("ShiftLeft");});
  document.getElementById("sprintBtn").addEventListener("pointerup",()=>keys.delete("ShiftLeft"));
  document.getElementById("sprintBtn").addEventListener("pointercancel",()=>keys.delete("ShiftLeft"));
 }
-window.addEventListener("keydown",e=>{if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight","Space"].includes(e.code))e.preventDefault();keys.add(e.code);});
+window.addEventListener("keydown",e=>{if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight","Space"].includes(e.code))e.preventDefault();if(e.code==="Space"&&e.repeat)return;keys.add(e.code);});
 window.addEventListener("keyup",e=>keys.delete(e.code));
 window.addEventListener("blur",()=>{keys.clear();touchMove.x=0;touchMove.y=0;});
 document.getElementById("aiMode").addEventListener("click",()=>{document.getElementById("aiMode").classList.add("active");document.getElementById("onlineMode").classList.remove("active");document.getElementById("modeNote").textContent="Single Player is playable now. Online rooms and live matchmaking are planned for the multiplayer phase.";});
