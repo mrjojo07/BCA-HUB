@@ -15,8 +15,19 @@ const gravity=1700,keys={left:false,right:false,jump:false,kick:false};
 const player={x:190,y:floor-72,vx:0,vy:0,r:39,face:1,onGround:true,kickCd:0};
 const ai={x:W-190,y:floor-72,vx:0,vy:0,r:39,face:-1,onGround:true,kickCd:0};
 const ball={x:W/2,y:floor-100,vx:0,vy:0,r:18};
-function resize(){const r=canvas.getBoundingClientRect();const d=Math.min(devicePixelRatio||1,2);canvas.width=Math.max(1,Math.round(r.width*d));canvas.height=Math.max(1,Math.round(r.height*d));W=r.width;H=r.height;floor=H-56;scale=d;ctx.setTransform(d,0,0,d,0,0);}
-new ResizeObserver(resize).observe(canvas);
+function resize(){
+  const rect=canvas.getBoundingClientRect();
+  const host=$("arenaWrap");
+  const width=Math.max(1,rect.width||host.clientWidth||960);
+  const height=Math.max(1,rect.height||host.clientHeight||540);
+  const d=Math.min(window.devicePixelRatio||1,2);
+  canvas.width=Math.max(1,Math.round(width*d));
+  canvas.height=Math.max(1,Math.round(height*d));
+  W=width;H=height;floor=H-56;scale=d;
+  ctx.setTransform(d,0,0,d,0,0);
+}
+if("ResizeObserver" in window){new ResizeObserver(resize).observe(canvas);}
+else{window.addEventListener("resize",resize);}
 function resetPositions(){player.x=W*.2;player.y=H-120;player.vx=player.vy=0;player.onGround=true;ai.x=W*.8;ai.y=H-120;ai.vx=ai.vy=0;ai.onGround=true;ball.x=W/2;ball.y=H-105;ball.vx=ball.vy=0;}
 function stadiumPath(x,y,w,h){ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+w,y);ctx.lineTo(x+w-18,y+h);ctx.lineTo(x+18,y+h);ctx.closePath();}
 function drawStadium(){
@@ -61,7 +72,7 @@ function drawStadium(){
   ctx.beginPath();ctx.ellipse(W/2,top+groundH*.53,Math.min(49,W*.085),groundH*.22,0,0,Math.PI*2);ctx.stroke();
   ctx.beginPath();ctx.arc(W/2,top+groundH*.53,3,0,7);ctx.fillStyle="#f3ffe6";ctx.fill();
   const boxW=Math.min(126,W*.19),boxH=groundH*.78,boxY=top+(groundH-boxH)/2;ctx.strokeRect(9,boxY,boxW,boxH);ctx.strokeRect(W-9-boxW,boxY,boxW,boxH);
-  const sixW=boxW*.42,sixH=boxH*.48,sixY=top+(groundH-sixH)/2;ctx.strokeRect(9,sixY,sixW,sixH);ctx.strokeRect(W-9-sixW,sixY,sixH);
+  const sixW=boxW*.42,sixH=boxH*.48,sixY=top+(groundH-sixH)/2;ctx.strokeRect(9,sixY,sixW,sixH);ctx.strokeRect(W-9-sixW,sixY,sixW,sixH);
   ctx.restore();
   // Soft glow along the far touchline.
   const shade=ctx.createLinearGradient(0,top,0,top+groundH*.22);shade.addColorStop(0,"#f4ffdc24");shade.addColorStop(1,"#f4ffdc00");ctx.fillStyle=shade;ctx.fillRect(0,top,W,groundH*.22);
