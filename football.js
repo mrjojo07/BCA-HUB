@@ -95,13 +95,15 @@ function scoreGoal(team){if(!playing)return;if(team==="blue"){blueScore++;showGo
 function finishMatch(){playing=false;paused=false;pauseBtn.textContent="Pause";pauseBtn.disabled=true;restartBtn.disabled=false;resultTitle.textContent=blueScore>redScore?"You win!":blueScore<redScore?"AI wins":"It's a draw";resultScore.textContent=blueScore+" - "+redScore;resultOverlay.hidden=false;}
 function startMatch(){blueScore=0;redScore=0;timeLeft=300;playing=true;paused=false;resultOverlay.hidden=true;pauseBtn.disabled=false;restartBtn.disabled=false;pauseBtn.textContent="Pause";updateScore();clockEl.textContent="05:00";resetPositions();}
 function movePlayer(obj,dx,dz,speed,dt){const len=Math.hypot(dx,dz);if(len>.10){const strength=Math.min(1,len);const nx=dx/len,nz=dz/len;obj.position.x+=nx*speed*strength*dt;obj.position.z+=nz*speed*strength*dt;obj.rotation.y=Math.atan2(-nx,-nz);}obj.position.x=clamp(obj.position.x,-9.1,9.1);obj.position.z=clamp(obj.position.z,-14.8,14.8);}
-function tryKick(shooter,forward,boost=1){
+function tryKick(shooter,forward,power=.55){
+ if(kickCooldown>0)return false;
  const distance=shooter.position.distanceTo(v3(ball.position.x,0,ball.position.z));
- if(distance>1.85)return false;
+ if(distance>1.9)return false;
  const dir=v3(ball.position.x-shooter.position.x,0,ball.position.z-shooter.position.z);
  if(dir.length()<.25)dir.set(0,0,forward);
- dir.normalize();dir.z=forward<0?Math.min(dir.z,-.48):Math.max(dir.z,.48);dir.normalize();
- ballVelocity.addScaledVector(dir,boost*13);ballVelocity.y=Math.max(ballVelocity.y,3.1);return true;
+ dir.normalize();dir.z=forward<0?Math.min(dir.z,-.42):Math.max(dir.z,.42);dir.normalize();
+ const strength=10+clamp(power,0,1)*8;
+ ballVelocity.x=dir.x*strength;ballVelocity.z=dir.z*strength;ballVelocity.y=2.5+power*3.2;kickCooldown=.32;return true;
 }
 function updateBall(dt){
  ball.position.x+=ballVelocity.x*dt;ball.position.z+=ballVelocity.z*dt;ball.position.y+=ballVelocity.y*dt;
@@ -143,13 +145,15 @@ function setupTouch(){
  pad.addEventListener("pointermove",e=>{if(active&&e.pointerId===pointerId)updatePad(e);});
  pad.addEventListener("pointerup",reset);pad.addEventListener("pointercancel",reset);
  function updatePad(e){const r=pad.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;let x=e.clientX-cx,y=e.clientY-cy;const max=Math.min(r.width,r.height)*.34,l=Math.hypot(x,y);if(l>max){x=x/l*max;y=y/l*max;}const raw=Math.min(1,Math.hypot(x,y)/max);const dead=.13;const strength=raw<dead?0:(raw-dead)/(1-dead);const angle=Math.atan2(y,x);touchMove.x=Math.cos(angle)*strength;touchMove.y=Math.sin(angle)*strength;dot.style.transform="translate("+x+"px,"+y+"px)";}
- document.getElementById("shootBtn").addEventListener("pointerdown",e=>{e.preventDefault();touchShoot=true;});
- document.getElementById("sprintBtn").addEventListener("pointerdown",()=>{keys.add("ShiftLeft");});
- document.getElementById("sprintBtn").addEventListener("pointerup",()=>keys.delete("ShiftLeft"));
- document.getElementById("sprintBtn").addEventListener("pointercancel",()=>keys.delete("ShiftLeft"));
+ const shootBtn=document.getElementById("shootBtn");
+ shootBtn.addEventListener("pointerdown",e=>{e.preventDefault();chargingShot=true;shotCharge=0;});
+ ["pointerup","pointercancel","lostpointercapture"].forEach(type=>shootBtn.addEventListener(type,()=>{if(chargingShot)releaseShot=true;}));
+ const sprintBtn=document.getElementById("sprintBtn");
+ sprintBtn.addEventListener("pointerdown",e=>{e.preventDefault();sprintHeld=true;sprintBtn.setPointerCapture(e.pointerId);});
+ ["pointerup","pointercancel","lostpointercapture"].forEach(type=>sprintBtn.addEventListener(type,()=>{sprintHeld=false;}));
 }
-window.addEventListener("keydown",e=>{if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight","Space"].includes(e.code))e.preventDefault();if(e.code==="Space"){if(!e.repeat)touchShoot=true;return;}keys.add(e.code);});
-window.addEventListener("keyup",e=>keys.delete(e.code));
+window.addEventListener("keydown",e=>{if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight","Space"].includes(e.code))e.preventDefault();if(e.code==="Space"){if(!e.repeat){chargingShot=true;shotCharge=0;}return;}keys.add(e.code);});
+window.addEventListener("keyup",e=>{keys.delete(e.code);if(e.code==="Space"&&chargingShot)releaseShot=true;});
 window.addEventListener("blur",()=>{keys.clear();touchMove.x=0;touchMove.y=0;sprintHeld=false;if(chargingShot)releaseShot=true;});
 document.getElementById("aiMode").addEventListener("click",()=>{document.getElementById("aiMode").classList.add("active");document.getElementById("onlineMode").classList.remove("active");document.getElementById("modeNote").textContent="Single Player is playable now. Online rooms and live matchmaking are planned for the multiplayer phase.";});
 document.getElementById("onlineMode").addEventListener("click",()=>{document.getElementById("modeNote").textContent="Online Multiplayer is planned for Phase 3. Room creation, live synchronization and fair match validation are not active yet.";});
