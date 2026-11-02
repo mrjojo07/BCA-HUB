@@ -161,3 +161,11 @@ pauseBtn.addEventListener("click",()=>{if(!playing)return;paused=!paused;pauseBt
 restartBtn.addEventListener("click",startMatch);document.getElementById("playAgainBtn").addEventListener("click",startMatch);
 window.addEventListener("resize",resize);
 try{buildArena();clock=new THREE.Clock();setupTouch();loading.classList.add("done");pauseBtn.disabled=false;restartBtn.disabled=false;startMatch();animate();}catch(error){loading.textContent="The 3D game could not start. Please use an updated browser with WebGL enabled.";console.error(error);}
+
+
+// Fullscreen landscape gameplay
+const fullscreenBtn=document.getElementById("fullscreenBtn");
+const gamePanel=document.querySelector(".game-panel");
+async function toggleGameFullscreen(){try{if(!document.fullscreenElement){await gamePanel.requestFullscreen();try{await screen.orientation?.lock("landscape");}catch(_){/* Device/browser may not support orientation lock. */}fullscreenBtn.textContent="⛶ Exit full screen";}else{await document.exitFullscreen();}}catch(error){console.warn("Fullscreen unavailable:",error);}}
+fullscreenBtn.addEventListener("click",toggleGameFullscreen);
+document.addEventListener("fullscreenchange",()=>{const active=Boolean(document.fullscreenElement);fullscreenBtn.textContent=active?"⛶ Exit full screen":"⛶ Full screen";if(!active){try{screen.orientation?.unlock();}catch(_){}}requestAnimationFrame(resize);});
