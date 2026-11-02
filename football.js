@@ -127,17 +127,23 @@ function updateAI(dt){
 }
 function update(dt){
  if(!playing||paused)return;
- kickCooldown=Math.max(0,kickCooldown-dt);\n sprintHeld=keys.has("ShiftLeft")||keys.has("ShiftRight")||sprintHeld;\n const sprinting=(sprintHeld||keys.has("ShiftLeft")||keys.has("ShiftRight"))&&sprintStamina>0;\n if(sprinting)sprintStamina=Math.max(0,sprintStamina-34*dt);else sprintStamina=Math.min(100,sprintStamina+22*dt);\n const sprint=sprinting?6.8:4.35;\n updateControlMeters();
+ kickCooldown=Math.max(0,kickCooldown-dt);
+ const sprinting=(sprintHeld||keys.has("ShiftLeft")||keys.has("ShiftRight"))&&sprintStamina>0;
+ if(sprinting)sprintStamina=Math.max(0,sprintStamina-34*dt);else sprintStamina=Math.min(100,sprintStamina+22*dt);
+ const sprint=sprinting?6.8:4.35;
+ updateControlMeters();
  let dx=(keys.has("KeyD")||keys.has("ArrowRight")?1:0)-(keys.has("KeyA")||keys.has("ArrowLeft")?1:0);
  let dz=(keys.has("KeyS")||keys.has("ArrowDown")?1:0)-(keys.has("KeyW")||keys.has("ArrowUp")?1:0);
  dx+=touchMove.x;dz+=touchMove.y;
  movePlayer(player,dx,dz,sprint,dt);
- if(touchShoot){chargingShot=true;shotCharge=Math.min(1,shotCharge+dt*1.15);}\n if(releaseShot){tryKick(player,-1,shotCharge);shotCharge=0;chargingShot=false;releaseShot=false;}
+ if(chargingShot){shotCharge=Math.min(1,shotCharge+dt*1.15);}
+ if(releaseShot){tryKick(player,-1,shotCharge);shotCharge=0;chargingShot=false;releaseShot=false;}
  updateAI(dt);updateBall(dt);
  timeLeft=Math.max(0,timeLeft-dt);const sec=Math.ceil(timeLeft);clockEl.textContent=String(Math.floor(sec/60)).padStart(2,"0")+":"+String(sec%60).padStart(2,"0");if(timeLeft<=0)finishMatch();
 }
 function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.04);update(dt);if(player){const desired=v3(player.position.x*.16,23,27);camera.position.lerp(desired,.045);camera.lookAt(player.position.x*.12,0,0);}renderer.render(scene,camera);}
-const touchMove={x:0,y:0};let touchShoot=false,releaseShot=false;\nfunction updateControlMeters(){const stamina=document.getElementById("staminaFill"),power=document.getElementById("shotFill"),sprintBtn=document.getElementById("sprintBtn");if(stamina)stamina.style.width=sprintStamina+"%";if(power)power.style.width=(shotCharge*100)+"%";if(sprintBtn)sprintBtn.classList.toggle("active",sprintHeld&&sprintStamina>0);}
+const touchMove={x:0,y:0};let releaseShot=false;
+function updateControlMeters(){const stamina=document.getElementById("staminaFill"),power=document.getElementById("shotFill"),sprintBtn=document.getElementById("sprintBtn");if(stamina)stamina.style.width=sprintStamina+"%";if(power)power.style.width=(shotCharge*100)+"%";if(sprintBtn)sprintBtn.classList.toggle("active",sprintHeld&&sprintStamina>0);}
 function setupTouch(){
  const pad=document.getElementById("touchPad"),dot=document.getElementById("padDot");let active=false,pointerId=null;
  const reset=()=>{active=false;touchMove.x=0;touchMove.y=0;dot.style.transform="translate(0,0)";};
