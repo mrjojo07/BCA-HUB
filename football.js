@@ -1,11 +1,11 @@
 const canvas=document.getElementById("gameCanvas"),ctx=canvas.getContext("2d");
 const $=id=>document.getElementById(id);const blueEl=$("blueScore"),redEl=$("redScore"),clockEl=$("matchClock"),loading=$("gameLoading"),panel=$("gamePanel");
-let W=960,H=540,scale=1,last=0,remaining=300,blueScore=0,redScore=0,paused=false,ended=false,goalTimer=0,flashTimer=0;
-const floor=H-56,gravity=1700,keys={left:false,right:false,jump:false,kick:false};
+let W=960,H=540,scale=1,last=0,floor=484,remaining=300,blueScore=0,redScore=0,paused=false,ended=false,goalTimer=0,flashTimer=0;
+const gravity=1700,keys={left:false,right:false,jump:false,kick:false};
 const player={x:190,y:floor-72,vx:0,vy:0,r:39,face:1,onGround:true,kickCd:0};
 const ai={x:W-190,y:floor-72,vx:0,vy:0,r:39,face:-1,onGround:true,kickCd:0};
 const ball={x:W/2,y:floor-100,vx:0,vy:0,r:18};
-function resize(){const r=canvas.getBoundingClientRect();const d=Math.min(devicePixelRatio||1,2);canvas.width=Math.max(1,Math.round(r.width*d));canvas.height=Math.max(1,Math.round(r.height*d));W=r.width;H=r.height;scale=d;ctx.setTransform(d,0,0,d,0,0);}
+function resize(){const r=canvas.getBoundingClientRect();const d=Math.min(devicePixelRatio||1,2);canvas.width=Math.max(1,Math.round(r.width*d));canvas.height=Math.max(1,Math.round(r.height*d));W=r.width;H=r.height;floor=H-56;scale=d;ctx.setTransform(d,0,0,d,0,0);}
 new ResizeObserver(resize).observe(canvas);
 function resetPositions(){player.x=W*.2;player.y=H-120;player.vx=player.vy=0;player.onGround=true;ai.x=W*.8;ai.y=H-120;ai.vx=ai.vy=0;ai.onGround=true;ball.x=W/2;ball.y=H-105;ball.vx=ball.vy=0;}
 function drawPlayer(p,color,trim){ctx.save();ctx.translate(p.x,p.y);ctx.fillStyle="#0003";ctx.beginPath();ctx.ellipse(0,48,38,8,0,0,Math.PI*2);ctx.fill();ctx.fillStyle=trim;ctx.fillRect(-17,23,13,24);ctx.fillRect(5,23,13,24);ctx.fillStyle=color;ctx.beginPath();ctx.roundRect(-25,-5,50,38,12);ctx.fill();ctx.fillStyle="#f1c49b";ctx.beginPath();ctx.arc(0,-30, p.r,0,Math.PI*2);ctx.fill();ctx.fillStyle="#1a2635";ctx.beginPath();ctx.arc(-12,-38,5,0,Math.PI*2);ctx.arc(12,-38,5,0,Math.PI*2);ctx.fill();ctx.strokeStyle="#542f2b";ctx.lineWidth=3;ctx.beginPath();ctx.arc(0,-23,9,.15,Math.PI-.15);ctx.stroke();ctx.fillStyle="#fff";ctx.fillRect(p.face*13-5,-8,10,5);ctx.restore();}
