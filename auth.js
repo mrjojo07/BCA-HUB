@@ -12,6 +12,7 @@ const loginForm = $("loginForm");
 const signupForm = $("signupForm");
 const otpForm = $("otpForm");
 let pendingOtpEmail = "";
+let signupInProgress = false;
 const recoveryForm = $("recoveryForm");
 const newPasswordForm = $("newPasswordForm");
 const appBase = window.location.pathname.replace(/[^/]*$/, "");
@@ -79,21 +80,39 @@ signupForm.addEventListener("submit", async (event) => {
   if (password.length < 8) return showStatus("Use a password with at least 8 characters.", "error");
   const button = signupForm.querySelector("button[type=submit]");
   button.disabled = true; button.textContent = "Creating account…";
-  const { data, error } = await supabase.auth.signUp({
-    email, password,
-    options: { data: { display_name: displayName }, emailRedirectTo: redirectUrl }
-  });
-  button.disabled = false; button.textContent = "Create account";
-  if (error) return showStatus(readableError(error), "error");
-  if (data.session) {
-    showStatus("Your account is ready.", "success");
-    await showAccount(data.user);
-  } else {
-    pendingOtpEmail = email;
-    $("otpEmailLabel").textContent = email;
-    showForm("otp");
-    showStatus("A 6-digit verification code has been sent to your Gmail. Enter it below.", "success");
+  let result;
+  signupInProgress = true;
+  try {
+    result = await supabase.auth.signUp({
+      email, password,
+      options: { data: { display_name: displayName }, emailRedirectTo: redirectUrl }
+    });
+  } catch (error) {
+    signupInProgress = false;
+    button.disabled = false; button.textContent = "Create account";
+    return showStatus(readableError(error), "error");
   }
+  const { data, error } = result;
+  if (error) {
+    signupInProgress = false;
+    button.disabled = false; button.textContent = "Create account";
+    return showStatus(readableError(error), "error");
+  }
+  if (data.session) {
+    // A session immediately after sign-up means Supabase email confirmation is disabled.
+    // Do not let this session bypass the email-verification screen.
+    try { await supabase.auth.signOut(); } catch (_) {}
+    signupInProgress = false;
+    button.disabled = false; button.textContent = "Create account";
+    showForm("signup");
+    return showStatus("Email verification is not enabled in Supabase yet. Turn ON Authentication → Sign In / Providers → Email → Confirm email, then try signing up again.", "error");
+  }
+  signupInProgress = false;
+  button.disabled = false; button.textContent = "Create account";
+  pendingOtpEmail = email;
+  $("otpEmailLabel").textContent = email;
+  showForm("otp");
+  showStatus("A 6-digit verification code has been requested. Check your email and enter it below.", "success");
 });
 
 otpForm.addEventListener("submit", async (event) => {
@@ -177,7 +196,7 @@ $("logoutButton").addEventListener("click", async () => {
 supabase.auth.onAuthStateChange(async (event, session) => {
   if (event === "PASSWORD_RECOVERY") {
     showForm("newPassword");
-  } else if (session?.user && event === "SIGNED_IN") {
+  } else if (session?.user && event === "SIGNED_IN" && !signupInProgress) {
     queueMicrotask(() => showAccount(session.user));
   } else if (event === "SIGNED_OUT") {
     formsPanel.hidden = false;
