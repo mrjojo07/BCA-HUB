@@ -51,6 +51,7 @@
       <a href="#learningMaterialsPanel"><span>↑</span> Learning Materials</a>
       <a href="#examTimetablePanel"><span>▣</span> Exam Timetable</a>
       <a href="#communityUploadsPanel"><span>♧</span> Community Uploads</a>
+      <a href="#notificationsAdminPanel"><span>🔔</span> Notifications</a>
       <a href="#feedbackManagerPanel"><span>✉</span> Student Feedback</a>
       <a href="#logoutButton"><span>↪</span> Logout</a>
     </nav>
@@ -100,6 +101,22 @@
         <p class="admin-intro" id="communityAdminStatus" aria-live="polite">Loading submissions…</p>
         <div id="communityAdminList" class="admin-resource-requests"></div>
       </section>
+      <section class="admin-timetable" id="notificationsAdminPanel">
+        <h2>Student Notifications</h2>
+        <p class="admin-intro">Send an announcement to every signed-in BCA SYNC student. Uploads and timetable updates also create notifications automatically.</p>
+        <form id="adminNotificationForm" class="admin-form">
+          <label for="adminNotificationTitle">Notification title</label>
+          <input id="adminNotificationTitle" maxlength="120" required placeholder="e.g. Important exam update">
+          <label for="adminNotificationMessage">Message</label>
+          <textarea id="adminNotificationMessage" rows="3" maxlength="500" required placeholder="Write a short update for students…"></textarea>
+          <label for="adminNotificationCategory">Notification type</label>
+          <select id="adminNotificationCategory"><option value="announcement">Announcement</option><option value="general">General update</option><option value="timetable">Timetable</option></select>
+          <label for="adminNotificationLink">Optional page link</label>
+          <input id="adminNotificationLink" maxlength="300" placeholder="#semesters">
+          <button class="admin-action" type="submit" id="adminNotificationSend">Send notification</button>
+          <p class="admin-intro" id="adminNotificationStatus" aria-live="polite"></p>
+        </form>
+      </section>
       <section class="admin-timetable" id="feedbackManagerPanel"><div class="admin-toolbar"><div><h2>Student feedback</h2><p class="admin-intro">Feedback submitted through the homepage appears here.</p></div><button class="admin-back-button" id="refreshFeedback" type="button">↻ Refresh feedback</button></div><p class="admin-intro" id="feedbackAdminStatus" aria-live="polite">Loading feedback…</p><div id="adminFeedbackList" class="admin-resource-requests"></div><p class="admin-footnote">Feedback is stored privately in BCA SYNC and visible only to approved administrators.</p></section>
       <p class="admin-footnote">Directly uploaded files can be removed here. Older files stored in GitHub still use GitHub for rename or deletion.</p>
       <button class="admin-back-button" id="logoutButton" type="button">Lock Admin Panel</button>
@@ -117,6 +134,21 @@
       "https://efbkhmfekfujbwfdpfhk.supabase.co",
       "sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH"
     );
+    async function publishAdminNotification({title,message,category="general",target_url=null}) {
+      try {
+        const {data:{user}} = await supabase.auth.getUser();
+        if (!user) throw new Error("Admin session is unavailable.");
+        const {error} = await supabase.from("bca_notifications").insert({
+          title:String(title).slice(0,120),message:String(message).slice(0,500),
+          category,target_url:target_url || null,created_by:user.id
+        });
+        if (error) throw error;
+        return true;
+      } catch (error) {
+        console.warn("BCA SYNC notification was not published:",error.message);
+        return false;
+      }
+    }
     const loginPanel = document.getElementById("loginPanel");
     const uploadPanel = document.getElementById("uploadPanel");
     const loginError = document.getElementById("loginError");
@@ -395,6 +427,11 @@
         document.getElementById("materialFiles").value = "";
         await loadExistingFiles();
         status.textContent = uploaded + " file(s) uploaded and published successfully.";
+        const folderParts = folder.split("/");
+        const category = folderParts[2] || "general";
+        const subjectName = subjectSelect.value || "BCA";
+        const notificationCategory = ["notes","important-questions","previous-year-questions"].includes(category) ? category : "general";
+        await publishAdminNotification({title:"New " + (category === "notes" ? "notes" : category.replace(/-/g," ")) + " available",message:subjectName + " · Semester " + semesterSelect.value.replace("semester-","") + " — new study material has been published.",category:notificationCategory,target_url:"#semesters"});
       } catch (error) {
         status.textContent = uploaded + " file(s) uploaded. Upload stopped: " + (error.message || "Please try again.");
         await loadExistingFiles();
@@ -564,6 +601,7 @@
         resetExamEditor();
         await loadExamTimetable();
         examAdminStatus.textContent = "Published successfully. The website will show the updated timetable.";
+        await publishAdminNotification({title:"Exam timetable updated",message:title + " · " + new Date(date + "T00:00:00").toLocaleDateString() + ". Check the exam countdown on BCA SYNC.",category:"timetable",target_url:"#examCountdown"});
       } catch (error) {
         examAdminStatus.textContent = "Publish failed: " + (error.message || "Please try again.");
       } finally {
@@ -600,6 +638,30 @@
       } catch (error) { feedbackStatus.textContent = error.message || "Could not load feedback. Check Admin access and MFA."; }
     }
     document.getElementById("refreshFeedback")?.addEventListener("click", loadAdminFeedback);
+
+    document.getElementById("adminNotificationForm")?.addEventListener("submit", async event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const button = document.getElementById("adminNotificationSend");
+      const status = document.getElementById("adminNotificationStatus");
+      const title = document.getElementById("adminNotificationTitle").value.trim();
+      const message = document.getElementById("adminNotificationMessage").value.trim();
+      const category = document.getElementById("adminNotificationCategory").value;
+      const rawLink = document.getElementById("adminNotificationLink").value.trim();
+      let target_url = null;
+      if (rawLink) {
+        if (rawLink.startsWith("#") || rawLink.startsWith("./") || rawLink.startsWith("../")) target_url = rawLink;
+        else {
+          try { const parsed = new URL(rawLink); if (parsed.protocol === "https:" || parsed.protocol === "http:") target_url = parsed.href; else throw new Error(); }
+          catch (_) { status.textContent = "Enter a valid page link or leave it blank."; return; }
+        }
+      }
+      button.disabled = true; status.textContent = "Sending notification…";
+      const sent = await publishAdminNotification({title,message,category,target_url});
+      if (sent) { form.reset(); status.textContent = "Notification published for all signed-in students."; }
+      else status.textContent = "Could not send notification. Check Admin access and try again.";
+      button.disabled = false;
+    });
 
     const communityAdminStatus = document.getElementById("communityAdminStatus");
     const communityAdminList = document.getElementById("communityAdminList");
