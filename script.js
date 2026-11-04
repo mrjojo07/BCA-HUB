@@ -625,6 +625,41 @@ enablePushNotifications?.addEventListener("click",async()=>{
 });
 
 
+const welcomeNotificationPrompt = document.getElementById("welcomeNotificationPrompt");
+const welcomeNotificationEnable = document.getElementById("welcomeNotificationEnable");
+const welcomeNotificationLater = document.getElementById("welcomeNotificationLater");
+const welcomeNotificationStatus = document.getElementById("welcomeNotificationStatus");
+function closeWelcomeNotificationPrompt() {
+  if (welcomeNotificationPrompt) welcomeNotificationPrompt.hidden = true;
+}
+window.addEventListener("bca-sync:welcome-complete", () => {
+  if (!welcomeNotificationPrompt || !notificationUserId) return;
+  if (localStorage.getItem("bcaSyncPushEnabled") === "1" || sessionStorage.getItem("bcaSyncWelcomeNotificationDismissed") === "1") return;
+  welcomeNotificationPrompt.hidden = false;
+  if (typeof Notification !== "undefined" && Notification.permission === "denied") {
+    if (welcomeNotificationStatus) welcomeNotificationStatus.textContent = "Notifications are blocked in browser settings. Allow them from this site's settings.";
+    if (welcomeNotificationEnable) welcomeNotificationEnable.disabled = true;
+  }
+});
+welcomeNotificationLater?.addEventListener("click", () => {
+  sessionStorage.setItem("bcaSyncWelcomeNotificationDismissed", "1");
+  closeWelcomeNotificationPrompt();
+});
+welcomeNotificationEnable?.addEventListener("click", async () => {
+  welcomeNotificationEnable.disabled = true;
+  if (welcomeNotificationStatus) welcomeNotificationStatus.textContent = "Enabling notifications…";
+  try {
+    await enableBcaPushNotifications();
+    localStorage.setItem("bcaSyncPushEnabled", "1");
+    if (welcomeNotificationStatus) welcomeNotificationStatus.textContent = "Notifications are enabled on this device.";
+    closeWelcomeNotificationPrompt();
+    if (enablePushNotifications) enablePushNotifications.hidden = true;
+  } catch (error) {
+    if (welcomeNotificationStatus) welcomeNotificationStatus.textContent = error.message || "Could not enable notifications. Please try again.";
+    welcomeNotificationEnable.disabled = false;
+  }
+});
+
 function notificationIcon(category) {
   return ({notes:"▤","previous-year-questions":"▧","important-questions":"✦",timetable:"▣",announcement:"!",general:"●"})[category] || "●";
 }
