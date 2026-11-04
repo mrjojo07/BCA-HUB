@@ -582,11 +582,13 @@ async function registerBcaServiceWorker() {
   if (!("serviceWorker" in navigator)) throw new Error("This browser does not support background notifications.");
   return await navigator.serviceWorker.register("./sw.js",{scope:"./"});
 }
-async function enableBcaPushNotifications() {
+async function enableBcaPushNotifications(permission) {
   if (!notificationUserId) throw new Error("Please sign in first.");
   if (!("PushManager" in window) || !("Notification" in window)) throw new Error("Push notifications are not supported in this browser.");
-  const permission = await Notification.requestPermission();
-  if (permission !== "granted") throw new Error("Notification permission was not allowed. You can enable it in browser site settings.");
+  if (permission !== "granted") {
+    if (Notification.permission === "denied") throw new Error("Chrome has already blocked notifications for this site. Change this site's Notifications permission to Allow in Chrome settings, then tap Enable again.");
+    throw new Error("Please choose Allow in the Chrome notification permission prompt.");
+  }
   const registration = await registerBcaServiceWorker();
   const keyResponse = await fetch(PUSH_FUNCTION_URL,{
     method:"POST",
@@ -610,10 +612,13 @@ async function enableBcaPushNotifications() {
   return true;
 }
 enablePushNotifications?.addEventListener("click",async()=>{
+  // Request permission immediately in the user's click gesture so Chrome can show its native Allow/Block prompt.
+  const permissionRequest = ("Notification" in window) ? Notification.requestPermission() : Promise.reject(new Error("Notifications are not supported in this browser."));
   enablePushNotifications.disabled=true;
-  if (pushNotificationStatus) pushNotificationStatus.textContent="Enabling phone notifications…";
+  if (pushNotificationStatus) pushNotificationStatus.textContent="Waiting for your permission…";
   try {
-    await enableBcaPushNotifications();
+    const permission = await permissionRequest;
+    await enableBcaPushNotifications(permission);
     if (pushNotificationStatus) pushNotificationStatus.textContent="Phone notifications enabled on this device.";
     enablePushNotifications.textContent="Notifications enabled";
     localStorage.setItem("bcaSyncPushEnabled","1");
@@ -637,8 +642,9 @@ window.addEventListener("bca-sync:welcome-complete", () => {
   if (localStorage.getItem("bcaSyncPushEnabled") === "1" || sessionStorage.getItem("bcaSyncWelcomeNotificationDismissed") === "1") return;
   welcomeNotificationPrompt.hidden = false;
   if (typeof Notification !== "undefined" && Notification.permission === "denied") {
-    if (welcomeNotificationStatus) welcomeNotificationStatus.textContent = "Notifications are blocked in browser settings. Allow them from this site's settings.";
-    if (welcomeNotificationEnable) welcomeNotificationEnable.disabled = true;
+    if (welcomeNotificationStatus) welcomeNotificationStatus.textContent = "Chrome has previously blocked notifications for this site. Change this site's Notifications permission to Allow in Chrome settings, then tap Enable again.";
+    // Keep the button available; the browser itself decides whether it can show a permission prompt again.
+    if (welcomeNotificationEnable) welcomeNotificationEnable.disabled = false;
   }
 });
 welcomeNotificationLater?.addEventListener("click", () => {
@@ -646,10 +652,13 @@ welcomeNotificationLater?.addEventListener("click", () => {
   closeWelcomeNotificationPrompt();
 });
 welcomeNotificationEnable?.addEventListener("click", async () => {
+  // Call requestPermission directly from this tap, before any other asynchronous work.
+  const permissionRequest = (typeof Notification !== "undefined") ? Notification.requestPermission() : Promise.reject(new Error("Notifications are not supported in this browser."));
   welcomeNotificationEnable.disabled = true;
-  if (welcomeNotificationStatus) welcomeNotificationStatus.textContent = "Enabling notifications…";
+  if (welcomeNotificationStatus) welcomeNotificationStatus.textContent = "Waiting for Chrome's permission prompt…";
   try {
-    await enableBcaPushNotifications();
+    const permission = await permissionRequest;
+    await enableBcaPushNotifications(permission);
     localStorage.setItem("bcaSyncPushEnabled", "1");
     if (welcomeNotificationStatus) welcomeNotificationStatus.textContent = "Notifications are enabled on this device.";
     closeWelcomeNotificationPrompt();
