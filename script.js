@@ -570,105 +570,6 @@ let notificationItems = [];
 let notificationReadIds = new Set();
 let notificationChannel = null;
 
-const PUSH_FUNCTION_URL = "https://efbkhmfekfujbwfdpfhk.supabase.co/functions/v1/send-bca-push";
-const enablePushNotifications = document.getElementById("enablePushNotifications");
-const pushNotificationStatus = document.getElementById("pushNotificationStatus");
-function decodePushKey(value) {
-  const normalized = value.replace(/-/g,"+").replace(/_/g,"/");
-  const padded = normalized + "=".repeat((4 - normalized.length % 4) % 4);
-  return Uint8Array.from(atob(padded), character => character.charCodeAt(0));
-}
-async function registerBcaServiceWorker() {
-  if (!("serviceWorker" in navigator)) throw new Error("This browser does not support background notifications.");
-  return await navigator.serviceWorker.register("./sw.js",{scope:"./"});
-}
-async function enableBcaPushNotifications(permission) {
-  if (!notificationUserId) throw new Error("Please sign in first.");
-  if (!("PushManager" in window) || !("Notification" in window)) throw new Error("Push notifications are not supported in this browser.");
-  if (permission !== "granted") {
-    if (Notification.permission === "denied") throw new Error("Chrome has already blocked notifications for this site. Change this site's Notifications permission to Allow in Chrome settings, then tap Enable again.");
-    throw new Error("Please choose Allow in the Chrome notification permission prompt.");
-  }
-  const registration = await registerBcaServiceWorker();
-  const keyResponse = await fetch(PUSH_FUNCTION_URL,{
-    method:"POST",
-    headers:{"Content-Type":"application/json","apikey":"sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH"},
-    body:JSON.stringify({action:"public-key"})
-  });
-  const keyData = await keyResponse.json().catch(()=>({}));
-  if (!keyResponse.ok || !keyData.publicKey) throw new Error(keyData.error || "Push setup is not ready yet.");
-  let subscription = await registration.pushManager.getSubscription();
-  if (!subscription) subscription = await registration.pushManager.subscribe({
-    userVisibleOnly:true,
-    applicationServerKey:decodePushKey(keyData.publicKey)
-  });
-  const {error} = await supabase.from("bca_push_subscriptions").upsert({
-    user_id:notificationUserId,
-    endpoint:subscription.endpoint,
-    subscription:subscription.toJSON(),
-    updated_at:new Date().toISOString()
-  },{onConflict:"endpoint"});
-  if (error) throw error;
-  return true;
-}
-enablePushNotifications?.addEventListener("click",async()=>{
-  // Request permission immediately in the user's click gesture so Chrome can show its native Allow/Block prompt.
-  const permissionRequest = ("Notification" in window) ? Notification.requestPermission() : Promise.reject(new Error("Notifications are not supported in this browser."));
-  enablePushNotifications.disabled=true;
-  if (pushNotificationStatus) pushNotificationStatus.textContent="Waiting for your permission…";
-  try {
-    const permission = await permissionRequest;
-    await enableBcaPushNotifications(permission);
-    if (pushNotificationStatus) pushNotificationStatus.textContent="Phone notifications enabled on this device.";
-    enablePushNotifications.textContent="Notifications enabled";
-    localStorage.setItem("bcaSyncPushEnabled","1");
-    enablePushNotifications.hidden=true;
-  } catch(error) {
-    if (pushNotificationStatus) pushNotificationStatus.textContent=error.message || "Could not enable notifications.";
-    enablePushNotifications.disabled=false;
-  }
-});
-
-
-const welcomeNotificationPrompt = document.getElementById("welcomeNotificationPrompt");
-const welcomeNotificationEnable = document.getElementById("welcomeNotificationEnable");
-const welcomeNotificationLater = document.getElementById("welcomeNotificationLater");
-const welcomeNotificationStatus = document.getElementById("welcomeNotificationStatus");
-function closeWelcomeNotificationPrompt() {
-  if (welcomeNotificationPrompt) welcomeNotificationPrompt.hidden = true;
-}
-window.addEventListener("bca-sync:welcome-complete", () => {
-  if (!welcomeNotificationPrompt || !notificationUserId) return;
-  if (localStorage.getItem("bcaSyncPushEnabled") === "1" || sessionStorage.getItem("bcaSyncWelcomeNotificationDismissed") === "1") return;
-  welcomeNotificationPrompt.hidden = false;
-  if (typeof Notification !== "undefined" && Notification.permission === "denied") {
-    if (welcomeNotificationStatus) welcomeNotificationStatus.textContent = "Chrome has previously blocked notifications for this site. Change this site's Notifications permission to Allow in Chrome settings, then tap Enable again.";
-    // Keep the button available; the browser itself decides whether it can show a permission prompt again.
-    if (welcomeNotificationEnable) welcomeNotificationEnable.disabled = false;
-  }
-});
-welcomeNotificationLater?.addEventListener("click", () => {
-  sessionStorage.setItem("bcaSyncWelcomeNotificationDismissed", "1");
-  closeWelcomeNotificationPrompt();
-});
-welcomeNotificationEnable?.addEventListener("click", async () => {
-  // Call requestPermission directly from this tap, before any other asynchronous work.
-  const permissionRequest = (typeof Notification !== "undefined") ? Notification.requestPermission() : Promise.reject(new Error("Notifications are not supported in this browser."));
-  welcomeNotificationEnable.disabled = true;
-  if (welcomeNotificationStatus) welcomeNotificationStatus.textContent = "Waiting for Chrome's permission prompt…";
-  try {
-    const permission = await permissionRequest;
-    await enableBcaPushNotifications(permission);
-    localStorage.setItem("bcaSyncPushEnabled", "1");
-    if (welcomeNotificationStatus) welcomeNotificationStatus.textContent = "Notifications are enabled on this device.";
-    closeWelcomeNotificationPrompt();
-    if (enablePushNotifications) enablePushNotifications.hidden = true;
-  } catch (error) {
-    if (welcomeNotificationStatus) welcomeNotificationStatus.textContent = error.message || "Could not enable notifications. Please try again.";
-    welcomeNotificationEnable.disabled = false;
-  }
-});
-
 function notificationIcon(category) {
   return ({notes:"▤","previous-year-questions":"▧","important-questions":"✦",timetable:"▣",announcement:"!",general:"●"})[category] || "●";
 }
@@ -686,11 +587,7 @@ function renderNotifications() {
     notificationCount.textContent = unread > 99 ? "99+" : String(unread);
   }
   if (notificationSummary) notificationSummary.textContent = unread ? unread + " unread update" + (unread === 1 ? "" : "s") : "You're all caught up";
-  if (enablePushNotifications) {
-    const supported = "PushManager" in window && "Notification" in window && "serviceWorker" in navigator;
-    enablePushNotifications.hidden = !notificationUserId || !supported || localStorage.getItem("bcaSyncPushEnabled") === "1";
-    if (typeof Notification !== "undefined" && Notification.permission === "denied" && pushNotificationStatus) pushNotificationStatus.textContent = "Notifications are blocked in browser site settings.";
-  }
+
   if (!notificationItems.length) {
     const empty = document.createElement("p"); empty.className = "notification-empty";
     empty.textContent = notificationUserId ? "No notifications yet. New BCA SYNC updates will appear here." : "Sign in to view your notifications.";
