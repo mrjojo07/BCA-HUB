@@ -1105,3 +1105,11 @@ body.image-viewer-open{overflow:hidden}
   .upload-notes-bar .header-upload-notes{order:-1;margin-right:auto}
   .upload-notes-bar .install-app-button{order:1;margin-left:auto;margin-right:0}
 }
+
+
+/* App layout correction: keep Install on the left and Upload Notes on the right. */
+@media (display-mode: standalone){
+  .upload-notes-bar{justify-content:space-between}
+  .upload-notes-bar .install-app-button{order:0;margin-left:0;margin-right:auto}
+  .upload-notes-bar .header-upload-notes{order:1;margin-left:auto;margin-right:0}
+}
