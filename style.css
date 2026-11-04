@@ -1028,3 +1028,12 @@ body.image-viewer-open{overflow:hidden}
 .brand-mark.brand-logo{background:transparent!important;object-fit:contain;padding:0;border-radius:0;filter:drop-shadow(0 2px 8px #087cff30)}
 .brand-logo-large{object-fit:contain;background:transparent!important}
 .about-mark.brand-logo-about{object-fit:contain;background:transparent!important;border-radius:0;padding:0}
+
+
+/* Password visibility toggle on login and signup */
+.password-field{position:relative;width:100%;display:flex;align-items:center}
+.password-field input{width:100%;padding-right:48px!important}
+.password-toggle{position:absolute;right:7px;top:50%;transform:translateY(-50%);width:36px;height:36px;display:grid;place-items:center;border:0;border-radius:8px;background:transparent;color:#91a9c5;cursor:pointer}
+.password-toggle:hover{background:#14283e;color:#65baff}
+.password-toggle:focus-visible{outline:2px solid #168cff;outline-offset:1px}
+.password-toggle svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
