@@ -644,6 +644,9 @@ notificationBell?.addEventListener("click", async () => {
   notificationPanel.hidden = !opening;
   notificationBell.setAttribute("aria-expanded",String(opening));
   if (opening) await loadNotifications();
+notificationChannel = supabase.channel("bca-sync-notification-feed")
+  .on("postgres_changes",{event:"INSERT",schema:"public",table:"bca_notifications"},() => loadNotifications())
+  .subscribe();
 });
 markAllNotificationsRead?.addEventListener("click", async () => {
   if (!notificationUserId) return;
