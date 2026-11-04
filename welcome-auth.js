@@ -11,3 +11,8 @@ if (session?.user) closePopup();
 supabase.auth.onAuthStateChange((_event, sessionNow) => {
   if (sessionNow?.user) closePopup();
 });
+
+if (document.documentElement.classList.contains("show-new-user-welcome")) {
+  closePopup();
+  window.setTimeout(() => document.documentElement.classList.remove("show-new-user-welcome"), 5200);
+}
