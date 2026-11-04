@@ -616,6 +616,7 @@ enablePushNotifications?.addEventListener("click",async()=>{
     await enableBcaPushNotifications();
     if (pushNotificationStatus) pushNotificationStatus.textContent="Phone notifications enabled on this device.";
     enablePushNotifications.textContent="Notifications enabled";
+    localStorage.setItem("bcaSyncPushEnabled","1");
     enablePushNotifications.hidden=true;
   } catch(error) {
     if (pushNotificationStatus) pushNotificationStatus.textContent=error.message || "Could not enable notifications.";
@@ -643,8 +644,8 @@ function renderNotifications() {
   if (notificationSummary) notificationSummary.textContent = unread ? unread + " unread update" + (unread === 1 ? "" : "s") : "You're all caught up";
   if (enablePushNotifications) {
     const supported = "PushManager" in window && "Notification" in window && "serviceWorker" in navigator;
-    enablePushNotifications.hidden = !notificationUserId || !supported || Notification.permission === "granted";
-    if (Notification.permission === "denied" && pushNotificationStatus) pushNotificationStatus.textContent = "Notifications are blocked in browser site settings.";
+    enablePushNotifications.hidden = !notificationUserId || !supported || localStorage.getItem("bcaSyncPushEnabled") === "1";
+    if (typeof Notification !== "undefined" && Notification.permission === "denied" && pushNotificationStatus) pushNotificationStatus.textContent = "Notifications are blocked in browser site settings.";
   }
   if (!notificationItems.length) {
     const empty = document.createElement("p"); empty.className = "notification-empty";
