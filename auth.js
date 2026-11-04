@@ -139,7 +139,11 @@ otpForm.addEventListener("submit", async (event) => {
   pendingOtpEmail = "";
   $("signupOtp").value = "";
   if (data.user) {
-    try { sessionStorage.setItem("bcaSyncNewUserWelcome", "1"); } catch (_) {}
+    const studentName = data.user.user_metadata?.display_name || data.user.email?.split("@")[0] || "Student";
+    try {
+      sessionStorage.setItem("bcaSyncNewUserWelcome", "1");
+      sessionStorage.setItem("bcaSyncWelcomeName", studentName);
+    } catch (_) {}
     window.location.replace("index.html");
     return;
   } else {
