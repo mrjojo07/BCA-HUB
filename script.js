@@ -663,6 +663,6 @@ document.addEventListener("click", event => {
 });
 supabase.auth.onAuthStateChange((_event,session) => {
   notificationUserId = session?.user?.id || null;
-  loadNotifications();
+  window.setTimeout(loadNotifications,0);
 });
 loadNotifications();
