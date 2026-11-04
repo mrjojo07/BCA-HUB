@@ -10,8 +10,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=21">
-  <script type="module" src="auth.js?v=6"></script>
+  <link rel="stylesheet" href="style.css?v=22">
+  <script type="module" src="auth.js?v=7"></script>
 </head>
 <body class="auth-page">
   <header class="site-header">
@@ -32,7 +32,7 @@
           <label for="loginEmail">Email address</label>
           <input id="loginEmail" type="email" autocomplete="email" required maxlength="254" placeholder="you@example.com">
           <label for="loginPassword">Password</label>
-          <input id="loginPassword" type="password" autocomplete="current-password" required minlength="8" placeholder="Enter your password">
+          <div class="password-field"><input id="loginPassword" type="password" autocomplete="current-password" required minlength="8" placeholder="Enter your password"><button class="password-toggle" type="button" data-password-target="loginPassword" aria-label="Show password" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
           <button class="button button-gold auth-submit" type="submit">Log in</button>
           <button class="auth-text-button" id="forgotPassword" type="button">Forgot password?</button>
         </form>
@@ -42,7 +42,7 @@
           <label for="signupEmail">Email address</label>
           <input id="signupEmail" type="email" autocomplete="email" required maxlength="254" placeholder="you@example.com">
           <label for="signupPassword">Create password</label>
-          <input id="signupPassword" type="password" autocomplete="new-password" required minlength="8" placeholder="At least 8 characters">
+          <div class="password-field"><input id="signupPassword" type="password" autocomplete="new-password" required minlength="8" placeholder="At least 8 characters"><button class="password-toggle" type="button" data-password-target="signupPassword" aria-label="Show password" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
           <button class="button button-gold auth-submit" type="submit">Create account</button>
           <p class="auth-small-note">A 6-digit OTP will be sent to your email to verify your account.</p>
         </form>
