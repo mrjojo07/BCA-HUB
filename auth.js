@@ -119,7 +119,7 @@ otpForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   clearStatus();
   const token = $("signupOtp").value.trim();
-  if (!/^\d{6}$/.test(token)) return showStatus("Enter the 6-digit code from your email.", "error");
+  if (!/^\d{8}$/.test(token)) return showStatus("Enter the 8-digit code from your email.", "error");
   const button = otpForm.querySelector('button[type="submit"]');
   button.disabled = true; button.textContent = "Verifying…";
   let result;
