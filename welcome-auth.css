@@ -1,5 +1,8 @@
 .welcome-auth-overlay{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:20px;background:rgba(2,7,14,.82);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px)}
 .welcome-auth-overlay[hidden]{display:none!important}
+html:has(#welcomeAuthOverlay:not([hidden])),body:has(#welcomeAuthOverlay:not([hidden])){overflow:hidden!important;overscroll-behavior:none!important;touch-action:none}
+.welcome-auth-overlay{touch-action:none}
+.welcome-auth-card{touch-action:pan-y}
 .welcome-auth-card{width:min(440px,100%);padding:clamp(25px,6vw,38px);border:1px solid #28527a;border-radius:22px;background:radial-gradient(ellipse at 85% 0,rgba(22,140,255,.17),transparent 55%),linear-gradient(145deg,#101e30,#080e18);box-shadow:0 24px 80px rgba(0,0,0,.55);text-align:center}
 .welcome-auth-mark{width:54px;height:54px;display:grid;place-items:center;margin:0 auto 22px;border-radius:16px;background:#087de0;color:#fff;font:700 31px "Space Grotesk";box-shadow:0 8px 24px rgba(8,125,224,.3)}
 .welcome-auth-card .eyebrow{justify-content:center}
