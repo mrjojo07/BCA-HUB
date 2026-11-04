@@ -1059,3 +1059,9 @@ body.image-viewer-open{overflow:hidden}
 .notification-item-copy{min-width:0;display:grid;gap:4px}.notification-item-copy strong{font-size:12px;line-height:1.4}.notification-item-copy span{font-size:11px;line-height:1.5;color:#b6c5d8;overflow-wrap:anywhere}.notification-item-copy small{font-size:9px;color:#7892ad}
 .notification-empty{margin:0;padding:25px 15px;text-align:center;color:#91a5bd;font-size:12px;line-height:1.6}
 @media(max-width:650px){.header-shortcuts{margin-left:auto;margin-right:8px;gap:6px}.header-top-row{gap:6px}.notification-bell{width:36px;height:36px}.header-dashboard{font-size:10px;padding:8px 9px;margin:0}.notification-panel{right:-46px;top:calc(100% + 14px)}}
+
+.notification-push-actions{padding:10px 12px 6px;border-bottom:1px solid #1c3047;display:grid;gap:6px}
+.notification-enable-push{width:100%;padding:10px 12px;border:1px solid #2868a0;border-radius:9px;background:#10345a;color:#d9edff;font-size:11px;font-weight:750;cursor:pointer}
+.notification-enable-push:hover{background:#174875}
+.notification-enable-push[hidden]{display:none}
+#pushNotificationStatus{font-size:10px;color:#8fa4bd;line-height:1.4}
