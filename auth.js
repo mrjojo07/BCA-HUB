@@ -44,7 +44,7 @@ function readableError(error) {
   const message = error?.message || "Something went wrong. Please try again.";
   if (/invalid login credentials/i.test(message)) return "Email or password is incorrect.";
   if (/email not confirmed/i.test(message)) return "Please verify your email using the OTP sent to your inbox.";
-  if (/user already registered/i.test(message)) return "An account already exists for this email. Please log in.";
+  if (/user already registered|email_exists|user_already_exists/i.test(message)) return "This email may already be registered. Please log in instead."
   return message;
 }
 function isAdminUser(user) {
