@@ -179,7 +179,7 @@ function addAiMessage(role, text) {
   const bubble = document.createElement("div");
   bubble.className = "ai-message " + (role === "user" ? "ai-message-user" : "ai-message-assistant");
   const label = document.createElement("strong");
-  label.textContent = role === "user" ? "You" : "BCA HUB AI";
+  label.textContent = role === "user" ? "You" : "BCA SYNC AI";
   const paragraph = document.createElement("p");
   paragraph.textContent = text;
   bubble.append(label, paragraph);
