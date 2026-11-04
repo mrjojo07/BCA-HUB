@@ -1065,3 +1065,16 @@ body.image-viewer-open{overflow:hidden}
 .notification-enable-push:hover{background:#174875}
 .notification-enable-push[hidden]{display:none}
 #pushNotificationStatus{font-size:10px;color:#8fa4bd;line-height:1.4}
+
+/* First-login notification request shown after the welcome animation. */
+.welcome-notification-prompt{position:fixed;inset:0;z-index:10050;display:grid;place-items:center;padding:22px;background:rgba(2,8,17,.78);backdrop-filter:blur(12px)}
+.welcome-notification-prompt[hidden]{display:none}
+.welcome-notification-card{width:min(420px,100%);padding:30px 24px;border:1px solid #294665;border-radius:22px;background:linear-gradient(145deg,#10243b,#081321);box-shadow:0 24px 80px #000b;text-align:center;color:#edf5ff}
+.welcome-notification-icon{width:58px;height:58px;margin:0 auto 16px;display:grid;place-items:center;border-radius:18px;background:#173b60;font-size:27px}
+.welcome-notification-card .eyebrow{color:#7fc4ff;font-size:10px;letter-spacing:2px;font-weight:800}
+.welcome-notification-card h2{margin:10px 0;font:700 24px/1.2 "Space Grotesk",sans-serif}
+.welcome-notification-card p{color:#aebfd2;font-size:13px;line-height:1.65}
+.welcome-notification-enable{width:100%;margin-top:12px;padding:13px 16px;border:1px solid #4c9de0;border-radius:11px;background:#1760a0;color:#fff;font-size:14px;font-weight:800;cursor:pointer}
+.welcome-notification-enable:disabled{opacity:.55;cursor:not-allowed}
+.welcome-notification-later{margin-top:12px;padding:8px 16px;border:0;background:transparent;color:#9fb2c8;font-size:12px;cursor:pointer}
+.welcome-notification-card .welcome-notification-status{min-height:16px;margin:8px 0 0;font-size:11px}
