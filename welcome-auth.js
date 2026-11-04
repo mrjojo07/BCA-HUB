@@ -7,7 +7,7 @@ continueButton?.addEventListener("click", closePopup);
 overlay?.addEventListener("click", event => { if (event.target === overlay) closePopup(); });
 document.addEventListener("keydown", event => { if (event.key === "Escape") closePopup(); });
 const { data: { session } } = await supabase.auth.getSession();
-if (overlay && !session?.user) overlay.hidden = false;
+if (session?.user) closePopup();
 supabase.auth.onAuthStateChange((_event, sessionNow) => {
   if (sessionNow?.user) closePopup();
 });
