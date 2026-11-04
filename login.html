@@ -44,7 +44,14 @@
           <label for="signupPassword">Create password</label>
           <input id="signupPassword" type="password" autocomplete="new-password" required minlength="8" placeholder="At least 8 characters">
           <button class="button button-gold auth-submit" type="submit">Create account</button>
-          <p class="auth-small-note">Your account will be ready to use after sign-up.</p>
+          <p class="auth-small-note">A 6-digit OTP will be sent to your email to verify your account.</p>
+        </form>
+        <form id="otpForm" class="auth-form" hidden>
+          <p class="auth-small-note">Enter the 6-digit code sent to <strong id="otpEmailLabel"></strong>.</p>
+          <label for="signupOtp">Email verification code</label>
+          <input id="signupOtp" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" minlength="6" maxlength="6" required placeholder="6-digit OTP">
+          <button class="button button-gold auth-submit" type="submit">Verify email</button>
+          <button class="auth-text-button" id="resendSignupOtp" type="button">Resend code</button>
         </form>
         <form id="recoveryForm" class="auth-form" hidden>
           <label for="recoveryEmail">Account email</label>
