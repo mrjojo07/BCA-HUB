@@ -27,7 +27,7 @@ if (document.documentElement.classList.contains("show-new-user-welcome")) {
     window.setTimeout(() => {
       document.documentElement.classList.remove("show-new-user-welcome");
       orbitOverlay.classList.remove("is-exiting");
-    }, 1150);
+    }, 2550);
     window.setTimeout(() => document.documentElement.classList.remove("welcome-home-opening"), 1500);
   });
 }
