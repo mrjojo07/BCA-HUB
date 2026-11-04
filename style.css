@@ -1061,3 +1061,19 @@ body.image-viewer-open{overflow:hidden}
 @media(max-width:650px){.header-shortcuts{margin-left:auto;margin-right:8px;gap:6px}.header-top-row{gap:6px}.notification-bell{width:36px;height:36px}.header-dashboard{font-size:10px;padding:8px 9px;margin:0}.notification-panel{right:-46px;top:calc(100% + 14px)}}
 
 
+
+/* Mobile experience improvements */
+@media(max-width:650px){
+  html{scroll-padding-top:76px}
+  body{overflow-x:hidden}
+  button,a,[role="button"],input,select,textarea{touch-action:manipulation}
+  .hero-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+  .hero-actions .button,.hero-actions .text-link{min-height:44px}
+  .install-app-button{display:inline-flex;align-items:center;gap:8px;padding:10px 13px;border:1px solid #2c75b7;border-radius:9px;background:#0b1b2c;color:#a8d5ff;font-size:12px;font-weight:800}
+  .auth-page input,.auth-page select,.auth-page textarea,.community-upload-form input,.community-upload-form select{font-size:16px}
+  .notification-panel{max-height:min(70vh,480px)}
+  .notification-list{max-height:min(60vh,390px);overscroll-behavior:contain}
+  .site-footer{padding-bottom:calc(22px + env(safe-area-inset-bottom))}
+}
+@media(min-width:651px){.install-app-button{display:inline-flex;align-items:center;gap:8px;padding:10px 13px;border:1px solid #2c75b7;border-radius:9px;background:#0b1b2c;color:#a8d5ff;font-size:12px;font-weight:800}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
