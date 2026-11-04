@@ -645,11 +645,10 @@ notificationBell?.addEventListener("click", async () => {
   notificationPanel.hidden = !opening;
   notificationBell.setAttribute("aria-expanded",String(opening));
   if (opening) await loadNotifications();
-registerBcaServiceWorker().catch(error => console.info('BCA SYNC service worker:',error.message));
+});
 notificationChannel = supabase.channel("bca-sync-notification-feed")
   .on("postgres_changes",{event:"INSERT",schema:"public",table:"bca_notifications"},() => loadNotifications())
   .subscribe();
-});
 markAllNotificationsRead?.addEventListener("click", async () => {
   if (!notificationUserId) return;
   const unreadIds = notificationItems.filter(item => !notificationReadIds.has(item.id)).map(item => item.id);
