@@ -23,9 +23,11 @@ if (document.documentElement.classList.contains("show-new-user-welcome")) {
     if (!orbitOverlay || orbitOverlay.classList.contains("is-exiting")) return;
     enterButton.disabled = true;
     orbitOverlay.classList.add("is-exiting");
+    document.documentElement.classList.add("welcome-home-opening");
     window.setTimeout(() => {
       document.documentElement.classList.remove("show-new-user-welcome");
       orbitOverlay.classList.remove("is-exiting");
-    }, 850);
+    }, 1150);
+    window.setTimeout(() => document.documentElement.classList.remove("welcome-home-opening"), 1500);
   });
 }
