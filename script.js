@@ -570,6 +570,60 @@ let notificationItems = [];
 let notificationReadIds = new Set();
 let notificationChannel = null;
 
+const PUSH_FUNCTION_URL = "https://efbkhmfekfujbwfdpfhk.supabase.co/functions/v1/send-bca-push";
+const enablePushNotifications = document.getElementById("enablePushNotifications");
+const pushNotificationStatus = document.getElementById("pushNotificationStatus");
+function decodePushKey(value) {
+  const normalized = value.replace(/-/g,"+").replace(/_/g,"/");
+  const padded = normalized + "=".repeat((4 - normalized.length % 4) % 4);
+  return Uint8Array.from(atob(padded), character => character.charCodeAt(0));
+}
+async function registerBcaServiceWorker() {
+  if (!("serviceWorker" in navigator)) throw new Error("This browser does not support background notifications.");
+  return await navigator.serviceWorker.register("./sw.js",{scope:"./"});
+}
+async function enableBcaPushNotifications() {
+  if (!notificationUserId) throw new Error("Please sign in first.");
+  if (!("PushManager" in window) || !("Notification" in window)) throw new Error("Push notifications are not supported in this browser.");
+  const permission = await Notification.requestPermission();
+  if (permission !== "granted") throw new Error("Notification permission was not allowed. You can enable it in browser site settings.");
+  const registration = await registerBcaServiceWorker();
+  const keyResponse = await fetch(PUSH_FUNCTION_URL,{
+    method:"POST",
+    headers:{"Content-Type":"application/json","apikey":"sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH"},
+    body:JSON.stringify({action:"public-key"})
+  });
+  const keyData = await keyResponse.json().catch(()=>({}));
+  if (!keyResponse.ok || !keyData.publicKey) throw new Error(keyData.error || "Push setup is not ready yet.");
+  let subscription = await registration.pushManager.getSubscription();
+  if (!subscription) subscription = await registration.pushManager.subscribe({
+    userVisibleOnly:true,
+    applicationServerKey:decodePushKey(keyData.publicKey)
+  });
+  const {error} = await supabase.from("bca_push_subscriptions").upsert({
+    user_id:notificationUserId,
+    endpoint:subscription.endpoint,
+    subscription:subscription.toJSON(),
+    updated_at:new Date().toISOString()
+  },{onConflict:"endpoint"});
+  if (error) throw error;
+  return true;
+}
+enablePushNotifications?.addEventListener("click",async()=>{
+  enablePushNotifications.disabled=true;
+  if (pushNotificationStatus) pushNotificationStatus.textContent="Enabling phone notifications…";
+  try {
+    await enableBcaPushNotifications();
+    if (pushNotificationStatus) pushNotificationStatus.textContent="Phone notifications enabled on this device.";
+    enablePushNotifications.textContent="Notifications enabled";
+    enablePushNotifications.hidden=true;
+  } catch(error) {
+    if (pushNotificationStatus) pushNotificationStatus.textContent=error.message || "Could not enable notifications.";
+    enablePushNotifications.disabled=false;
+  }
+});
+
+
 function notificationIcon(category) {
   return ({notes:"▤","previous-year-questions":"▧","important-questions":"✦",timetable:"▣",announcement:"!",general:"●"})[category] || "●";
 }
@@ -587,6 +641,11 @@ function renderNotifications() {
     notificationCount.textContent = unread > 99 ? "99+" : String(unread);
   }
   if (notificationSummary) notificationSummary.textContent = unread ? unread + " unread update" + (unread === 1 ? "" : "s") : "You're all caught up";
+  if (enablePushNotifications) {
+    const supported = "PushManager" in window && "Notification" in window && "serviceWorker" in navigator;
+    enablePushNotifications.hidden = !notificationUserId || !supported || Notification.permission === "granted";
+    if (Notification.permission === "denied" && pushNotificationStatus) pushNotificationStatus.textContent = "Notifications are blocked in browser site settings.";
+  }
   if (!notificationItems.length) {
     const empty = document.createElement("p"); empty.className = "notification-empty";
     empty.textContent = notificationUserId ? "No notifications yet. New BCA SYNC updates will appear here." : "Sign in to view your notifications.";
@@ -644,6 +703,7 @@ notificationBell?.addEventListener("click", async () => {
   notificationPanel.hidden = !opening;
   notificationBell.setAttribute("aria-expanded",String(opening));
   if (opening) await loadNotifications();
+registerBcaServiceWorker().catch(error => console.info('BCA SYNC service worker:',error.message));
 notificationChannel = supabase.channel("bca-sync-notification-feed")
   .on("postgres_changes",{event:"INSERT",schema:"public",table:"bca_notifications"},() => loadNotifications())
   .subscribe();
