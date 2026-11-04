@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="style.css?v=10">
   <style>
 .admin-bulk-guide{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0;padding:14px;border:1px solid #26364c;border-radius:12px;background:#0b1421}.admin-bulk-step{font-size:12px;line-height:1.6;color:#c4d0e0}.admin-bulk-step strong{display:block;color:#eaf2ff;font-size:13px;margin-bottom:4px}@media(max-width:620px){.admin-bulk-guide{grid-template-columns:1fr}}.admin-resource-requests{display:grid;gap:12px;margin-top:16px}.admin-request-card{padding:16px;border:1px solid #26364c;border-radius:12px;background:#0b1421}.admin-request-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.admin-request-top strong{font-size:13px;color:#eaf2ff}.admin-request-state{flex:none;padding:4px 8px;border-radius:20px;font-size:10px;font-weight:700}.admin-request-state.is-open{background:#123b2c;color:#86e0b1}.admin-request-state.is-closed{background:#263448;color:#aebbd0}.admin-request-body{white-space:pre-wrap;overflow-wrap:anywhere;color:#c4d0e0;font-size:12px;line-height:1.6;margin:10px 0 14px}
+.admin-nav{position:sticky;top:8px;z-index:20;display:flex;gap:8px;overflow-x:auto;padding:10px;margin:16px 0 22px;border:1px solid #26364c;border-radius:14px;background:rgba(7,13,23,.96);backdrop-filter:blur(12px);scrollbar-width:thin}.admin-nav a{flex:0 0 auto;display:inline-flex;align-items:center;gap:7px;padding:10px 13px;border:1px solid #26364c;border-radius:10px;color:#dce8f8;text-decoration:none;font-size:12px;font-weight:700;white-space:nowrap;transition:background .2s,border-color .2s}.admin-nav a:hover,.admin-nav a:focus-visible{background:#14243a;border-color:#4b83c5;color:#fff;outline:none}.admin-nav a span{font-size:15px}@media(max-width:620px){.admin-nav{top:4px;margin:12px -4px 18px;padding:8px}.admin-nav a{padding:10px 12px}}
 </style>
 </head>
 <body class="admin-page">
@@ -18,6 +19,14 @@
   <main class="admin-main">
     <div class="eyebrow">SITE OWNER TOOLS</div>
     <h1 class="admin-title">BCA HUB <span>Admin</span></h1>
+    <nav class="admin-nav" id="adminNavigation" aria-label="Admin main navigation">
+      <a href="#analyticsPanel"><span>▦</span> Dashboard</a>
+      <a href="#learningMaterialsPanel"><span>↑</span> Learning Materials</a>
+      <a href="#examTimetablePanel"><span>▣</span> Exam Timetable</a>
+      <a href="#communityUploadsPanel"><span>♧</span> Community Uploads</a>
+      <a href="#feedbackManagerPanel"><span>✉</span> Student Feedback</a>
+      <a href="#logoutButton"><span>↪</span> Logout</a>
+    </nav>
     <section id="loginPanel" class="admin-login" hidden>
       <h2>Admin access</h2>
       <p class="admin-intro">Sign in with your approved BCA HUB administrator account.</p>
@@ -56,7 +65,7 @@
         <p class="admin-intro" id="analyticsStatus" aria-live="polite">Loading website analytics…</p>
       </section>
       <div class="admin-toolbar"><div><h2>Learning Materials Upload</h2><p class="admin-intro">Upload Notes, Important Questions and Previous Year Papers directly from this panel.</p></div></div><div class="admin-bulk-guide"><div class="admin-bulk-step"><strong>1. Choose destination</strong>Select semester, subject and material type.</div><div class="admin-bulk-step"><strong>2. Select files</strong>Choose one or more PDF or image files.</div><div class="admin-bulk-step"><strong>3. Upload &amp; publish</strong>Files are immediately available on the website.</div></div>
-      <form id="materialForm" class="admin-form">
+      <form id="materialForm" class="admin-form"><span id="learningMaterialsPanel" class="admin-section-anchor" aria-hidden="true"></span>
         <label for="semester">Semester</label>
         <select id="semester" required>
           <option value="">Choose semester</option>
@@ -83,7 +92,7 @@
           <p id="fileListStatus" class="admin-intro" aria-live="polite">Choose a semester, subject and material type to load files.</p>
         </div>
       </form>
-      <section class="admin-timetable"><h2>Exam timetable</h2><p class="admin-intro">Add or edit exam dates here. Save &amp; Publish updates the website directly — no GitHub commit needed.</p><form id="examForm" class="admin-form"><label for="examTitle">Exam / paper name</label><input id="examTitle" maxlength="160" required placeholder="e.g. Data Structures"><label for="examDate">Exam date</label><input id="examDate" type="date" required><div class="admin-toolbar"><button class="admin-action" id="saveExamButton" type="submit">＋ Save &amp; Publish</button><button class="admin-back-button" id="cancelExamEdit" type="button" hidden>Cancel edit</button></div></form><p id="examAdminStatus" class="admin-intro" aria-live="polite">Loading timetable…</p><div id="examEntries"></div></section>
+      <section class="admin-timetable" id="examTimetablePanel"><h2>Exam timetable</h2><p class="admin-intro">Add or edit exam dates here. Save &amp; Publish updates the website directly — no GitHub commit needed.</p><form id="examForm" class="admin-form"><label for="examTitle">Exam / paper name</label><input id="examTitle" maxlength="160" required placeholder="e.g. Data Structures"><label for="examDate">Exam date</label><input id="examDate" type="date" required><div class="admin-toolbar"><button class="admin-action" id="saveExamButton" type="submit">＋ Save &amp; Publish</button><button class="admin-back-button" id="cancelExamEdit" type="button" hidden>Cancel edit</button></div></form><p id="examAdminStatus" class="admin-intro" aria-live="polite">Loading timetable…</p><div id="examEntries"></div></section>
 
       <section class="admin-timetable" id="communityUploadsPanel">
         <div class="admin-toolbar"><div><h2>Community Uploads</h2><p class="admin-intro">Review student PDFs. Only approved files are published to the matching semester, subject and category.</p></div><button class="admin-back-button" id="refreshCommunityUploads" type="button">↻ Refresh</button></div>
