@@ -80,7 +80,7 @@
       }
     };
     const analyticsVisitorId = getAnalyticsVisitorId();
-    // Record event type, optional content label and anonymous random browser ID only.
+    // Exclude admin accounts and count only one page view per browser tab session.
     const trackActivity = (eventType, label = null) => {
       supabase.from("website_analytics_events").insert({
         event_type: eventType,
@@ -88,15 +88,28 @@
         visitor_id: analyticsVisitorId
       }).then(({ error }) => { if (error) console.debug("Analytics event was not recorded."); });
     };
-    trackActivity("page_view");
-    document.addEventListener("click", event => {
-      const semester = event.target.closest(".semester-card");
-      const subject = event.target.closest(".subject-item");
-      const material = event.target.closest(".material-type");
-      if (semester) trackActivity("semester_view", semester.textContent.replace(/\s+/g, " ").trim());
-      else if (subject) trackActivity("subject_view", subject.querySelector("strong")?.textContent || subject.textContent);
-      else if (material) trackActivity("material_view", material.querySelector("h4")?.textContent || material.textContent);
-    });
+    const analyticsSessionKey = "bca_sync_page_view_counted";
+    (async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        const appMeta = user?.app_metadata || {};
+        if (appMeta.role === "admin" || appMeta.admin === true) return;
+      } catch { /* Continue with anonymous visitor tracking if auth lookup is unavailable. */ }
+      let alreadyCounted = false;
+      try { alreadyCounted = sessionStorage.getItem(analyticsSessionKey) === "1"; } catch {}
+      if (!alreadyCounted) {
+        trackActivity("page_view");
+        try { sessionStorage.setItem(analyticsSessionKey, "1"); } catch {}
+      }
+      document.addEventListener("click", event => {
+        const semester = event.target.closest(".semester-card");
+        const subject = event.target.closest(".subject-item");
+        const material = event.target.closest(".material-type");
+        if (semester) trackActivity("semester_view", semester.textContent.replace(/\\s+/g, " ").trim());
+        else if (subject) trackActivity("subject_view", subject.querySelector("strong")?.textContent || subject.textContent);
+        else if (material) trackActivity("material_view", material.querySelector("h4")?.textContent || material.textContent);
+      });
+    })();
     const examBox = document.getElementById("examCountdownList");
     if (examBox) {
       try {
