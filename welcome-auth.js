@@ -13,6 +13,9 @@ supabase.auth.onAuthStateChange((_event, sessionNow) => {
 });
 
 if (document.documentElement.classList.contains("show-new-user-welcome")) {
+  const studentName = document.documentElement.dataset.welcomeName || "Student";
+  const greeting = document.getElementById("welcomeOrbitGreeting");
+  if (greeting) greeting.textContent = `Welcome, ${studentName}!`;
   closePopup();
   window.setTimeout(() => document.documentElement.classList.remove("show-new-user-welcome"), 5200);
 }
