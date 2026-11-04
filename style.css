@@ -1078,8 +1078,9 @@ body.image-viewer-open{overflow:hidden}
 @media(min-width:651px){.install-app-button{display:inline-flex;align-items:center;gap:8px;padding:10px 13px;border:1px solid #2c75b7;border-radius:9px;background:#0b1b2c;color:#a8d5ff;font-size:12px;font-weight:800}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
-/* Keep Install beside Upload Notes in the header action row */
-.upload-notes-bar{justify-content:flex-end;gap:10px;flex-wrap:wrap}
+/* Place Install at the far left and keep Upload Notes at the far right */
+.upload-notes-bar{justify-content:space-between;gap:10px;flex-wrap:wrap}
+.upload-notes-bar .install-app-button{margin-right:auto}
 .upload-notes-bar .install-app-button{
   display:inline-flex;align-items:center;justify-content:center;gap:6px;
   min-height:36px;padding:8px 12px;border:1px solid #2c75b7;border-radius:9px;
@@ -1088,7 +1089,7 @@ body.image-viewer-open{overflow:hidden}
 }
 .upload-notes-bar .install-app-button:hover{background:#123354;border-color:#168cff;color:#fff}
 @media(max-width:420px){
-  .upload-notes-bar{justify-content:flex-end;gap:7px;padding-left:10px;padding-right:10px}
+  .upload-notes-bar{justify-content:space-between;gap:7px;padding-left:10px;padding-right:10px}
   .upload-notes-bar .install-app-button{font-size:10px;padding:7px 9px}
   .upload-notes-bar .header-upload-notes{font-size:10px;padding:8px 10px}
 }
