@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#05080e">
+  <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/svg+xml" href="assets/bca-sync-logo.svg">
   <meta name="description" content="BCA SYNC — a student-friendly learning hub for BCA notes, question papers, lab resources and exam preparation.">
   <meta property="og:site_name" content="BCA SYNC">
@@ -17,11 +18,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=36">
+  <link rel="stylesheet" href="style.css?v=37">
   <link rel="stylesheet" href="welcome-auth.css?v=14">
   <script>try{if(sessionStorage.getItem("bcaSyncNewUserWelcome")==="1"){document.documentElement.classList.add("show-new-user-welcome");document.documentElement.dataset.welcomeName=sessionStorage.getItem("bcaSyncWelcomeName")||"Student";sessionStorage.removeItem("bcaSyncNewUserWelcome");sessionStorage.removeItem("bcaSyncWelcomeName");}}catch(e){}</script>
   <style>html.show-new-user-welcome .header-dashboard,html.show-new-user-welcome .header-shortcuts,html.show-new-user-welcome #menuToggle,html.show-new-user-welcome .nav-links{display:none!important}html.show-new-user-welcome,html.show-new-user-welcome body{overflow:hidden!important;overscroll-behavior:none!important;touch-action:none}html.show-new-user-welcome body{position:fixed;inset:0;width:100%}</style>
-  <script type="module" src="script.js?v=43"></script>
+  <script type="module" src="script.js?v=44"></script>
 </head>
 <body>
   <header class="site-header">
@@ -36,7 +37,7 @@
           </button>
           <section class="notification-panel" id="notificationPanel" aria-label="Notifications" hidden>
             <div class="notification-panel-head"><div><strong>Notifications</strong><small id="notificationSummary">Your BCA SYNC updates</small></div><button type="button" id="markAllNotificationsRead" class="notification-mark-all">Mark all read</button></div>
-            <div class="notification-list" id="notificationList" aria-live="polite"><p class="notification-empty">Sign in to view your notifications.</p></div>
+            <div class="notification-push-actions"><button type="button" id="enablePushNotifications" class="notification-enable-push" hidden>Enable phone notifications</button><small id="pushNotificationStatus" aria-live="polite"></small></div><div class="notification-list" id="notificationList" aria-live="polite"><p class="notification-empty">Sign in to view your notifications.</p></div>
           </section>
         </div>
       </div>
