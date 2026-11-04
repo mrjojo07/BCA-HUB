@@ -19,7 +19,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=35">
   <link rel="stylesheet" href="welcome-auth.css?v=2">
-  <script>try{if(sessionStorage.getItem("bcaSyncNewUserWelcome")==="1"){document.documentElement.classList.add("show-new-user-welcome");sessionStorage.removeItem("bcaSyncNewUserWelcome");}}catch(e){}</script>
+  <script>try{if(sessionStorage.getItem("bcaSyncNewUserWelcome")==="1"){document.documentElement.classList.add("show-new-user-welcome");document.documentElement.dataset.welcomeName=sessionStorage.getItem("bcaSyncWelcomeName")||"Student";sessionStorage.removeItem("bcaSyncNewUserWelcome");sessionStorage.removeItem("bcaSyncWelcomeName");}}catch(e){}</script>
   <script type="module" src="script.js?v=42"></script>
 </head>
 <body>
@@ -203,7 +203,7 @@
       <div class="welcome-orbit-item orbit-videos"><span>▶</span><small>Videos</small></div>
       <div class="welcome-orbit-item orbit-ai"><span>✧</span><small>AI Teacher</small></div>
     </div>
-    <div class="welcome-orbit-copy"><span>WELCOME TO BCA SYNC</span><h2>Your Learning Journey Starts Now!</h2></div>
+    <div class="welcome-orbit-copy"><span>WELCOME TO BCA SYNC</span><h2 id="welcomeOrbitGreeting">Your Learning Journey Starts Now!</h2></div>
   </section>
   <section class="welcome-auth-overlay" id="welcomeAuthOverlay" role="dialog" aria-modal="true" aria-labelledby="welcomeAuthTitle">
     <div class="welcome-auth-card">
@@ -217,7 +217,7 @@
       </div>
     </div>
   </section>
-  <script type="module" src="welcome-auth.js?v=2"></script>
+  <script type="module" src="welcome-auth.js?v=3"></script>
   <main>
     <section class="hero">
       <div class="hero-glow"></div>
