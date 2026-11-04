@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=32">
+  <link rel="stylesheet" href="style.css?v=33">
   <link rel="stylesheet" href="welcome-auth.css?v=1">
   <script type="module" src="script.js?v=41"></script>
 </head>
@@ -34,6 +34,15 @@
       <button class="nav-admin" id="menuLogout" type="button" hidden>Log out</button>
     </nav>
   </header>
+  <script>
+    (() => {
+      const header = document.querySelector(".site-header");
+      if (!header) return;
+      const updateHeaderScrollState = () => header.classList.toggle("is-scrolled", window.scrollY > 80);
+      updateHeaderScrollState();
+      window.addEventListener("scroll", updateHeaderScrollState, { passive: true });
+    })();
+  </script>
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm";
     const supabase = createClient("https://efbkhmfekfujbwfdpfhk.supabase.co", "sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH");
