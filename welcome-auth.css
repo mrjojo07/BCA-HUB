@@ -44,3 +44,12 @@
 /* The center logo itself is the unlabeled home button */
 .welcome-orbit-center{padding:0;cursor:pointer;color:inherit;font:inherit;appearance:none;-webkit-appearance:none}
 .welcome-orbit-center:focus-visible{outline:3px solid #fff;outline-offset:6px}
+
+/* Smoothly reveal the home page after the orbit gathers */
+.welcome-orbit-overlay{transition:opacity 1.15s ease}
+.welcome-orbit-overlay.is-exiting{opacity:0}
+.welcome-home-opening body>header,
+.welcome-home-opening body>main,
+.welcome-home-opening body>footer{animation:welcome-home-reveal 1.35s cubic-bezier(.2,.75,.25,1) both}
+@keyframes welcome-home-reveal{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.welcome-orbit-overlay{transition:none!important}.welcome-home-opening body>header,.welcome-home-opening body>main,.welcome-home-opening body>footer{animation:none!important}}
