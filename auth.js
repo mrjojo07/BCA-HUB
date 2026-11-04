@@ -10,6 +10,8 @@ const formsPanel = $("authForms");
 const accountPanel = $("accountPanel");
 const loginForm = $("loginForm");
 const signupForm = $("signupForm");
+const otpForm = $("otpForm");
+let pendingOtpEmail = "";
 const recoveryForm = $("recoveryForm");
 const newPasswordForm = $("newPasswordForm");
 const appBase = window.location.pathname.replace(/[^/]*$/, "");
@@ -26,6 +28,7 @@ function clearStatus() {
 function showForm(name) {
   loginForm.hidden = name !== "login";
   signupForm.hidden = name !== "signup";
+  otpForm.hidden = name !== "otp";
   recoveryForm.hidden = name !== "recovery";
   newPasswordForm.hidden = name !== "newPassword";
   $("showLogin").classList.toggle("active", name === "login");
@@ -39,7 +42,7 @@ function showForm(name) {
 function readableError(error) {
   const message = error?.message || "Something went wrong. Please try again.";
   if (/invalid login credentials/i.test(message)) return "Email or password is incorrect.";
-  if (/email not confirmed/i.test(message)) return "Please verify your email using the link we sent you.";
+  if (/email not confirmed/i.test(message)) return "Please verify your email using the OTP sent to your inbox.";
   if (/user already registered/i.test(message)) return "An account already exists for this email. Please log in.";
   return message;
 }
@@ -86,9 +89,43 @@ signupForm.addEventListener("submit", async (event) => {
     showStatus("Your account is ready.", "success");
     await showAccount(data.user);
   } else {
-    showForm("login");
-    showStatus("Account created. You can now log in.", "success");
+    pendingOtpEmail = email;
+    $("otpEmailLabel").textContent = email;
+    showForm("otp");
+    showStatus("A 6-digit verification code has been sent to your Gmail. Enter it below.", "success");
   }
+});
+
+otpForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  clearStatus();
+  const token = $("signupOtp").value.trim();
+  if (!/^\d{6}$/.test(token)) return showStatus("Enter the 6-digit code from your email.", "error");
+  const button = otpForm.querySelector('button[type="submit"]');
+  button.disabled = true; button.textContent = "Verifying…";
+  const { data, error } = await supabase.auth.verifyOtp({
+    email: pendingOtpEmail,
+    token,
+    type: "signup"
+  });
+  button.disabled = false; button.textContent = "Verify email";
+  if (error) return showStatus(readableError(error), "error");
+  pendingOtpEmail = "";
+  $("signupOtp").value = "";
+  if (data.user) {
+    showStatus("Email verified. Your account is ready.", "success");
+    await showAccount(data.user);
+  } else {
+    showForm("login");
+    showStatus("Email verified. You can now log in.", "success");
+  }
+});
+
+$("resendSignupOtp").addEventListener("click", async () => {
+  if (!pendingOtpEmail) return showStatus("Please create your account again.", "error");
+  const { error } = await supabase.auth.resend({ type: "signup", email: pendingOtpEmail });
+  if (error) return showStatus(readableError(error), "error");
+  showStatus("A new verification code has been sent.", "success");
 });
 
 loginForm.addEventListener("submit", async (event) => {
