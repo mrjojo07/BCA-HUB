@@ -13,3 +13,19 @@
 .welcome-auth-continue{margin-top:19px;border:0;background:transparent;color:#91a7bf;font:600 11px "DM Sans";cursor:pointer;text-decoration:underline;text-underline-offset:4px}
 .welcome-auth-continue:hover{color:#fff}
 @media(max-width:420px){.welcome-auth-card{padding:27px 21px;border-radius:18px}.welcome-auth-actions{grid-template-columns:1fr}.welcome-auth-actions .button,.welcome-auth-signup{min-height:45px}}
+
+/* First verified sign-up: feature orbit welcome */
+.welcome-orbit-overlay{display:none;position:fixed;inset:0;z-index:1200;place-content:center;justify-items:center;gap:24px;padding:24px;background:radial-gradient(ellipse at 50% 42%,#12365b 0%,#071321 48%,#03070d 100%);color:#f4f8ff;text-align:center;overflow:hidden}
+.show-new-user-welcome .welcome-orbit-overlay{display:grid;animation:orbit-screen-in .55s ease both}
+.welcome-orbit-scene{width:min(78vw,330px);aspect-ratio:1;position:relative;display:grid;place-items:center}
+.welcome-orbit-center{width:104px;height:104px;display:grid;place-items:center;border-radius:28px;background:linear-gradient(145deg,#123d68,#081a2c);border:1px solid #4aaaff;box-shadow:0 0 35px #168cff66,0 0 90px #168cff30;z-index:2;animation:orbit-logo-pulse 2.2s ease-in-out infinite}
+.welcome-orbit-center img{width:65px;height:65px;object-fit:contain}
+.welcome-orbit-ring{position:absolute;inset:12%;border:1px solid #4daeff66;border-radius:50%;box-shadow:0 0 24px #168cff22;animation:orbit-spin 9s linear infinite}
+.welcome-orbit-ring.ring-two{inset:1%;border-style:dashed;border-color:#77c4ff40;animation-direction:reverse;animation-duration:15s}
+.welcome-orbit-item{position:absolute;z-index:3;width:70px;height:70px;border:1px solid #4a9cdb;background:linear-gradient(145deg,#153b5d,#091827);border-radius:19px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;box-shadow:0 8px 28px #0008;animation:orbit-float 2.6s ease-in-out infinite}
+.welcome-orbit-item span{font-size:25px;color:#80c7ff;line-height:1}
+.welcome-orbit-item small{font:600 9px "DM Sans";color:#d6eaff}
+.orbit-notes{top:0;left:calc(50% - 35px);animation-delay:0s}.orbit-books{right:0;top:calc(50% - 35px);animation-delay:.35s}.orbit-videos{bottom:0;left:calc(50% - 35px);animation-delay:.7s}.orbit-ai{left:0;top:calc(50% - 35px);animation-delay:1.05s}
+.welcome-orbit-copy span{font:700 10px "DM Sans";letter-spacing:3px;color:#72bdff}.welcome-orbit-copy h2{margin:10px 0 0;font:700 clamp(22px,5vw,30px)/1.2 "Space Grotesk";letter-spacing:-.8px}
+@keyframes orbit-spin{to{transform:rotate(360deg)}}@keyframes orbit-float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-9px) scale(1.04)}}@keyframes orbit-logo-pulse{0%,100%{transform:scale(1);box-shadow:0 0 35px #168cff66,0 0 90px #168cff30}50%{transform:scale(1.07);box-shadow:0 0 48px #168cff99,0 0 110px #168cff45}}@keyframes orbit-screen-in{from{opacity:0}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){.show-new-user-welcome .welcome-orbit-overlay,.welcome-orbit-ring,.welcome-orbit-item,.welcome-orbit-center{animation:none!important}}
