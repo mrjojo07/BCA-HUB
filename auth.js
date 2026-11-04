@@ -197,3 +197,19 @@ if (params.get("mode") === "recovery") {
   if (params.get("mode") === "signup") showForm("signup");
   if (params.get("verified") === "1") showStatus("Email verified. You can now log in.", "success");
 }
+
+
+// Show/hide password controls for login and account creation.
+document.querySelectorAll(".password-toggle").forEach((toggle) => {
+  toggle.addEventListener("click", () => {
+    const input = document.getElementById(toggle.dataset.passwordTarget);
+    if (!input) return;
+    const reveal = input.type === "password";
+    input.type = reveal ? "text" : "password";
+    toggle.setAttribute("aria-label", reveal ? "Hide password" : "Show password");
+    toggle.setAttribute("aria-pressed", String(reveal));
+    toggle.innerHTML = reveal
+      ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18M10.6 10.6a2 2 0 002.8 2.8"/><path d="M9.9 5.2A10.8 10.8 0 0112 5c6.4 0 10 7 10 7a17 17 0 01-4 4.7M6.2 6.2C3.5 8 2 12 2 12s3.6 7 10 7c1.2 0 2.3-.2 3.3-.6"/></svg>'
+      : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>';
+  });
+});
