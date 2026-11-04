@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#05080e">
   <link rel="icon" type="image/svg+xml" href="assets/bca-sync-logo.svg">
+  <link rel="manifest" href="manifest.json">
   <meta name="description" content="BCA SYNC — a student-friendly learning hub for BCA notes, question papers, lab resources and exam preparation.">
   <meta property="og:site_name" content="BCA SYNC">
   <meta property="og:title" content="BCA SYNC | Learn. Practice. Succeed.">
@@ -17,11 +18,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=39">
+  <link rel="stylesheet" href="style.css?v=40">
   <link rel="stylesheet" href="welcome-auth.css?v=14">
   <script>try{if(sessionStorage.getItem("bcaSyncNewUserWelcome")==="1"){document.documentElement.classList.add("show-new-user-welcome");document.documentElement.dataset.welcomeName=sessionStorage.getItem("bcaSyncWelcomeName")||"Student";sessionStorage.removeItem("bcaSyncNewUserWelcome");sessionStorage.removeItem("bcaSyncWelcomeName");}}catch(e){}</script>
   <style>html.show-new-user-welcome .header-dashboard,html.show-new-user-welcome .header-shortcuts,html.show-new-user-welcome #menuToggle,html.show-new-user-welcome .nav-links{display:none!important}html.show-new-user-welcome,html.show-new-user-welcome body{overflow:hidden!important;overscroll-behavior:none!important;touch-action:none}html.show-new-user-welcome body{position:fixed;inset:0;width:100%}</style>
-  <script type="module" src="script.js?v=47"></script>
+  <script type="module" src="script.js?v=48"></script>
 </head>
 <body>
   <header class="site-header">
@@ -238,7 +239,7 @@
         <div class="eyebrow"><span class="eyebrow-dot"></span> YOUR BCA LEARNING COMPANION</div>
         <h1>Learn smarter.<br><span>Build your future.</span></h1>
         <p class="hero-copy">Your student-friendly space for BCA study notes, previous question papers, practical resources and exam preparation.</p>
-        <div class="hero-actions"><a class="button button-gold" href="#semesters">Explore semesters <span>↗</span></a><button class="text-link" id="savedNotesHeroButton" type="button" hidden>Saved Notes <span>★</span></button></div>
+        <div class="hero-actions"><a class="button button-gold" href="#semesters">Explore semesters <span>↗</span></a><button class="text-link" id="savedNotesHeroButton" type="button" hidden>Saved Notes <span>★</span></button><button class="text-link install-app-button" id="installAppButton" type="button">Install BCA SYNC <span>↓</span></button></div>
         <div class="hero-note"><span class="note-icon">✦</span> Made for BCA students, one topic at a time.</div>
       </div>
       <div class="hero-art" aria-hidden="true">
@@ -332,5 +333,6 @@
     })();
   </script>
   <footer class="site-footer"><span class="copyright">© <span id="year"></span> BCA SYNC</span></footer>
+  <script type="module" src="pwa.js?v=1"></script>
 </body>
 </html>
