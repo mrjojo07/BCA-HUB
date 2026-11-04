@@ -18,7 +18,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=35">
-  <link rel="stylesheet" href="welcome-auth.css?v=1">
+  <link rel="stylesheet" href="welcome-auth.css?v=2">
+  <script>try{if(sessionStorage.getItem("bcaSyncNewUserWelcome")==="1"){document.documentElement.classList.add("show-new-user-welcome");sessionStorage.removeItem("bcaSyncNewUserWelcome");}}catch(e){}</script>
   <script type="module" src="script.js?v=42"></script>
 </head>
 <body>
@@ -193,6 +194,17 @@
       window.location.href = "login.html";
     });
   </script>
+  <section class="welcome-orbit-overlay" id="welcomeOrbitOverlay" aria-label="Welcome to BCA SYNC">
+    <div class="welcome-orbit-scene">
+      <div class="welcome-orbit-ring ring-one"></div><div class="welcome-orbit-ring ring-two"></div>
+      <div class="welcome-orbit-center"><img src="assets/bca-sync-logo.svg" alt="BCA SYNC"></div>
+      <div class="welcome-orbit-item orbit-notes"><span>▤</span><small>Notes</small></div>
+      <div class="welcome-orbit-item orbit-books"><span>▣</span><small>Books</small></div>
+      <div class="welcome-orbit-item orbit-videos"><span>▶</span><small>Videos</small></div>
+      <div class="welcome-orbit-item orbit-ai"><span>✧</span><small>AI Teacher</small></div>
+    </div>
+    <div class="welcome-orbit-copy"><span>WELCOME TO BCA SYNC</span><h2>Your Learning Journey Starts Now!</h2></div>
+  </section>
   <section class="welcome-auth-overlay" id="welcomeAuthOverlay" role="dialog" aria-modal="true" aria-labelledby="welcomeAuthTitle">
     <div class="welcome-auth-card">
       <img class="welcome-auth-mark brand-logo-large" src="assets/bca-sync-logo.svg" alt="BCA SYNC">
