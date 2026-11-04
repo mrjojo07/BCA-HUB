@@ -17,7 +17,7 @@
 /* First verified sign-up: feature orbit welcome */
 .welcome-orbit-overlay{display:none;position:fixed;inset:0;z-index:1200;place-content:center;justify-items:center;gap:24px;padding:24px;background:radial-gradient(ellipse at 50% 42%,#12365b 0%,#071321 48%,#03070d 100%);color:#f4f8ff;text-align:center;overflow:hidden}
 .show-new-user-welcome .welcome-orbit-overlay{display:grid;animation:orbit-screen-in .55s ease both}
-.welcome-orbit-scene{width:min(78vw,330px);aspect-ratio:1;position:relative;display:grid;place-items:center}
+.welcome-orbit-scene{--scene-size:min(78vw,330px);width:var(--scene-size);aspect-ratio:1;position:relative;display:grid;place-items:center}
 .welcome-orbit-center{width:104px;height:104px;display:grid;place-items:center;border-radius:28px;background:linear-gradient(145deg,#123d68,#081a2c);border:1px solid #4aaaff;box-shadow:0 0 35px #168cff66,0 0 90px #168cff30;z-index:2;animation:orbit-logo-pulse 2.2s ease-in-out infinite}
 .welcome-orbit-center img{width:65px;height:65px;object-fit:contain}
 .welcome-orbit-ring{position:absolute;inset:12%;border:1px solid #4daeff66;border-radius:50%;box-shadow:0 0 24px #168cff22;animation:orbit-spin 9s linear infinite}
@@ -25,7 +25,7 @@
 .welcome-orbit-item{position:absolute;z-index:3;width:70px;height:70px;border:1px solid #4a9cdb;background:linear-gradient(145deg,#153b5d,#091827);border-radius:19px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;box-shadow:0 8px 28px #0008;animation:orbit-float 2.6s ease-in-out infinite}
 .welcome-orbit-item span{font-size:25px;color:#80c7ff;line-height:1}
 .welcome-orbit-item small{font:600 9px "DM Sans";color:#d6eaff}
-.orbit-notes{top:0;left:calc(50% - 35px);animation-delay:0s}.orbit-books{right:0;top:calc(50% - 35px);animation-delay:.35s}.orbit-videos{bottom:0;left:calc(50% - 35px);animation-delay:.7s}.orbit-ai{left:0;top:calc(50% - 35px);animation-delay:1.05s}
+.orbit-notes{top:0;left:calc(50% - 35px);--gather-x:0px;--gather-y:calc(var(--scene-size)/2 - 35px);animation-delay:0s}.orbit-books{right:0;top:calc(50% - 35px);--gather-x:calc(-1 * (var(--scene-size)/2 - 35px));--gather-y:0px;animation-delay:.35s}.orbit-videos{bottom:0;left:calc(50% - 35px);--gather-x:0px;--gather-y:calc(-1 * (var(--scene-size)/2 - 35px));animation-delay:.7s}.orbit-ai{left:0;top:calc(50% - 35px);--gather-x:calc(var(--scene-size)/2 - 35px);--gather-y:0px;animation-delay:1.05s}
 .welcome-orbit-copy span{font:700 10px "DM Sans";letter-spacing:3px;color:#72bdff}.welcome-orbit-copy h2{margin:10px 0 0;font:700 clamp(22px,5vw,30px)/1.2 "Space Grotesk";letter-spacing:-.8px}
 @keyframes orbit-spin{to{transform:rotate(360deg)}}@keyframes orbit-float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-9px) scale(1.04)}}@keyframes orbit-logo-pulse{0%,100%{transform:scale(1);box-shadow:0 0 35px #168cff66,0 0 90px #168cff30}50%{transform:scale(1.07);box-shadow:0 0 48px #168cff99,0 0 110px #168cff45}}@keyframes orbit-screen-in{from{opacity:0}to{opacity:1}}
 @media(prefers-reduced-motion:reduce){.show-new-user-welcome .welcome-orbit-overlay,.welcome-orbit-ring,.welcome-orbit-item,.welcome-orbit-center{animation:none!important}}
@@ -34,11 +34,11 @@
 .welcome-orbit-enter{margin-top:24px;min-height:48px;padding:0 25px;border:1px solid #69bdff;border-radius:999px;background:linear-gradient(135deg,#168cff,#0756a5);color:#fff;font:700 13px "DM Sans";letter-spacing:.3px;box-shadow:0 8px 30px #168cff55;cursor:pointer;transition:transform .2s,box-shadow .2s,opacity .2s}
 .welcome-orbit-enter:hover{transform:translateY(-2px);box-shadow:0 12px 38px #168cff88}
 .welcome-orbit-enter:focus-visible{outline:3px solid #fff;outline-offset:4px}
-.welcome-orbit-overlay.is-exiting .welcome-orbit-item{animation:none;top:calc(50% - 35px);right:auto;bottom:auto;left:calc(50% - 35px);transform:scale(.72);opacity:1;transition:top .9s cubic-bezier(.18,.72,.22,1) var(--gather-delay),left .9s cubic-bezier(.18,.72,.22,1) var(--gather-delay),right .9s var(--gather-delay),bottom .9s var(--gather-delay),transform .9s cubic-bezier(.18,.72,.22,1) var(--gather-delay)}
+.welcome-orbit-overlay.is-exiting .welcome-orbit-item{animation:none;opacity:1;transform:translate(var(--gather-x),var(--gather-y)) scale(.72);transition:transform 1s cubic-bezier(.18,.72,.22,1) var(--gather-delay)}
 .welcome-orbit-overlay.is-exiting .orbit-notes{--gather-delay:0s}
-.welcome-orbit-overlay.is-exiting .orbit-books{--gather-delay:.85s}
-.welcome-orbit-overlay.is-exiting .orbit-videos{--gather-delay:1.7s}
-.welcome-orbit-overlay.is-exiting .orbit-ai{--gather-delay:2.55s}
+.welcome-orbit-overlay.is-exiting .orbit-books{--gather-delay:2.7s}
+.welcome-orbit-overlay.is-exiting .orbit-videos{--gather-delay:.9s}
+.welcome-orbit-overlay.is-exiting .orbit-ai{--gather-delay:1.8s}
 .welcome-orbit-overlay.is-exiting .welcome-orbit-ring{transform:scale(1);opacity:1;transition:none}
 .welcome-orbit-overlay.is-exiting .welcome-orbit-center{animation:none;transform:scale(1.28);box-shadow:0 0 65px #168cffcc,0 0 140px #168cff77;transition:transform 2.05s ease,box-shadow 2.05s ease}
 .welcome-orbit-overlay.is-exiting .welcome-orbit-copy{opacity:1;transform:none;transition:none}
@@ -50,8 +50,8 @@
 .welcome-orbit-center:focus-visible{outline:3px solid #fff;outline-offset:6px}
 
 /* Smoothly reveal the home page after the orbit gathers */
-.welcome-orbit-overlay{transition:opacity 1.15s ease}
-.welcome-orbit-overlay.is-exiting{opacity:0;transition-delay:4.25s}
+.welcome-orbit-overlay{transition:opacity 1.05s ease}
+.welcome-orbit-overlay.is-exiting{opacity:0;transition-delay:3.85s}
 .welcome-home-opening body>header,
 .welcome-home-opening body>main,
 .welcome-home-opening body>footer{animation:welcome-home-reveal 1.7s cubic-bezier(.2,.75,.25,1) both}
