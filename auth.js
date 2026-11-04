@@ -139,8 +139,9 @@ otpForm.addEventListener("submit", async (event) => {
   pendingOtpEmail = "";
   $("signupOtp").value = "";
   if (data.user) {
-    showStatus("Email verified. Your account is ready.", "success");
-    await showAccount(data.user);
+    try { sessionStorage.setItem("bcaSyncNewUserWelcome", "1"); } catch (_) {}
+    window.location.replace("index.html");
+    return;
   } else {
     showForm("login");
     showStatus("Email verified. You can now log in.", "success");
