@@ -98,6 +98,13 @@ signupForm.addEventListener("submit", async (event) => {
     button.disabled = false; button.textContent = "Create account";
     return showStatus(readableError(error), "error");
   }
+  if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+    signupInProgress = false;
+    button.disabled = false; button.textContent = "Create account";
+    $("loginEmail").value = email;
+    showForm("login");
+    return showStatus("This email may already be registered. Please log in instead.", "error");
+  }
   if (data.session) {
     // A session immediately after sign-up means Supabase email confirmation is disabled.
     // Do not let this session bypass the email-verification screen.
