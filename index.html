@@ -18,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=40">
+  <link rel="stylesheet" href="style.css?v=41">
   <link rel="stylesheet" href="welcome-auth.css?v=14">
   <script>try{if(sessionStorage.getItem("bcaSyncNewUserWelcome")==="1"){document.documentElement.classList.add("show-new-user-welcome");document.documentElement.dataset.welcomeName=sessionStorage.getItem("bcaSyncWelcomeName")||"Student";sessionStorage.removeItem("bcaSyncNewUserWelcome");sessionStorage.removeItem("bcaSyncWelcomeName");}}catch(e){}</script>
   <style>html.show-new-user-welcome .header-dashboard,html.show-new-user-welcome .header-shortcuts,html.show-new-user-welcome #menuToggle,html.show-new-user-welcome .nav-links{display:none!important}html.show-new-user-welcome,html.show-new-user-welcome body{overflow:hidden!important;overscroll-behavior:none!important;touch-action:none}html.show-new-user-welcome body{position:fixed;inset:0;width:100%}</style>
@@ -56,11 +56,36 @@
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm";
     const supabase = createClient("https://efbkhmfekfujbwfdpfhk.supabase.co", "sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH");
-    // Record aggregate page and content activity only; never collect IPs or personal identifiers.
+    // Use a random, anonymous browser ID so repeat visits can be counted without fingerprinting.
+    const getAnalyticsVisitorId = () => {
+      try {
+        const key = "bca_sync_analytics_visitor_id";
+        let id = localStorage.getItem(key);
+        if (!id) {
+          if (crypto.randomUUID) {
+            id = crypto.randomUUID();
+          } else {
+            const bytes = new Uint8Array(16);
+            crypto.getRandomValues(bytes);
+            bytes[6] = (bytes[6] & 15) | 64;
+            bytes[8] = (bytes[8] & 63) | 128;
+            const hex = [...bytes].map(value => value.toString(16).padStart(2, "0"));
+            id = hex.slice(0,4).join("") + "-" + hex.slice(4,6).join("") + "-" + hex.slice(6,8).join("") + "-" + hex.slice(8,10).join("") + "-" + hex.slice(10).join("");
+          }
+          localStorage.setItem(key, id);
+        }
+        return id;
+      } catch {
+        return null;
+      }
+    };
+    const analyticsVisitorId = getAnalyticsVisitorId();
+    // Record event type, optional content label and anonymous random browser ID only.
     const trackActivity = (eventType, label = null) => {
       supabase.from("website_analytics_events").insert({
         event_type: eventType,
-        event_label: label ? String(label).trim().slice(0, 160) : null
+        event_label: label ? String(label).trim().slice(0, 160) : null,
+        visitor_id: analyticsVisitorId
       }).then(({ error }) => { if (error) console.debug("Analytics event was not recorded."); });
     };
     trackActivity("page_view");
