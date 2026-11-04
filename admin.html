@@ -143,13 +143,6 @@
           category,target_url:target_url || null,created_by:user.id
         });
         if (error) throw error;
-        const {data:{session}} = await supabase.auth.getSession();
-        if (session?.access_token) {
-          const pushResult = await supabase.functions.invoke("send-bca-push", {
-            body:{title:String(title).slice(0,120),message:String(message).slice(0,500),url:target_url || "/BCA-HUB/"}
-          });
-          if (pushResult.error) console.info("Push delivery awaits VAPID setup:",pushResult.error.message);
-        }
         return true;
       } catch (error) {
         console.warn("BCA SYNC notification was not published:",error.message);
