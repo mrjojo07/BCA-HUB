@@ -122,11 +122,18 @@ otpForm.addEventListener("submit", async (event) => {
   if (!/^\d{6}$/.test(token)) return showStatus("Enter the 6-digit code from your email.", "error");
   const button = otpForm.querySelector('button[type="submit"]');
   button.disabled = true; button.textContent = "Verifying…";
-  const { data, error } = await supabase.auth.verifyOtp({
-    email: pendingOtpEmail,
-    token,
-    type: "signup"
-  });
+  let result;
+  try {
+    result = await supabase.auth.verifyOtp({
+      email: pendingOtpEmail,
+      token,
+      type: "signup"
+    });
+  } catch (error) {
+    button.disabled = false; button.textContent = "Verify email";
+    return showStatus(readableError(error), "error");
+  }
+  const { data, error } = result;
   button.disabled = false; button.textContent = "Verify email";
   if (error) return showStatus(readableError(error), "error");
   pendingOtpEmail = "";
@@ -142,9 +149,17 @@ otpForm.addEventListener("submit", async (event) => {
 
 $("resendSignupOtp").addEventListener("click", async () => {
   if (!pendingOtpEmail) return showStatus("Please create your account again.", "error");
-  const { error } = await supabase.auth.resend({ type: "signup", email: pendingOtpEmail });
-  if (error) return showStatus(readableError(error), "error");
-  showStatus("A new verification code has been sent.", "success");
+  const button = $("resendSignupOtp");
+  button.disabled = true;
+  try {
+    const { error } = await supabase.auth.resend({ type: "signup", email: pendingOtpEmail });
+    if (error) return showStatus(readableError(error), "error");
+    showStatus("A new verification code has been sent.", "success");
+  } catch (error) {
+    showStatus(readableError(error), "error");
+  } finally {
+    button.disabled = false;
+  }
 });
 
 loginForm.addEventListener("submit", async (event) => {
