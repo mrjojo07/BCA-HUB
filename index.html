@@ -11,6 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=31">
+  <link rel="stylesheet" href="welcome-auth.css?v=1">
   <script type="module" src="script.js?v=41"></script>
 </head>
 <body>
@@ -183,6 +184,20 @@
       window.location.href = "login.html";
     });
   </script>
+  <section class="welcome-auth-overlay" id="welcomeAuthOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="welcomeAuthTitle">
+    <div class="welcome-auth-card">
+      <div class="welcome-auth-mark">B</div>
+      <div class="eyebrow">WELCOME TO BCA HUB</div>
+      <h2 id="welcomeAuthTitle">Your learning journey <span>starts here.</span></h2>
+      <p>Log in to your student account or create a free account to save resources and track your learning progress.</p>
+      <div class="welcome-auth-actions">
+        <a class="button button-gold" href="login.html?mode=login">Log in</a>
+        <a class="welcome-auth-signup" href="login.html?mode=signup">Create account</a>
+      </div>
+      <button class="welcome-auth-continue" id="welcomeAuthContinue" type="button">Continue browsing</button>
+    </div>
+  </section>
+  <script type="module" src="welcome-auth.js?v=1"></script>
   <main>
     <section class="hero">
       <div class="hero-glow"></div>
