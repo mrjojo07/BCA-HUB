@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#05080e">
   <link rel="icon" type="image/svg+xml" href="assets/bca-sync-logo.svg">
   <title>Admin Panel | BCA SYNC</title>
-  <link rel="stylesheet" href="style.css?v=40">
+  <link rel="stylesheet" href="style.css?v=41">
   <style>
 .admin-bulk-guide{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0;padding:14px;border:1px solid #26364c;border-radius:12px;background:#0b1421}.admin-bulk-step{font-size:12px;line-height:1.6;color:#c4d0e0}.admin-bulk-step strong{display:block;color:#eaf2ff;font-size:13px;margin-bottom:4px}@media(max-width:620px){.admin-bulk-guide{grid-template-columns:1fr}}.admin-resource-requests{display:grid;gap:12px;margin-top:16px}.admin-request-card{padding:16px;border:1px solid #26364c;border-radius:12px;background:#0b1421}.admin-request-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.admin-request-top strong{font-size:13px;color:#eaf2ff}.admin-request-state{flex:none;padding:4px 8px;border-radius:20px;font-size:10px;font-weight:700}.admin-request-state.is-open{background:#123b2c;color:#86e0b1}.admin-request-state.is-closed{background:#263448;color:#aebbd0}.admin-request-body{white-space:pre-wrap;overflow-wrap:anywhere;color:#c4d0e0;font-size:12px;line-height:1.6;margin:10px 0 14px}
 .admin-nav{position:sticky;top:8px;z-index:20;display:flex;gap:8px;overflow-x:auto;padding:10px;margin:16px 0 22px;border:1px solid #26364c;border-radius:14px;background:rgba(7,13,23,.96);backdrop-filter:blur(12px);scrollbar-width:thin}.admin-nav a{flex:0 0 auto;display:inline-flex;align-items:center;gap:7px;padding:10px 13px;border:1px solid #26364c;border-radius:10px;color:#dce8f8;text-decoration:none;font-size:12px;font-weight:700;white-space:nowrap;transition:background .2s,border-color .2s}.admin-nav a:hover,.admin-nav a:focus-visible{background:#14243a;border-color:#4b83c5;color:#fff;outline:none}.admin-nav a span{font-size:15px}@media(max-width:620px){.admin-nav{top:4px;margin:12px -4px 18px;padding:8px}.admin-nav a{padding:10px 12px}}
@@ -56,9 +56,12 @@
       <a href="#logoutButton"><span>↪</span> Logout</a>
     </nav>
       <section class="admin-timetable" id="analyticsPanel">
-        <div class="admin-toolbar"><div><h2>Website Analytics</h2><p class="admin-intro">Privacy-friendly aggregate activity from the last 30 days. No IP addresses or personal visitor profiles are stored.</p></div><button class="admin-back-button" id="refreshAnalytics" type="button">↻ Refresh analytics</button></div>
+        <div class="admin-toolbar"><div><h2>Website Analytics</h2><p class="admin-intro">Anonymous analytics for the last 30 days. A random ID is stored in each browser only; no IP addresses, names or device fingerprints are collected.</p></div><button class="admin-back-button" id="refreshAnalytics" type="button">↻ Refresh analytics</button></div>
         <div class="analytics-stat-grid">
           <article class="analytics-stat"><span>PAGE VIEWS · 30 DAYS</span><strong id="analyticsTotal">—</strong></article>
+          <article class="analytics-stat"><span>UNIQUE BROWSERS · 30 DAYS</span><strong id="analyticsUnique30">—</strong></article>
+          <article class="analytics-stat"><span>UNIQUE BROWSERS · TODAY</span><strong id="analyticsUniqueToday">—</strong></article>
+          <article class="analytics-stat"><span>RETURNING BROWSERS · 30 DAYS</span><strong id="analyticsReturning">—</strong></article>
           <article class="analytics-stat"><span>PAGE VIEWS · TODAY</span><strong id="analyticsToday">—</strong></article>
           <article class="analytics-stat"><span>SUBJECT OPENS · 30 DAYS</span><strong id="analyticsSubjects">—</strong></article>
           <article class="analytics-stat"><span>CATEGORY OPENS · 30 DAYS</span><strong id="analyticsMaterials">—</strong></article>
@@ -758,7 +761,7 @@
       try {
         const since = new Date(Date.now() - 30 * 86400000).toISOString();
         const { data, error } = await supabase.from("website_analytics_events")
-          .select("event_type,event_label,created_at")
+          .select("event_type,event_label,visitor_id,created_at")
           .gte("created_at", since)
           .order("created_at", { ascending: false })
           .limit(5000);
@@ -767,9 +770,19 @@
         const today = new Date().toLocaleDateString();
         const pageViews = events.filter(e => e.event_type === "page_view");
         const todayViews = pageViews.filter(e => new Date(e.created_at).toLocaleDateString() === today);
+        const uniqueBrowsers = new Set(pageViews.map(e => e.visitor_id).filter(Boolean));
+        const todayUniqueBrowsers = new Set(todayViews.map(e => e.visitor_id).filter(Boolean));
+        const browserVisits = new Map();
+        pageViews.forEach(e => {
+          if (e.visitor_id) browserVisits.set(e.visitor_id, (browserVisits.get(e.visitor_id) || 0) + 1);
+        });
+        const returningBrowsers = [...browserVisits.values()].filter(count => count > 1).length;
         const subjects = events.filter(e => e.event_type === "subject_view");
         const materials = events.filter(e => e.event_type === "material_view");
         analyticsNumber("analyticsTotal").textContent = String(pageViews.length);
+        analyticsNumber("analyticsUnique30").textContent = String(uniqueBrowsers.size);
+        analyticsNumber("analyticsUniqueToday").textContent = String(todayUniqueBrowsers.size);
+        analyticsNumber("analyticsReturning").textContent = String(returningBrowsers);
         analyticsNumber("analyticsToday").textContent = String(todayViews.length);
         analyticsNumber("analyticsSubjects").textContent = String(subjects.length);
         analyticsNumber("analyticsMaterials").textContent = String(materials.length);
@@ -779,7 +792,7 @@
         materials.forEach(e => materialCounts.set(e.event_label || "Unknown", (materialCounts.get(e.event_label || "Unknown") || 0) + 1));
         renderAnalyticsRanking("analyticsTopSubjects", subjectCounts);
         renderAnalyticsRanking("analyticsTopMaterials", materialCounts);
-        analyticsStatus.textContent = "Showing " + events.length + " recorded event(s) from the last 30 days. " + (events.length === 5000 ? "Display limit reached; counts may be incomplete." : "");
+        analyticsStatus.textContent = "Showing " + events.length + " recorded event(s) from the last 30 days. Unique counts include browsers that have the anonymous ID; older events are not included in unique counts. " + (events.length === 5000 ? "Display limit reached; counts may be incomplete." : "");
       } catch (error) {
         analyticsStatus.textContent = "Could not load analytics: " + (error.message || "Check Admin access and MFA.");
       }
