@@ -1097,3 +1097,11 @@ body.image-viewer-open{overflow:hidden}
 /* Expanded admin analytics cards */
 .analytics-stat-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
 @media(max-width:760px){.analytics-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+
+/* In the installed BCA SYNC app, place Upload Notes on the left.
+   Keep the website layout unchanged (Upload Notes remains on the right). */
+@media (display-mode: standalone){
+  .upload-notes-bar .header-upload-notes{order:-1;margin-right:auto}
+  .upload-notes-bar .install-app-button{order:1;margin-left:auto;margin-right:0}
+}
