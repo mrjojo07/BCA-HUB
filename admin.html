@@ -714,6 +714,12 @@
               if(updateError){await supabase.storage.from("bca-hub-materials").remove([publishedPath]);throw updateError;}
               await supabase.storage.from("community-pending").remove([item.storage_path]);
               communityAdminStatus.textContent="Approved and published: "+item.title;
+              await publishAdminNotification({
+                title:"New " + item.category.replace(/-/g," ") + " published",
+                message:item.title + " · " + item.subject_name + " · Semester " + item.semester + " is now available.",
+                category:item.category,
+                target_url:"#semesters"
+              });
               await loadCommunityUploads();
             }catch(e){communityAdminStatus.textContent="Could not publish: "+(e.message||"Please try again.");approve.disabled=false;reject.disabled=false;}
           });
