@@ -23,11 +23,11 @@ if (document.documentElement.classList.contains("show-new-user-welcome")) {
     if (!orbitOverlay || orbitOverlay.classList.contains("is-exiting")) return;
     enterButton.disabled = true;
     orbitOverlay.classList.add("is-exiting");
-    window.setTimeout(() => document.documentElement.classList.add("welcome-home-opening"), 5450);
+    window.setTimeout(() => document.documentElement.classList.add("welcome-home-opening"), 4950);
     window.setTimeout(() => {
       document.documentElement.classList.remove("show-new-user-welcome");
       orbitOverlay.classList.remove("is-exiting");
-    }, 7350);
-    window.setTimeout(() => document.documentElement.classList.remove("welcome-home-opening"), 7350);
+    }, 6800);
+    window.setTimeout(() => document.documentElement.classList.remove("welcome-home-opening"), 6800);
   });
 }
