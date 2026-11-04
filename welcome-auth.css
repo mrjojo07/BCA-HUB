@@ -34,8 +34,12 @@
 .welcome-orbit-enter{margin-top:24px;min-height:48px;padding:0 25px;border:1px solid #69bdff;border-radius:999px;background:linear-gradient(135deg,#168cff,#0756a5);color:#fff;font:700 13px "DM Sans";letter-spacing:.3px;box-shadow:0 8px 30px #168cff55;cursor:pointer;transition:transform .2s,box-shadow .2s,opacity .2s}
 .welcome-orbit-enter:hover{transform:translateY(-2px);box-shadow:0 12px 38px #168cff88}
 .welcome-orbit-enter:focus-visible{outline:3px solid #fff;outline-offset:4px}
-.welcome-orbit-overlay.is-exiting .welcome-orbit-item{animation:none;top:calc(50% - 35px);right:auto;bottom:auto;left:calc(50% - 35px);transform:scale(.12);opacity:0;transition:top 2.05s cubic-bezier(.18,.72,.22,1),left 2.05s cubic-bezier(.18,.72,.22,1),right 2.05s,bottom 2.05s,transform 2.05s cubic-bezier(.18,.72,.22,1),opacity 1.8s ease}
-.welcome-orbit-overlay.is-exiting .welcome-orbit-ring{transform:scale(.12);opacity:0;transition:transform 2.05s ease,opacity 1.8s ease}
+.welcome-orbit-overlay.is-exiting .welcome-orbit-item{animation:none;top:calc(50% - 35px);right:auto;bottom:auto;left:calc(50% - 35px);transform:scale(.12);opacity:0;transition:top .9s cubic-bezier(.18,.72,.22,1) var(--gather-delay),left .9s cubic-bezier(.18,.72,.22,1) var(--gather-delay),right .9s var(--gather-delay),bottom .9s var(--gather-delay),transform .9s cubic-bezier(.18,.72,.22,1) var(--gather-delay),opacity .4s ease calc(var(--gather-delay) + .5s)}
+.welcome-orbit-overlay.is-exiting .orbit-notes{--gather-delay:0s}
+.welcome-orbit-overlay.is-exiting .orbit-books{--gather-delay:.85s}
+.welcome-orbit-overlay.is-exiting .orbit-videos{--gather-delay:1.7s}
+.welcome-orbit-overlay.is-exiting .orbit-ai{--gather-delay:2.55s}
+.welcome-orbit-overlay.is-exiting .welcome-orbit-ring{transform:scale(.12);opacity:0;transition:transform 3.45s ease,opacity 3.45s ease}
 .welcome-orbit-overlay.is-exiting .welcome-orbit-center{animation:none;transform:scale(1.28);box-shadow:0 0 65px #168cffcc,0 0 140px #168cff77;transition:transform 2.05s ease,box-shadow 2.05s ease}
 .welcome-orbit-overlay.is-exiting .welcome-orbit-copy{opacity:0;transform:translateY(12px);transition:opacity .35s,transform .35s}
 .welcome-orbit-copy{transition:opacity .35s,transform .35s}
@@ -47,7 +51,7 @@
 
 /* Smoothly reveal the home page after the orbit gathers */
 .welcome-orbit-overlay{transition:opacity 1.15s ease}
-.welcome-orbit-overlay.is-exiting{opacity:0}
+.welcome-orbit-overlay.is-exiting{opacity:0;transition-delay:3.55s}
 .welcome-home-opening body>header,
 .welcome-home-opening body>main,
 .welcome-home-opening body>footer{animation:welcome-home-reveal 1.7s cubic-bezier(.2,.75,.25,1) both}
