@@ -17,17 +17,29 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=35">
+  <link rel="stylesheet" href="style.css?v=36">
   <link rel="stylesheet" href="welcome-auth.css?v=14">
   <script>try{if(sessionStorage.getItem("bcaSyncNewUserWelcome")==="1"){document.documentElement.classList.add("show-new-user-welcome");document.documentElement.dataset.welcomeName=sessionStorage.getItem("bcaSyncWelcomeName")||"Student";sessionStorage.removeItem("bcaSyncNewUserWelcome");sessionStorage.removeItem("bcaSyncWelcomeName");}}catch(e){}</script>
   <style>html.show-new-user-welcome .header-dashboard,html.show-new-user-welcome .header-shortcuts,html.show-new-user-welcome #menuToggle,html.show-new-user-welcome .nav-links{display:none!important}html.show-new-user-welcome,html.show-new-user-welcome body{overflow:hidden!important;overscroll-behavior:none!important;touch-action:none}html.show-new-user-welcome body{position:fixed;inset:0;width:100%}</style>
-  <script type="module" src="script.js?v=42"></script>
+  <script type="module" src="script.js?v=43"></script>
 </head>
 <body>
   <header class="site-header">
     <a class="brand" href="#" aria-label="BCA SYNC home"><img class="brand-mark brand-logo" src="assets/bca-sync-logo.svg" alt="" aria-hidden="true"><span>BCA <b>SYNC</b></span></a>
     <div class="header-shortcuts">
-      <a class="header-dashboard" href="dashboard.html">My Dashboard</a>
+      <div class="header-top-row">
+        <a class="header-dashboard" href="dashboard.html">My Dashboard</a>
+        <div class="notification-wrap" id="notificationWrap">
+          <button class="notification-bell" id="notificationBell" type="button" aria-label="Notifications" aria-expanded="false" aria-controls="notificationPanel">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>
+            <span class="notification-count" id="notificationCount" hidden>0</span>
+          </button>
+          <section class="notification-panel" id="notificationPanel" aria-label="Notifications" hidden>
+            <div class="notification-panel-head"><div><strong>Notifications</strong><small id="notificationSummary">Your BCA SYNC updates</small></div><button type="button" id="markAllNotificationsRead" class="notification-mark-all">Mark all read</button></div>
+            <div class="notification-list" id="notificationList" aria-live="polite"><p class="notification-empty">Sign in to view your notifications.</p></div>
+          </section>
+        </div>
+      </div>
     </div>
     <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open navigation" aria-expanded="false" onclick="const nav=document.getElementById('navLinks');const opened=nav.classList.toggle('open');this.setAttribute('aria-expanded',String(opened));this.setAttribute('aria-label',opened?'Close navigation':'Open navigation');">☰</button>
     <nav class="nav-links" id="navLinks">
