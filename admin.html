@@ -347,7 +347,7 @@
       try {
         const [githubResponse, storageResult] = await Promise.all([
           fetch("https://api.github.com/repos/mrjojo07/BCA-HUB/contents/" + folder),
-          supabase.storage.from("BCA SYNC-materials").list(folder, { limit: 100, sortBy: { column: "name", order: "asc" } })
+          supabase.storage.from("bca-hub-materials").list(folder, { limit: 100, sortBy: { column: "name", order: "asc" } })
         ]);
         const githubFiles = githubResponse.ok ? (await githubResponse.json()).filter(item => item.type === "file") : [];
         if (storageResult.error) throw storageResult.error;
@@ -385,7 +385,7 @@
           status.textContent = "Uploading " + (uploaded + 1) + " of " + files.length + ": " + file.name;
           const safeName = file.name.normalize("NFKD").replace(/[^a-zA-Z0-9._-]+/g, "-").replace(/^-+|-+$/g, "");
           const path = folder + "/" + crypto.randomUUID() + "-" + safeName;
-          const { error } = await supabase.storage.from("BCA SYNC-materials").upload(path, file, {
+          const { error } = await supabase.storage.from("bca-hub-materials").upload(path, file, {
             contentType: file.type || "application/octet-stream",
             upsert: false
           });
@@ -424,7 +424,7 @@
         fileListStatus.textContent = "Renaming file…";
         try {
           const folder = selectedFolder();
-          const { error } = await supabase.storage.from("BCA SYNC-materials").move(folder + "/" + oldName, folder + "/" + cleanName);
+          const { error } = await supabase.storage.from("bca-hub-materials").move(folder + "/" + oldName, folder + "/" + cleanName);
           if (error) throw error;
           await loadExistingFiles();
           fileListStatus.textContent = "File renamed successfully.";
@@ -448,7 +448,7 @@
         const path = selectedFolder() + "/" + fileName;
         if (!confirm('Delete "' + fileName + '" from the published website?')) return;
         removeButton.disabled = true;
-        const { error } = await supabase.storage.from("BCA SYNC-materials").remove([path]);
+        const { error } = await supabase.storage.from("bca-hub-materials").remove([path]);
         if (error) { fileListStatus.textContent = "Could not delete file: " + error.message; removeButton.disabled = false; return; }
         await loadExistingFiles();
         fileListStatus.textContent = "File deleted from the website.";
@@ -646,10 +646,10 @@
               const folder="resources/semester-"+item.semester+"/"+item.category+"/"+item.subject_slug+(item.category==="notes"?"/module-"+item.module_number:"");
               const safeName=item.original_filename.normalize("NFKD").replace(/[^a-zA-Z0-9._-]+/g,"-").slice(-100)||"community-note.pdf";
               publishedPath=folder+"/"+Date.now()+"-"+safeName;
-              const {error:publishError}=await supabase.storage.from("BCA SYNC-materials").upload(publishedPath,blob,{contentType:"application/pdf",upsert:false});
+              const {error:publishError}=await supabase.storage.from("bca-hub-materials").upload(publishedPath,blob,{contentType:"application/pdf",upsert:false});
               if(publishError)throw publishError;
               const {error:updateError}=await supabase.from("community_uploads").update({status:"approved",published_path:publishedPath,reviewed_at:new Date().toISOString()}).eq("id",item.id).eq("status","pending");
-              if(updateError){await supabase.storage.from("BCA SYNC-materials").remove([publishedPath]);throw updateError;}
+              if(updateError){await supabase.storage.from("bca-hub-materials").remove([publishedPath]);throw updateError;}
               await supabase.storage.from("community-pending").remove([item.storage_path]);
               communityAdminStatus.textContent="Approved and published: "+item.title;
               await loadCommunityUploads();
