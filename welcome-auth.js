@@ -22,7 +22,6 @@ if (document.documentElement.classList.contains("show-new-user-welcome")) {
   enterButton?.addEventListener("click", () => {
     if (!orbitOverlay || orbitOverlay.classList.contains("is-exiting")) return;
     enterButton.disabled = true;
-    enterButton.textContent = "Welcome aboard…";
     orbitOverlay.classList.add("is-exiting");
     window.setTimeout(() => {
       document.documentElement.classList.remove("show-new-user-welcome");
