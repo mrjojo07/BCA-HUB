@@ -69,17 +69,15 @@ async function showMaterials(category, moduleNumber = 0) {
   const baseFolder = 'resources/semester-'+currentSemester+'/'+category+'/'+subjectSlug(currentSubject);
   const folder = category === "notes" && moduleNumber ? baseFolder + "/module-" + moduleNumber : baseFolder;
   const apiUrl = 'https://api.github.com/repos/mrjojo07/BCA-HUB/contents/'+folder;
-  const storageUrl = 'https://efbkhmfekfujbwfdpfhk.supabase.co/storage/v1/object/list/bca-hub-materials';
-  const publishableKey = 'sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH';
   try {
-    const [githubResponse, storageResponse] = await Promise.all([
+    const [githubResponse, storageResult] = await Promise.all([
       fetch(apiUrl, {headers:{Accept:'application/vnd.github+json'}}),
-      fetch(storageUrl, {method:'POST',headers:{apikey:publishableKey,Authorization:'Bearer '+publishableKey,'Content-Type':'application/json'},body:JSON.stringify({prefix:folder,limit:100,offset:0,sortBy:{column:'name',order:'asc'}})})
+      supabase.storage.from("bca-hub-materials").list(folder, {limit:100, sortBy:{column:"name",order:"asc"}})
     ]);
     const githubFiles = githubResponse.ok ? (await githubResponse.json()).filter(file => file.type === 'file').map(file => ({name:file.name,url:file.download_url || file.html_url,preview:file.download_url})) : [];
-    if (!storageResponse.ok) throw new Error('Could not load directly uploaded materials.');
-    const storageFiles = (await storageResponse.json()).filter(file => file.id && file.name)
-      .sort((a,b) => new Date(b.created_at || 0) - new Date(a.created_at || 0))
+    if (storageResult.error) throw storageResult.error;
+    const storageFiles = (storageResult.data || []).filter(file => file.id && file.name)
+      .sort((a,b) => new Date(b.updated_at || b.created_at || 0) - new Date(a.updated_at || a.created_at || 0))
       .map(file => { const publicUrl = 'https://efbkhmfekfujbwfdpfhk.supabase.co/storage/v1/object/public/bca-hub-materials/'+folder+'/'+encodeURIComponent(file.name); const cacheVersion = encodeURIComponent(file.updated_at || file.created_at || Date.now()); return {name:file.name.replace(/^[0-9a-f-]{36}-/i,''),url:publicUrl+'?v='+cacheVersion,preview:publicUrl+'?v='+cacheVersion}; });
     // Show one entry per filename, preferring the newest direct upload.
     const uniqueFiles = new Map();
