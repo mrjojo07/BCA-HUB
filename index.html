@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=33">
+  <link rel="stylesheet" href="style.css?v=34">
   <link rel="stylesheet" href="welcome-auth.css?v=1">
   <script type="module" src="script.js?v=41"></script>
 </head>
@@ -25,7 +25,6 @@
     <a class="brand" href="#" aria-label="BCA SYNC home"><span class="brand-mark">S</span><span>BCA <b>SYNC</b></span></a>
     <div class="header-shortcuts">
       <a class="header-dashboard" href="dashboard.html">My Dashboard</a>
-      <a class="header-upload-notes" href="#communityUpload" id="openCommunityUpload" onclick="event.preventDefault();const section=document.getElementById('communityUpload');if(section){section.hidden=false;section.scrollIntoView({behavior:'smooth',block:'start'});}">↑ Upload Notes</a>
     </div>
     <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open navigation" aria-expanded="false" onclick="const nav=document.getElementById('navLinks');const opened=nav.classList.toggle('open');this.setAttribute('aria-expanded',String(opened));this.setAttribute('aria-label',opened?'Close navigation':'Open navigation');">☰</button>
     <nav class="nav-links" id="navLinks">
@@ -34,15 +33,9 @@
       <button class="nav-admin" id="menuLogout" type="button" hidden>Log out</button>
     </nav>
   </header>
-  <script>
-    (() => {
-      const header = document.querySelector(".site-header");
-      if (!header) return;
-      const updateHeaderScrollState = () => header.classList.toggle("is-scrolled", window.scrollY > 80);
-      updateHeaderScrollState();
-      window.addEventListener("scroll", updateHeaderScrollState, { passive: true });
-    })();
-  </script>
+  <div class="upload-notes-bar">
+    <a class="header-upload-notes" href="#communityUpload" id="openCommunityUpload">↑ Upload Notes</a>
+  </div>
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm";
     const supabase = createClient("https://efbkhmfekfujbwfdpfhk.supabase.co", "sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH");
