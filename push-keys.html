@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#05080e"><title>BCA SYNC Push Setup</title>
+<style>
+*{box-sizing:border-box}body{margin:0;padding:24px;background:#05080e;color:#edf5ff;font:15px/1.6 system-ui,sans-serif}
+main{max-width:720px;margin:30px auto;padding:24px;border:1px solid #29415f;border-radius:18px;background:#0b1726}
+h1{margin-top:0;font-size:25px}p,li{color:#b9c9dc}button{padding:12px 18px;border:0;border-radius:10px;background:#1675cf;color:#fff;font-weight:700}
+textarea{width:100%;min-height:120px;margin:8px 0 16px;padding:12px;border:1px solid #304b68;border-radius:10px;background:#06101c;color:#d9ecff;font:12px/1.5 monospace}
+code{color:#8ec8ff;overflow-wrap:anywhere}.note{padding:12px;border-radius:10px;background:#122943}
+</style></head>
+<body><main>
+<h1>🔐 BCA SYNC Push Setup</h1>
+<p>This page generates a Web Push key pair locally in this browser. The private key is not uploaded anywhere by this page.</p>
+<button id="generate" type="button">Generate secure keys</button>
+<p id="status" role="status"></p>
+<section id="results" hidden>
+<h3>Public key (for the website)</h3><textarea id="publicKey" readonly></textarea>
+<h3>Private key JSON (keep secret)</h3><textarea id="privateKey" readonly></textarea>
+<button id="copyPublic" type="button">Copy public key</button>
+<button id="copyPrivate" type="button">Copy private key JSON</button>
+<p class="note">Keep the private key secret. Add it only to Supabase Edge Function Secrets as <code>VAPID_KEYS_JSON</code>. Never put it in GitHub or share it in chat.</p>
+</section>
+</main>
+<script>
+const enc = bytes => btoa(String.fromCharCode(...new Uint8Array(bytes))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+document.getElementById("generate").addEventListener("click",async()=>{
+ const status=document.getElementById("status");
+ try{
+  if(!crypto?.subtle) throw new Error("Secure browser crypto is not available. Open this page in Chrome over HTTPS.");
+  const pair=await crypto.subtle.generateKey({name:"ECDSA",namedCurve:"P-256"},true,["sign","verify"]);
+  const publicJwk=await crypto.subtle.exportKey("jwk",pair.publicKey);
+  const privateJwk=await crypto.subtle.exportKey("jwk",pair.privateKey);
+  const raw=await crypto.subtle.exportKey("raw",pair.publicKey);
+  document.getElementById("publicKey").value=enc(raw);
+  document.getElementById("privateKey").value=JSON.stringify({publicKey:publicJwk,privateKey:privateJwk});
+  document.getElementById("results").hidden=false;
+  status.textContent="Keys generated locally. Save the private key securely before leaving this page.";
+ }catch(error){status.textContent="Could not generate keys: "+error.message;}
+});
+document.getElementById("copyPublic").onclick=()=>navigator.clipboard.writeText(document.getElementById("publicKey").value);
+document.getElementById("copyPrivate").onclick=()=>navigator.clipboard.writeText(document.getElementById("privateKey").value);
+</script></body></html>
