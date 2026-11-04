@@ -1018,3 +1018,6 @@ body.image-viewer-open{overflow:hidden}
   }
   .header-upload-notes:hover{background:#168cff;color:#fff}
 }
+
+/* Hide the Upload Notes shortcut after the page starts scrolling; keep the sticky header and dashboard link. */
+.site-header.is-scrolled .header-upload-notes{display:none!important}
