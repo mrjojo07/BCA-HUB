@@ -1,0 +1,19 @@
+{
+  "name": "BCA SYNC",
+  "short_name": "BCA SYNC",
+  "description": "Your BCA learning companion for notes, question papers and practice.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#05080e",
+  "theme_color": "#05080e",
+  "icons": [
+    {
+      "src": "assets/bca-sync-logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
