@@ -112,14 +112,14 @@ signupForm.addEventListener("submit", async (event) => {
   pendingOtpEmail = email;
   $("otpEmailLabel").textContent = email;
   showForm("otp");
-  showStatus("An 8-digit verification code has been requested. Check your email and enter it below.", "success");
+  showStatus("A 6-digit verification code has been requested. Check your email and enter it below.", "success");
 });
 
 otpForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   clearStatus();
   const token = $("signupOtp").value.trim();
-  if (!/^\d{8}$/.test(token)) return showStatus("Enter the 8-digit code from your email.", "error");
+  if (!/^\d{6}$/.test(token)) return showStatus("Enter the 6-digit code from your email.", "error");
   const button = otpForm.querySelector('button[type="submit"]');
   button.disabled = true; button.textContent = "Verifying…";
   let result;
