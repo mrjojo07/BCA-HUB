@@ -40,3 +40,7 @@
 .welcome-orbit-overlay.is-exiting .welcome-orbit-copy{opacity:0;transform:translateY(12px);transition:opacity .35s,transform .35s}
 .welcome-orbit-copy{transition:opacity .35s,transform .35s}
 @media(prefers-reduced-motion:reduce){.welcome-orbit-overlay.is-exiting .welcome-orbit-item,.welcome-orbit-overlay.is-exiting .welcome-orbit-ring,.welcome-orbit-overlay.is-exiting .welcome-orbit-center,.welcome-orbit-overlay.is-exiting .welcome-orbit-copy{transition:none!important}}
+
+/* The center logo itself is the unlabeled home button */
+.welcome-orbit-center{padding:0;cursor:pointer;color:inherit;font:inherit;appearance:none;-webkit-appearance:none}
+.welcome-orbit-center:focus-visible{outline:3px solid #fff;outline-offset:6px}
