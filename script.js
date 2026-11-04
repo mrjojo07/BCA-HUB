@@ -556,3 +556,110 @@ imageViewer.addEventListener("click", event => {
 document.addEventListener("keydown", event => {
   if (event.key === "Escape" && !imageViewer.hidden) closeImageViewer();
 });
+
+
+// BCA SYNC notification inbox: broadcast updates are stored in Supabase.
+const notificationBell = document.getElementById("notificationBell");
+const notificationPanel = document.getElementById("notificationPanel");
+const notificationList = document.getElementById("notificationList");
+const notificationCount = document.getElementById("notificationCount");
+const notificationSummary = document.getElementById("notificationSummary");
+const markAllNotificationsRead = document.getElementById("markAllNotificationsRead");
+let notificationUserId = null;
+let notificationItems = [];
+let notificationReadIds = new Set();
+let notificationChannel = null;
+
+function notificationIcon(category) {
+  return ({notes:"▤","previous-year-questions":"▧","important-questions":"✦",timetable:"▣",announcement:"!",general:"●"})[category] || "●";
+}
+function formatNotificationDate(value) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toLocaleString([], {day:"numeric",month:"short",hour:"numeric",minute:"2-digit"});
+}
+function renderNotifications() {
+  if (!notificationList) return;
+  notificationList.replaceChildren();
+  const unread = notificationItems.filter(item => !notificationReadIds.has(item.id)).length;
+  if (notificationCount) {
+    notificationCount.hidden = unread === 0;
+    notificationCount.textContent = unread > 99 ? "99+" : String(unread);
+  }
+  if (notificationSummary) notificationSummary.textContent = unread ? unread + " unread update" + (unread === 1 ? "" : "s") : "You're all caught up";
+  if (!notificationItems.length) {
+    const empty = document.createElement("p"); empty.className = "notification-empty";
+    empty.textContent = notificationUserId ? "No notifications yet. New BCA SYNC updates will appear here." : "Sign in to view your notifications.";
+    notificationList.append(empty); return;
+  }
+  notificationItems.forEach(item => {
+    const unreadItem = !notificationReadIds.has(item.id);
+    const button = document.createElement("button");
+    button.type = "button"; button.className = "notification-item" + (unreadItem ? " is-unread" : "");
+    const icon = document.createElement("span"); icon.className = "notification-item-icon"; icon.textContent = notificationIcon(item.category);
+    const copy = document.createElement("span"); copy.className = "notification-item-copy";
+    const title = document.createElement("strong"); title.textContent = item.title;
+    const message = document.createElement("span"); message.textContent = item.message;
+    const date = document.createElement("small"); date.textContent = formatNotificationDate(item.created_at);
+    copy.append(title,message,date); button.append(icon,copy);
+    button.addEventListener("click", async () => {
+      if (unreadItem && notificationUserId) {
+        const {error} = await supabase.from("bca_notification_reads").upsert(
+          {notification_id:item.id,user_id:notificationUserId},
+          {onConflict:"notification_id,user_id"}
+        );
+        if (!error) notificationReadIds.add(item.id);
+        renderNotifications();
+      }
+      if (item.target_url) {
+        const target = new URL(item.target_url, window.location.href);
+        if (target.protocol === "https:" || target.protocol === "http:") window.location.href = target.href;
+      }
+      notificationPanel.hidden = true;
+      notificationBell?.setAttribute("aria-expanded","false");
+    });
+    notificationList.append(button);
+  });
+}
+async function loadNotifications() {
+  const {data:{session}} = await supabase.auth.getSession();
+  notificationUserId = session?.user?.id || null;
+  notificationItems = []; notificationReadIds = new Set();
+  if (!notificationUserId) { renderNotifications(); return; }
+  const [itemsResult,readsResult] = await Promise.all([
+    supabase.from("bca_notifications").select("id,title,message,category,target_url,created_at").order("created_at",{ascending:false}).limit(40),
+    supabase.from("bca_notification_reads").select("notification_id").eq("user_id",notificationUserId)
+  ]);
+  if (itemsResult.error) {
+    const error = document.createElement("p"); error.className = "notification-empty";
+    error.textContent = "Notifications are temporarily unavailable. Please try again later.";
+    notificationList?.replaceChildren(error); return;
+  }
+  notificationItems = itemsResult.data || [];
+  notificationReadIds = new Set((readsResult.data || []).map(row => row.notification_id));
+  renderNotifications();
+}
+notificationBell?.addEventListener("click", async () => {
+  const opening = notificationPanel.hidden;
+  notificationPanel.hidden = !opening;
+  notificationBell.setAttribute("aria-expanded",String(opening));
+  if (opening) await loadNotifications();
+});
+markAllNotificationsRead?.addEventListener("click", async () => {
+  if (!notificationUserId) return;
+  const unreadIds = notificationItems.filter(item => !notificationReadIds.has(item.id)).map(item => item.id);
+  if (!unreadIds.length) return;
+  const rows = unreadIds.map(notification_id => ({notification_id,user_id:notificationUserId}));
+  const {error} = await supabase.from("bca_notification_reads").upsert(rows,{onConflict:"notification_id,user_id"});
+  if (!error) { unreadIds.forEach(id => notificationReadIds.add(id)); renderNotifications(); }
+});
+document.addEventListener("click", event => {
+  if (notificationPanel && !notificationPanel.hidden && !event.target.closest("#notificationWrap")) {
+    notificationPanel.hidden = true; notificationBell?.setAttribute("aria-expanded","false");
+  }
+});
+supabase.auth.onAuthStateChange((_event,session) => {
+  notificationUserId = session?.user?.id || null;
+  loadNotifications();
+});
+loadNotifications();
