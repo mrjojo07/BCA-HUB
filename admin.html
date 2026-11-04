@@ -19,14 +19,6 @@
   <main class="admin-main">
     <div class="eyebrow">SITE OWNER TOOLS</div>
     <h1 class="admin-title">BCA HUB <span>Admin</span></h1>
-    <nav class="admin-nav" id="adminNavigation" aria-label="Admin main navigation">
-      <a href="#analyticsPanel"><span>▦</span> Dashboard</a>
-      <a href="#learningMaterialsPanel"><span>↑</span> Learning Materials</a>
-      <a href="#examTimetablePanel"><span>▣</span> Exam Timetable</a>
-      <a href="#communityUploadsPanel"><span>♧</span> Community Uploads</a>
-      <a href="#feedbackManagerPanel"><span>✉</span> Student Feedback</a>
-      <a href="#logoutButton"><span>↪</span> Logout</a>
-    </nav>
     <section id="loginPanel" class="admin-login" hidden>
       <h2>Admin access</h2>
       <p class="admin-intro">Sign in with your approved BCA HUB administrator account.</p>
@@ -53,6 +45,14 @@
       <p class="admin-footnote">Keep your authenticator access private. Never share your one-time code.</p>
     </section>
     <section id="uploadPanel" hidden>
+    <nav class="admin-nav" id="adminNavigation" aria-label="Admin main navigation">
+      <a href="#analyticsPanel"><span>▦</span> Dashboard</a>
+      <a href="#learningMaterialsPanel"><span>↑</span> Learning Materials</a>
+      <a href="#examTimetablePanel"><span>▣</span> Exam Timetable</a>
+      <a href="#communityUploadsPanel"><span>♧</span> Community Uploads</a>
+      <a href="#feedbackManagerPanel"><span>✉</span> Student Feedback</a>
+      <a href="#logoutButton"><span>↪</span> Logout</a>
+    </nav>
       <section class="admin-timetable" id="analyticsPanel">
         <div class="admin-toolbar"><div><h2>Website Analytics</h2><p class="admin-intro">Privacy-friendly aggregate activity from the last 30 days. No IP addresses or personal visitor profiles are stored.</p></div><button class="admin-back-button" id="refreshAnalytics" type="button">↻ Refresh analytics</button></div>
         <div class="analytics-stat-grid">
