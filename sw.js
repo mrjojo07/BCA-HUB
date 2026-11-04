@@ -1,36 +1,50 @@
-const CACHE_NAME = "bca-sync-shell-v1";
-const APP_ROOT = new URL("./", self.location.href).pathname;
-self.addEventListener("install", event => { self.skipWaiting(); });
+const CACHE_NAME = "bca-sync-mobile-v1";
+const APP_ROOT = new URL("./", self.location.href);
+const SHELL_FILES = ["./","index.html","style.css","welcome-auth.css","script.js","welcome-auth.js","assets/bca-sync-logo.svg"];
+self.addEventListener("install", event => {
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE_NAME);
+    await cache.addAll(SHELL_FILES.map(path => new URL(path, APP_ROOT).href));
+    await self.skipWaiting();
+  })());
+});
 self.addEventListener("activate", event => {
-  event.waitUntil((async()=>{ await self.clients.claim(); })());
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.filter(key => key.startsWith("bca-sync-") && key !== CACHE_NAME).map(key => caches.delete(key)));
+    await self.clients.claim();
+  })());
 });
-self.addEventListener("push", event => {
-  let data = {};
-  try { data = event.data ? event.data.json() : {}; }
-  catch (_) { data = {title:"BCA SYNC",body:event.data ? event.data.text() : "There is a new update."}; }
-  const title = data.title || "BCA SYNC";
-  const options = {
-    body: data.body || data.message || "A new update is available.",
-    icon: new URL("assets/bca-sync-logo.svg", self.registration.scope).href,
-    badge: new URL("assets/bca-sync-logo.svg", self.registration.scope).href,
-    tag: data.tag || "bca-sync-update",
-    renotify: true,
-    data: { url: data.url || APP_ROOT }
-  };
-  event.waitUntil(self.registration.showNotification(title, options));
-});
-self.addEventListener("notificationclick", event => {
-  event.notification.close();
-  const target = new URL(event.notification.data?.url || APP_ROOT, self.registration.scope);
-  if (target.origin !== self.location.origin) return;
-  event.waitUntil((async()=>{
-    const windows = await self.clients.matchAll({type:"window",includeUncontrolled:true});
-    for (const client of windows) {
-      if (new URL(client.url).origin === target.origin) {
-        await client.navigate(target.href);
-        return client.focus();
+self.addEventListener("fetch", event => {
+  const request = event.request;
+  if (request.method !== "GET") return;
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin || !["http:","https:"].includes(url.protocol)) return;
+  if (request.mode === "navigate") {
+    event.respondWith((async () => {
+      try {
+        const response = await fetch(request);
+        if (response.ok) (await caches.open(CACHE_NAME)).put(request,response.clone());
+        return response;
+      } catch (_) {
+        return (await caches.match(request)) || (await caches.match(new URL("index.html",APP_ROOT).href)) || Response.error();
       }
-    }
-    return self.clients.openWindow(target.href);
+    })());
+    return;
+  }
+  if (!/\.(css|js|svg|png|jpe?g|webp|woff2?|ttf|pdf)$/i.test(url.pathname)) return;
+  event.respondWith((async () => {
+    const cache = await caches.open(CACHE_NAME);
+    const cached = await cache.match(request);
+    if (cached) return cached;
+    try {
+      const response = await fetch(request);
+      if (response.ok && response.type === "basic") {
+        await cache.put(request,response.clone());
+        const keys = await cache.keys();
+        if (keys.length > 60) await cache.delete(keys[0]);
+      }
+      return response;
+    } catch (_) { return cached || Response.error(); }
   })());
 });
