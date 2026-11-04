@@ -34,11 +34,15 @@
 .welcome-orbit-enter{margin-top:24px;min-height:48px;padding:0 25px;border:1px solid #69bdff;border-radius:999px;background:linear-gradient(135deg,#168cff,#0756a5);color:#fff;font:700 13px "DM Sans";letter-spacing:.3px;box-shadow:0 8px 30px #168cff55;cursor:pointer;transition:transform .2s,box-shadow .2s,opacity .2s}
 .welcome-orbit-enter:hover{transform:translateY(-2px);box-shadow:0 12px 38px #168cff88}
 .welcome-orbit-enter:focus-visible{outline:3px solid #fff;outline-offset:4px}
-.welcome-orbit-overlay.is-exiting .welcome-orbit-item{animation:none;opacity:1;transform:translate(var(--gather-x),var(--gather-y)) scale(.72);transition:transform 1s cubic-bezier(.18,.72,.22,1) var(--gather-delay)}
-.welcome-orbit-overlay.is-exiting .orbit-notes{--gather-delay:0s}
-.welcome-orbit-overlay.is-exiting .orbit-books{--gather-delay:2.7s}
-.welcome-orbit-overlay.is-exiting .orbit-videos{--gather-delay:.9s}
-.welcome-orbit-overlay.is-exiting .orbit-ai{--gather-delay:1.8s}
+.welcome-orbit-overlay.is-exiting .welcome-orbit-item{animation:none;opacity:1;transform:none}
+.welcome-orbit-overlay.is-exiting .orbit-notes{animation:gather-from-top 1s cubic-bezier(.18,.72,.22,1) 0s forwards}
+.welcome-orbit-overlay.is-exiting .orbit-videos{animation:gather-from-bottom 1s cubic-bezier(.18,.72,.22,1) .9s forwards}
+.welcome-orbit-overlay.is-exiting .orbit-ai{animation:gather-from-left 1s cubic-bezier(.18,.72,.22,1) 1.8s forwards}
+.welcome-orbit-overlay.is-exiting .orbit-books{animation:gather-from-right 1s cubic-bezier(.18,.72,.22,1) 2.7s forwards}
+@keyframes gather-from-top{0%{transform:translateY(0) scale(1)}100%{transform:translateY(var(--gather-distance)) scale(.72)}}
+@keyframes gather-from-bottom{0%{transform:translateY(0) scale(1)}100%{transform:translateY(calc(0px - var(--gather-distance))) scale(.72)}}
+@keyframes gather-from-left{0%{transform:translateX(0) scale(1)}100%{transform:translateX(var(--gather-distance)) scale(.72)}}
+@keyframes gather-from-right{0%{transform:translateX(0) scale(1)}100%{transform:translateX(calc(0px - var(--gather-distance))) scale(.72)}}
 .welcome-orbit-overlay.is-exiting .welcome-orbit-ring{transform:scale(1);opacity:1;transition:none}
 .welcome-orbit-overlay.is-exiting .welcome-orbit-center{animation:none;transform:scale(1.28);box-shadow:0 0 65px #168cffcc,0 0 140px #168cff77;transition:transform 2.05s ease,box-shadow 2.05s ease}
 .welcome-orbit-overlay.is-exiting .welcome-orbit-copy{opacity:1;transform:none;transition:none}
