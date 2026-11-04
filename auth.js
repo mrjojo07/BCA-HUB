@@ -87,7 +87,7 @@ signupForm.addEventListener("submit", async (event) => {
     await showAccount(data.user);
   } else {
     showForm("login");
-    showStatus("Account created. Check your inbox and verify your email before logging in.", "success");
+    showStatus("Account created. You can now log in.", "success");
   }
 });
 
@@ -157,5 +157,6 @@ if (params.get("mode") === "recovery") {
   if (session?.user) {
     if (!openAdminPanel(session.user)) await showAccount(session.user);
   } else showForm("login");
+  if (params.get("mode") === "signup") showForm("signup");
   if (params.get("verified") === "1") showStatus("Email verified. You can now log in.", "success");
 }
