@@ -35,6 +35,10 @@
 .welcome-orbit-enter:hover{transform:translateY(-2px);box-shadow:0 12px 38px #168cff88}
 .welcome-orbit-enter:focus-visible{outline:3px solid #fff;outline-offset:4px}
 .welcome-orbit-overlay.is-exiting .welcome-orbit-item{animation:none;opacity:1;transform:none}
+.welcome-orbit-overlay.is-exiting .orbit-notes{z-index:4}
+.welcome-orbit-overlay.is-exiting .orbit-videos{z-index:5}
+.welcome-orbit-overlay.is-exiting .orbit-ai{z-index:6}
+.welcome-orbit-overlay.is-exiting .orbit-books{z-index:7}
 .welcome-orbit-overlay.is-exiting .orbit-notes{animation:gather-to-center 1s cubic-bezier(.18,.72,.22,1) 0s forwards}
 .welcome-orbit-overlay.is-exiting .orbit-videos{animation:gather-to-center 1s cubic-bezier(.18,.72,.22,1) .9s forwards}
 .welcome-orbit-overlay.is-exiting .orbit-ai{animation:gather-to-center 1s cubic-bezier(.18,.72,.22,1) 1.8s forwards}
