@@ -27,5 +27,6 @@ if (document.documentElement.classList.contains("show-new-user-welcome")) {
       orbitOverlay.classList.remove("is-exiting");
     }, 3900);
     window.setTimeout(() => document.documentElement.classList.remove("welcome-home-opening"), 5600);
+    window.setTimeout(() => window.dispatchEvent(new Event("bca-sync:welcome-complete")), 3920);
   });
 }
