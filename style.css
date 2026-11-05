@@ -1188,3 +1188,21 @@ body.premium-transitioning{overflow-x:hidden}
 .premium-part-transition>:not(.premium-part-wash):not(.hero-glow){position:relative;z-index:1}
 @keyframes bcaPremiumPartTurn{0%{opacity:0;filter:brightness(1.12)}45%{opacity:.72;filter:brightness(1.04)}100%{opacity:1;filter:brightness(1)}}
 @media(prefers-reduced-motion:reduce){.premium-part-transition>.premium-part-wash{animation-duration:80ms}}
+
+
+/* Sequentially apply the real Premium palette to one page section at a time. */
+body.premium-transitioning{overflow-x:hidden}
+.premium-part-gold{transition:background 850ms ease,border-color 850ms ease,color 850ms ease,box-shadow 850ms ease}
+.premium-part-gold.site-header{background:linear-gradient(100deg,#080807,#17130b 55%,#080807)!important;border-bottom:1px solid #b99445!important;box-shadow:0 8px 30px #0009}
+.premium-part-gold.site-header .brand b,.premium-part-gold .eyebrow,.premium-part-gold .section-heading h2 span,.premium-part-gold.about-section h2 span{color:var(--premium-gold-light)!important}
+.premium-part-gold.hero,.premium-part-gold.semester-section,.premium-part-gold.countdown-section,.premium-part-gold.community-upload-section,.premium-part-gold.saved-resources-section,.premium-part-gold.resource-request-section{background:linear-gradient(145deg,#19160f,#100e0a 58%,#090909)!important;border-color:#b9944566!important;color:#f5f0e4!important}
+.premium-part-gold .hero-glow{background:#d8b45b20!important}
+.premium-part-gold.code-card,.premium-part-gold.floating-chip,.premium-part-gold.semester-card,.premium-part-gold.countdown-card,.premium-part-gold .code-card,.premium-part-gold .floating-chip,.premium-part-gold .semester-card,.premium-part-gold .countdown-card,.premium-part-gold .saved-resources-list{border-color:#b9944577!important;background:linear-gradient(145deg,#211c12,#100e0a)!important;box-shadow:0 10px 28px #0007!important;color:#f5f0e4!important}
+.premium-part-gold.about-section{background:linear-gradient(110deg,#211c12,#12100b)!important;color:#f5f0e4!important;border-color:#b9944566!important}
+.premium-part-gold.about-section p{color:#d6c9a9!important}
+.premium-part-gold.site-footer{border-top:1px solid #b9944566!important;background:#080807!important;color:#d8c99e!important}
+.premium-part-gold.site-header .header-search{background:#100e0a!important;border-color:#80652e!important}
+.premium-part-gold.site-header .header-search input{color:#f5f0e4!important}
+.premium-part-gold.site-header .header-search svg{stroke:#d8b45b!important}
+.premium-part-gold.site-header .header-premium-link{background:linear-gradient(110deg,#f2d98e,#bd913c)!important;color:#17120a!important;border-color:#e4c574!important}
+@media(prefers-reduced-motion:reduce){.premium-part-gold{transition-duration:80ms}}
