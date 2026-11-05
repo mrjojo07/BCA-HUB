@@ -1732,16 +1732,16 @@ body.premium-mode .nav-links #menuLogout:hover{
 }
 
 
-/* Premium theme: consistent gold accents for semester numbers; syllabus link stays Electric Cyan. */
+/* Premium theme: gold semester numbers and a clean white Calicut University syllabus link. */
 body.premium-mode .semester-card>span{
   color:#e8c58f!important;
   -webkit-text-fill-color:#e8c58f!important;
 }
 body.premium-mode .syllabus-link,
 body.premium-mode .syllabus-link span{
-  color:#22d3ee!important;
-  -webkit-text-fill-color:#22d3ee!important;
-  border-bottom-color:rgba(34,211,238,.62)!important;
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+  border-bottom-color:rgba(255,255,255,.62)!important;
 }
 
 
