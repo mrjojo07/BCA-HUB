@@ -33,7 +33,7 @@ function applyBcaPremiumTheme(user){
       const wash=document.createElement("span");
       wash.className="premium-part-wash";
       wash.setAttribute("aria-hidden","true");
-      wash.style.animationDelay=`${index*420}ms`;
+      wash.style.animationDelay=`${index*650}ms`;
       wash.addEventListener("animationend",finish,{once:true});
       part.prepend(wash);
     });
