@@ -1486,3 +1486,21 @@ body.premium-mode .material-type>span{color:#e4b98d!important;text-shadow:0 0 14
 body.premium-mode .material-type h4{color:#ffe8d2!important}
 body.premium-mode .material-type p{color:#d7c0c1!important}
 body.premium-mode .material-type small{color:#e5bd87!important}
+
+
+/* Premium styling for the dynamically generated subject progress panel. */
+body.premium-mode .learning-progress{
+  background:linear-gradient(135deg,#38202d 0%,#281622 48%,#1b101a 100%)!important;
+  border:1px solid rgba(191,145,135,.58)!important;
+  border-radius:14px!important;
+  color:#f5eadf!important;
+  box-shadow:0 12px 28px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,224,210,.10)!important;
+}
+body.premium-mode .learning-progress .eyebrow{color:#e5bd87!important}
+body.premium-mode .learning-progress h4{color:#ffe8d2!important}
+body.premium-mode .learning-progress .progress-percent{color:#f1d6a0!important}
+body.premium-mode .learning-progress-track{background:#4b3440!important}
+body.premium-mode .learning-progress-track span{background:linear-gradient(90deg,#bd845f,#f1d6a0)!important}
+body.premium-mode .progress-checklist label,
+body.premium-mode .learning-progress p{color:#d7c0c1!important}
+body.premium-mode .learning-progress input[type=checkbox]{accent-color:#c58b5a!important}
