@@ -1530,3 +1530,20 @@ body.premium-mode .learning-progress{
   border:1px solid rgba(197,139,90,.48)!important;
   box-shadow:0 10px 26px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,235,195,.055)!important;
 }
+
+
+/* Premium page headings use clean white for clear hierarchy. */
+body.premium-mode main h1,
+body.premium-mode main h2,
+body.premium-mode main h3,
+body.premium-mode main h4,
+body.premium-mode main h5,
+body.premium-mode main h6,
+body.premium-mode main .browser-heading h3,
+body.premium-mode main .section-heading h2 span,
+body.premium-mode main .about-section h2 span{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:none!important;
+  text-shadow:none!important;
+}
