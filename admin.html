@@ -210,7 +210,8 @@
       }
       const appMeta = user.app_metadata || {};
       const isAdmin = appMeta.role === "admin" || appMeta.admin === true;
-      if(isAdmin) document.body.classList.add("premium-mode");
+      const premiumChosen=sessionStorage.getItem("bca-sync-experience")==="premium";
+      document.body.classList.toggle("premium-mode",isAdmin&&premiumChosen);
       if (!isAdmin) {
         // Keep the student's session active; deny only Admin Panel access.
         loginPanel.hidden = false;
