@@ -1712,3 +1712,21 @@ body.premium-mode .account-dropdown #accountLogoutButton:hover{
   background:rgba(255,76,88,.13)!important;
   color:#ff737c!important;
 }
+
+
+/* Premium sidebar menu typography: white labels, red logout. */
+body.premium-mode .nav-links .sidebar-link,
+body.premium-mode .nav-links .sidebar-link *,
+body.premium-mode .nav-links .sidebar-link:not(#menuLogout){
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+}
+body.premium-mode .nav-links #menuLogout,
+body.premium-mode .nav-links #menuLogout *{
+  color:#ff626c!important;
+  -webkit-text-fill-color:#ff626c!important;
+}
+body.premium-mode .nav-links #menuLogout:hover{
+  background:rgba(255,76,88,.12)!important;
+  border-color:rgba(255,98,108,.35)!important;
+}
