@@ -1,45 +1,6 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#071321">
-  <title>BCA SYNC Premium</title>
-  <link rel="icon" type="image/svg+xml" href="assets/bca-sync-logo.svg?v=3">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=44">
-  <style>
-    body{min-height:100vh;background:radial-gradient(ellipse at 50% 20%,#173d5c 0%,#0a1b2d 42%,#050b13 100%);color:#f4f8ff}
-    .premium-top{max-width:1120px;margin:auto;padding:22px 6vw;display:flex;align-items:center;justify-content:space-between}
-    .premium-back{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid #6e9cba;border-radius:10px;color:#d9efff;background:#102b42;font-size:13px;font-weight:700}
-    .premium-main{min-height:calc(100vh - 80px);display:grid;place-items:center;padding:35px 22px 90px;text-align:center}
-    .premium-card{width:min(720px,100%);padding:clamp(34px,7vw,70px) 22px;border:1px solid rgba(226,199,135,.55);border-radius:28px;background:linear-gradient(145deg,rgba(16,45,67,.92),rgba(8,20,34,.96));box-shadow:0 22px 80px rgba(0,0,0,.35),0 0 45px rgba(169,211,239,.10);position:relative;overflow:hidden}
-    .premium-card:before{content:"";position:absolute;inset:0 0 auto;height:4px;background:linear-gradient(90deg,#b88a37,#f8e9b8,#a9ddf7,#b88a37)}
-    .premium-crown{width:76px;height:76px;margin:0 auto 22px;display:grid;place-items:center;border:1px solid #e5c77e;border-radius:24px;background:linear-gradient(135deg,#f8e9b8,#a9ddf7);color:#18324a;font-size:36px;box-shadow:0 0 28px rgba(222,194,128,.22)}
-    .premium-eyebrow{color:#c8e9ff;font-size:11px;font-weight:800;letter-spacing:3px}
-    .premium-title{margin:14px 0 12px;font:700 clamp(42px,9vw,76px)/1 "Space Grotesk",sans-serif;letter-spacing:2px;background:linear-gradient(100deg,#f7e8b8 12%,#fff4d3 38%,#bce6ff 76%);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 8px 30px rgba(191,221,242,.08)}
-    .premium-subtitle{max-width:470px;margin:0 auto;color:#c4d5e4;font-size:15px;line-height:1.8}
-    .premium-status{display:inline-flex;align-items:center;gap:8px;margin-top:28px;padding:10px 16px;border:1px solid rgba(220,194,135,.5);border-radius:30px;background:rgba(213,184,120,.09);color:#f1dfb0;font-size:12px;font-weight:800}
-    .premium-note{margin:22px auto 0;color:#a9bfd1;font-size:12px;line-height:1.7}
-    @media(max-width:500px){.premium-top{padding:17px 18px}.premium-card{border-radius:22px}.premium-subtitle{font-size:14px}}
-  </style>
-</head>
-<body>
-  <header class="premium-top">
-    <a class="brand" href="index.html" aria-label="BCA SYNC home"><img class="brand-mark brand-logo" src="assets/bca-sync-logo.svg?v=3" alt="" aria-hidden="true"><span>BCA <b>SYNC</b></span></a>
-    <a class="premium-back" href="index.html">← Home</a>
-  </header>
-  <main class="premium-main">
-    <section class="premium-card" aria-labelledby="premiumTitle">
-      <div class="premium-crown" aria-hidden="true">✦</div>
-      <div class="premium-eyebrow">THE NEXT LEVEL OF LEARNING</div>
-      <h1 class="premium-title" id="premiumTitle">PREMIUM</h1>
-      <p class="premium-subtitle">Unlock the BCA SYNC Premium experience: a special gold and light-blue design across Home, My Dashboard and Admin, plus Premium Notes and extra learning features.</p>
-      <div class="premium-status"><span>✧</span> PREMIUM EXPERIENCE</div>
-      <p class="premium-note">All existing Free Notes and study resources remain free. Premium access and payment activation will be added separately.</p>
-    </section>
-  </main>
-  <script type="module">\n    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm";\n    const supabase=createClient("https://efbkhmfekfujbwfdpfhk.supabase.co","sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH");\n    const {data:{session}}=await supabase.auth.getSession();\n    const meta=session?.user?.app_metadata||{};\n    const hasAccess=meta.role==="admin"||meta.admin===true||meta.premium===true||meta.premium_access===true;\n    if(hasAccess){\n      sessionStorage.setItem("bca-sync-experience","premium");\n      window.location.replace("index.html");\n    }\n  </script>\n</body>
-</html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#090806"><title>BCA SYNC | Premium Experience</title><link rel="icon" type="image/svg+xml" href="assets/bca-sync-logo.svg?v=3"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css?v=47">
+<style>
+*{box-sizing:border-box}body{min-height:100vh;margin:0;background:radial-gradient(ellipse at 50% 15%,#2a2110,#100e09 48%,#070707);color:#f6f0e2;font-family:"DM Sans",sans-serif}.premium-top{max-width:1120px;margin:auto;padding:22px 6vw;display:flex;align-items:center;justify-content:space-between}.premium-brand{font:700 19px "Space Grotesk";color:#f7f0df}.premium-brand b{color:#e5c77e}.premium-back{padding:10px 15px;border:1px solid #9b7836;border-radius:10px;color:#f0dfb1;background:#17130b;font-size:13px;font-weight:700}.premium-main{min-height:calc(100vh - 80px);display:grid;place-items:center;padding:35px 22px 90px;text-align:center}.premium-card{width:min(720px,100%);padding:clamp(34px,7vw,70px) 22px;border:1px solid #b99445aa;border-radius:28px;background:linear-gradient(145deg,#211c12,#0b0a08);box-shadow:0 22px 80px #0009,0 0 45px #d8b45b12;position:relative;overflow:hidden}.premium-card:before{content:"";position:absolute;inset:0 0 auto;height:4px;background:linear-gradient(90deg,#80602a,#f4df9a,#b58b3c,#80602a)}.premium-crown{width:76px;height:76px;margin:0 auto 22px;display:grid;place-items:center;border:1px solid #d8b45b;border-radius:24px;background:linear-gradient(135deg,#f4df9a,#b58b3c);color:#17120a;font-size:36px;box-shadow:0 0 28px #d8b45b30}.premium-eyebrow{color:#d8b45b;font-size:11px;font-weight:800;letter-spacing:3px}.premium-title{margin:14px 0 12px;font:700 clamp(42px,9vw,76px)/1 "Space Grotesk";letter-spacing:2px;background:linear-gradient(100deg,#c99b43,#fff0bd 48%,#d8b45b);-webkit-background-clip:text;background-clip:text;color:transparent}.premium-subtitle{max-width:470px;margin:0 auto;color:#d2c8b2;font-size:15px;line-height:1.8}.premium-enter{display:inline-flex;margin-top:28px;padding:15px 24px;border:1px solid #f0d58b;border-radius:12px;background:linear-gradient(110deg,#f2d98e,#bd913c);color:#17120a;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 8px 25px #d8b45b25}.premium-status{margin-top:22px;color:#c7b17c;font-size:12px}.premium-note{margin:18px 0 0;color:#a99d82;font-size:11px;line-height:1.7}#premiumMessage{margin-top:18px;color:#f1d98f;font-size:13px}
+</style></head><body><header class="premium-top"><a class="premium-brand" href="index.html">BCA <b>SYNC</b></a><a class="premium-back" href="index.html">← Home</a></header><main class="premium-main"><section class="premium-card" aria-labelledby="premiumTitle"><div class="premium-crown" aria-hidden="true">♛</div><div class="premium-eyebrow">THE EXCLUSIVE ADMIN THEME</div><h1 class="premium-title" id="premiumTitle">PREMIUM</h1><p class="premium-subtitle">A refined black and gold experience across BCA SYNC Home, Dashboard and Admin Panel.</p><button class="premium-enter" id="enterPremium" type="button" hidden>Enter Premium Experience&nbsp; →</button><div class="premium-status">✦ BLACK &amp; GOLD · ADMIN ACCESS ONLY</div><p class="premium-note">All study materials remain free. Premium Experience changes the site appearance only; it does not unlock paid content.</p><p id="premiumMessage" role="status" aria-live="polite">Checking account access…</p></section></main>
+<script type="module">import {createClient} from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm";const supabase=createClient("https://efbkhmfekfujbwfdpfhk.supabase.co","sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH");const button=document.getElementById("enterPremium"),message=document.getElementById("premiumMessage");const {data:{session}}=await supabase.auth.getSession();const meta=session?.user?.app_metadata||{};const isAdmin=Boolean(session?.user&&(meta.role==="admin"||meta.admin===true));if(isAdmin){button.hidden=false;message.textContent="Admin access verified. You can enter the Premium Experience.";button.addEventListener("click",()=>{sessionStorage.setItem("bca-sync-experience","premium");window.location.href="index.html";});}else{message.textContent=session?.user?"Premium Experience is currently available to the Admin account only.":"Please log in with the Admin account to access Premium Experience."}</script></body></html>
