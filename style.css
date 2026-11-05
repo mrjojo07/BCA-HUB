@@ -1803,7 +1803,8 @@ body.premium-mode .semester-card::after{
 }
 @keyframes semesterCardShine{
   0%{transform:translateX(-160%) skewX(-22deg)}
-  65%,100%{transform:translateX(360%) skewX(-22deg)}
+  68%{transform:translateX(-10%) skewX(-22deg)}
+  80%,100%{transform:translateX(360%) skewX(-22deg)}
 }
 @media(prefers-reduced-motion:reduce){
   .semester-card::after{animation:none!important;display:none!important}
