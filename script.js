@@ -752,8 +752,8 @@ document.addEventListener("click",event=>{
 const siteSearchForm=document.getElementById("siteSearchForm");
 const siteSearchInput=document.getElementById("siteSearchInput");
 function normalizeSearchText(value){
-  return String(value||"").normalize("NFKD").replace(/[\\u0300-\\u036f]/g,"")
-    .toLocaleLowerCase().replace(/\\.pdf$/i,"").replace(/[^a-z0-9]+/g," ").trim().replace(/\\s+/g," ");
+  return String(value||"").normalize("NFKD").replace(/[\u0300-\u036f]/g,"")
+    .toLocaleLowerCase().replace(/\.pdf$/i,"").replace(/[^a-z0-9]+/g," ").trim().replace(/\s+/g," ");
 }
 siteSearchForm?.addEventListener("submit",event=>{
   event.preventDefault();
