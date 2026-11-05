@@ -15,7 +15,7 @@ function applyBcaPremiumTheme(user){
   if(shouldAnimate){
     sessionStorage.removeItem("bca-sync-premium-transition");
     const selector=".site-header,.hero,.code-card,.floating-chip,.semester-section,.semester-card,.community-upload-section,.countdown-section,.countdown-card,.saved-resources-section,.saved-resources-list,.resource-request-section,.about-section,.site-footer";
-    const parts=[...document.querySelectorAll(selector)];
+    const parts=[...document.querySelectorAll(selector)].filter(part=>part.getClientRects().length>0);
     if(!parts.length){
       document.body.classList.add("premium-mode");
       return;
