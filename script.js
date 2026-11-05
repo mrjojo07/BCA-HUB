@@ -748,11 +748,6 @@ document.addEventListener("click",event=>{
     accountMenuToggle?.setAttribute("aria-expanded","false");
   }
 });
-document.getElementById("sidebarNotifications")?.addEventListener("click",()=>{
-  setSidebarOpen(false);
-  document.getElementById("notificationBell")?.click();
-});
-
 // Search currently loaded subjects, materials and resource cards.
 const siteSearchForm=document.getElementById("siteSearchForm");
 const siteSearchInput=document.getElementById("siteSearchInput");
