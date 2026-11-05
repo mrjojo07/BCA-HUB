@@ -1732,24 +1732,13 @@ body.premium-mode .nav-links #menuLogout:hover{
 }
 
 
-/* Blue theme: soft cyan accents for hero line numbers and syllabus link. */
-body:not(.premium-mode) .code-lines em{
-  color:#7dd3fc!important;
-}
-body:not(.premium-mode) .syllabus-link,
-body:not(.premium-mode) .syllabus-link span{
-  color:#7dd3fc!important;
-  -webkit-text-fill-color:#7dd3fc!important;
-  border-bottom-color:rgba(125,211,252,.55)!important;
-}
-
-
-/* Blue theme: Electric Cyan accents for hero line numbers and syllabus link. */
-body:not(.premium-mode) .code-lines em{
+/* Premium theme: consistent Electric Cyan accents for semester numbers and syllabus link. */
+body.premium-mode .semester-card>span{
   color:#22d3ee!important;
+  -webkit-text-fill-color:#22d3ee!important;
 }
-body:not(.premium-mode) .syllabus-link,
-body:not(.premium-mode) .syllabus-link span{
+body.premium-mode .syllabus-link,
+body.premium-mode .syllabus-link span{
   color:#22d3ee!important;
   -webkit-text-fill-color:#22d3ee!important;
   border-bottom-color:rgba(34,211,238,.62)!important;
