@@ -1732,10 +1732,10 @@ body.premium-mode .nav-links #menuLogout:hover{
 }
 
 
-/* Premium theme: consistent Electric Cyan accents for semester numbers and syllabus link. */
+/* Premium theme: consistent gold accents for semester numbers; syllabus link stays Electric Cyan. */
 body.premium-mode .semester-card>span{
-  color:#22d3ee!important;
-  -webkit-text-fill-color:#22d3ee!important;
+  color:#e8c58f!important;
+  -webkit-text-fill-color:#e8c58f!important;
 }
 body.premium-mode .syllabus-link,
 body.premium-mode .syllabus-link span{
