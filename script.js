@@ -1,6 +1,14 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm";
 const supabase = createClient("https://efbkhmfekfujbwfdpfhk.supabase.co", "sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH");
 
+function updateSidebarThemeLabel(){
+  const link=document.querySelector(".sidebar-premium");
+  if(!link) return;
+  const premium=document.body.classList.contains("premium-mode");
+  link.innerHTML=premium?"🔵 &nbsp; Old Theme":"♛ &nbsp; Premium";
+  link.setAttribute("aria-label",premium?"Switch to Old Theme":"Open BCA SYNC Premium");
+}
+
 // Premium theme requires an explicit Premium-button choice in this tab,
 // plus trusted access from Supabase app_metadata.
 function applyBcaPremiumTheme(user){
@@ -24,7 +32,7 @@ function applyBcaPremiumTheme(user){
         document.body.classList.remove("premium-transitioning");
         window.bcaPremiumTransitionTimers=[];
       },2300);
-      window.bcaPremiumTransitionTimers.push(finishTimer);
+      window.bcaPremiumTransitionTimers.push(finishTimer);\n      updateSidebarThemeLabel();
     },450);
     window.bcaPremiumTransitionTimers.push(beginTimer);
   }else{
@@ -45,7 +53,12 @@ oldThemeButton?.addEventListener("click",()=>{
   (window.bcaPremiumTransitionTimers||[]).forEach(timer=>window.clearTimeout(timer));
   window.bcaPremiumTransitionTimers=[];
   document.body.classList.remove("premium-mode","premium-transitioning");
-  oldThemeButton.blur();
+  oldThemeButton.blur();\n  updateSidebarThemeLabel();
+});
+document.querySelector(".sidebar-premium")?.addEventListener("click",(event)=>{
+  if(!document.body.classList.contains("premium-mode")) return;
+  event.preventDefault();
+  oldThemeButton?.click();
 });
 const menuToggle = document.getElementById("menuToggle");
 
