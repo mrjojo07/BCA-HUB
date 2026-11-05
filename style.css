@@ -1754,3 +1754,29 @@ body:not(.premium-mode) .syllabus-link span{
   -webkit-text-fill-color:#22d3ee!important;
   border-bottom-color:rgba(34,211,238,.62)!important;
 }
+
+
+/* Keep every semester tile equal in size across desktop and mobile. */
+.semester-grid{
+  align-items:stretch;
+}
+.semester-card{
+  box-sizing:border-box;
+  height:88px;
+  min-height:88px;
+  max-height:88px;
+}
+.semester-card>div{
+  min-width:0;
+}
+.semester-card b,
+.semester-card small{
+  overflow-wrap:anywhere;
+}
+@media(max-width:650px){
+  .semester-card{
+    height:82px;
+    min-height:82px;
+    max-height:82px;
+  }
+}
