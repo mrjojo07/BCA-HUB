@@ -86,7 +86,11 @@
           <option value="notes">Notes</option>
           <option value="important-questions">Important Questions</option>
           <option value="previous-year-questions">Previous Year Questions</option>
-          
+        </select>
+        <label for="materialAccess">Access type</label>
+        <select id="materialAccess" required>
+          <option value="free" selected>Free — everyone can access</option>
+          <option value="premium">Premium — Premium members only</option>
         </select>
         <div id="notesModuleField" hidden><label for="notesModule">Notes module</label><select id="notesModule"><option value="module-1">Module 1</option><option value="module-2">Module 2</option><option value="module-3">Module 3</option><option value="module-4">Module 4</option></select></div>
         <label for="materialFiles">Select files (PDF, images, documents)</label><input id="materialFiles" type="file" multiple accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.txt,.docx,.pptx,.xlsx"><div class="admin-toolbar"><button class="admin-action" id="uploadMaterials" type="button">↑ Upload &amp; Publish</button></div><p id="materialUploadStatus" class="admin-intro" aria-live="polite">Choose files to upload directly to BCA SYNC.</p>
@@ -363,6 +367,7 @@
     const notesModuleField = document.getElementById("notesModuleField");
     function updateNotesModuleVisibility() { notesModuleField.hidden = categorySelect.value !== "notes"; }
     categorySelect.addEventListener("change", () => { updateNotesModuleVisibility(); loadExistingFiles(); });
+    document.getElementById("materialAccess").addEventListener("change", loadExistingFiles);
     document.getElementById("notesModule").addEventListener("change", loadExistingFiles);
     updateNotesModuleVisibility();
     const existingFiles = document.getElementById("existingFiles");
@@ -371,34 +376,40 @@
     const renameButton = document.getElementById("renameButton");
     async function loadExistingFiles() {
       const folder = selectedFolder();
+      const accessType = document.getElementById("materialAccess").value;
+      const bucket = accessType === "premium" ? "bca-premium-materials" : "bca-hub-materials";
       existingFiles.innerHTML = '<option value="">Loading files...</option>';
       existingFiles.disabled = true;
       removeButton.disabled = true;
       renameButton.disabled = true;
       if (!folder) {
         existingFiles.innerHTML = '<option value="">Choose semester and subject first</option>';
-        fileListStatus.textContent = "Choose a semester, subject and material type to load files.";
+        fileListStatus.textContent = "Choose a semester and subject first.";
         return;
       }
       fileListStatus.textContent = "Checking published materials…";
       try {
-        const [githubResponse, storageResult] = await Promise.all([
-          fetch("https://api.github.com/repos/mrjojo07/BCA-HUB/contents/" + folder),
-          supabase.storage.from("bca-hub-materials").list(folder, { limit: 100, sortBy: { column: "name", order: "asc" } })
-        ]);
-        const githubFiles = githubResponse.ok ? (await githubResponse.json()).filter(item => item.type === "file") : [];
+        const storageResult = await supabase.storage.from(bucket).list(folder, { limit: 100, sortBy: { column: "name", order: "asc" } });
         if (storageResult.error) throw storageResult.error;
-        const storageFiles = (storageResult.data || []).filter(item => item.name && item.id).map(item => ({ name: item.name, path: "storage:" + item.name }));
-        existingFiles.innerHTML = '<option value="">Choose a file to remove</option>';
+        const storageFiles = (storageResult.data || []).filter(item => item.name && item.id).map(item => ({
+          name: item.name,
+          path: (accessType === "premium" ? "premiumstorage:" : "storage:") + item.name
+        }));
+        let githubFiles = [];
+        if (accessType === "free") {
+          const githubResponse = await fetch("https://api.github.com/repos/mrjojo07/BCA-HUB/contents/" + folder);
+          githubFiles = githubResponse.ok ? (await githubResponse.json()).filter(item => item.type === "file") : [];
+        }
+        existingFiles.innerHTML = '<option value="">Choose a file to manage</option>';
         [...githubFiles.map(file => ({ name: file.name, path: file.path, storage: false })),
           ...storageFiles.map(file => ({ name: file.name, path: file.path, storage: true }))].forEach(file => {
           const option = document.createElement("option");
           option.value = file.path;
-          option.textContent = file.name + (file.storage ? " · Direct upload" : " · GitHub");
+          option.textContent = file.name + (file.storage ? (accessType === "premium" ? " · Private Premium" : " · Direct upload") : " · GitHub");
           existingFiles.appendChild(option);
         });
         existingFiles.disabled = existingFiles.options.length <= 1;
-        fileListStatus.textContent = (githubFiles.length + storageFiles.length) + " file(s) found. Direct uploads can be removed here; older GitHub files remain managed through GitHub.";
+        fileListStatus.textContent = (githubFiles.length + storageFiles.length) + " file(s) found in " + (accessType === "premium" ? "Premium" : "Free") + " materials.";
       } catch (error) {
         existingFiles.innerHTML = '<option value="">Could not load files</option>';
         fileListStatus.textContent = error.message || "Could not load files.";
@@ -409,6 +420,8 @@
       const files = [...(document.getElementById("materialFiles").files || [])];
       const status = document.getElementById("materialUploadStatus");
       const button = document.getElementById("uploadMaterials");
+      const accessType = document.getElementById("materialAccess").value;
+      const bucket = accessType === "premium" ? "bca-premium-materials" : "bca-hub-materials";
       if (!folder) { status.textContent = "Choose semester and subject first."; return; }
       if (!files.length) { status.textContent = "Select at least one file to upload."; return; }
       const maxSize = 50 * 1024 * 1024;
@@ -418,25 +431,41 @@
       button.disabled = true;
       let uploaded = 0;
       try {
+        const folderParts = folder.split("/");
+        const category = folderParts[2] || "general";
+        const subjectSlug = folderParts[3] || "general";
         for (const file of files) {
           status.textContent = "Uploading " + (uploaded + 1) + " of " + files.length + ": " + file.name;
           const safeName = file.name.normalize("NFKD").replace(/[^a-zA-Z0-9._-]+/g, "-").replace(/^-+|-+$/g, "");
           const path = folder + "/" + crypto.randomUUID() + "-" + safeName;
-          const { error } = await supabase.storage.from("bca-hub-materials").upload(path, file, {
+          const { error } = await supabase.storage.from(bucket).upload(path, file, {
             contentType: file.type || "application/octet-stream",
             upsert: false
           });
           if (error) throw error;
+          if (accessType === "premium") {
+            const { error: metadataError } = await supabase.from("premium_materials").insert({
+              title: file.name,
+              semester: Number(semesterSelect.value.replace("semester-", "")),
+              subject_slug: subjectSlug,
+              category,
+              storage_path: path,
+              is_published: true
+            });
+            if (metadataError) {
+              await supabase.storage.from(bucket).remove([path]);
+              throw metadataError;
+            }
+          }
           uploaded++;
         }
         document.getElementById("materialFiles").value = "";
         await loadExistingFiles();
-        status.textContent = uploaded + " file(s) uploaded and published successfully.";
-        const folderParts = folder.split("/");
-        const category = folderParts[2] || "general";
+        status.textContent = uploaded + " " + (accessType === "premium" ? "Premium" : "Free") + " file(s) uploaded successfully.";
         const subjectName = subjectSelect.value || "BCA";
         const notificationCategory = ["notes","important-questions","previous-year-questions"].includes(category) ? category : "general";
-        await publishAdminNotification({title:"New " + (category === "notes" ? "notes" : category.replace(/-/g," ")) + " available",message:subjectName + " · Semester " + semesterSelect.value.replace("semester-","") + " — new study material has been published.",category:notificationCategory,target_url:"#semesters"});
+        const visibilityMessage = accessType === "premium" ? " New Premium material is available for eligible members." : " New free study material has been published.";
+        await publishAdminNotification({title:"New " + (category === "notes" ? "notes" : category.replace(/-/g," ")) + " available",message:subjectName + " · Semester " + semesterSelect.value.replace("semester-","") + " —" + visibilityMessage,category:notificationCategory,target_url:"#semesters"});
       } catch (error) {
         status.textContent = uploaded + " file(s) uploaded. Upload stopped: " + (error.message || "Please try again.");
         await loadExistingFiles();
@@ -451,8 +480,10 @@
     renameButton.addEventListener("click", async () => {
       const selected = existingFiles.value;
       if (!selected) return;
-      if (selected.startsWith("storage:")) {
-        const oldName = selected.slice(8);
+      if (selected.startsWith("storage:") || selected.startsWith("premiumstorage:")) {
+        const isPremiumFile = selected.startsWith("premiumstorage:");
+        const prefixLength = isPremiumFile ? "premiumstorage:".length : "storage:".length;
+        const oldName = selected.slice(prefixLength);
         const newName = prompt("Enter the new file name (keep the file extension):", oldName);
         if (newName === null) return;
         const cleanName = newName.trim();
@@ -466,8 +497,18 @@
         fileListStatus.textContent = "Renaming file…";
         try {
           const folder = selectedFolder();
-          const { error } = await supabase.storage.from("bca-hub-materials").move(folder + "/" + oldName, folder + "/" + cleanName);
+          const bucket = isPremiumFile ? "bca-premium-materials" : "bca-hub-materials";
+          const oldPath = folder + "/" + oldName;
+          const newPath = folder + "/" + cleanName;
+          const { error } = await supabase.storage.from(bucket).move(oldPath, newPath);
           if (error) throw error;
+          if (isPremiumFile) {
+            const { error: metadataError } = await supabase.from("premium_materials").update({ storage_path: newPath, title: cleanName }).eq("storage_path", oldPath);
+            if (metadataError) {
+              await supabase.storage.from(bucket).move(newPath, oldPath);
+              throw metadataError;
+            }
+          }
           await loadExistingFiles();
           fileListStatus.textContent = "File renamed successfully.";
         } catch (error) {
@@ -485,13 +526,20 @@
     removeButton.addEventListener("click", async () => {
       const selected = existingFiles.value;
       if (!selected) return;
-      if (selected.startsWith("storage:")) {
-        const fileName = selected.slice(8);
+      if (selected.startsWith("storage:") || selected.startsWith("premiumstorage:")) {
+        const isPremiumFile = selected.startsWith("premiumstorage:");
+        const prefixLength = isPremiumFile ? "premiumstorage:".length : "storage:".length;
+        const fileName = selected.slice(prefixLength);
         const path = selectedFolder() + "/" + fileName;
         if (!confirm('Delete "' + fileName + '" from the published website?')) return;
         removeButton.disabled = true;
-        const { error } = await supabase.storage.from("bca-hub-materials").remove([path]);
+        const bucket = isPremiumFile ? "bca-premium-materials" : "bca-hub-materials";
+        const { error } = await supabase.storage.from(bucket).remove([path]);
         if (error) { fileListStatus.textContent = "Could not delete file: " + error.message; removeButton.disabled = false; return; }
+        if (isPremiumFile) {
+          const { error: metadataError } = await supabase.from("premium_materials").delete().eq("storage_path", path);
+          if (metadataError) { fileListStatus.textContent = "File removed from storage, but its Premium listing could not be removed: " + metadataError.message; return; }
+        }
         await loadExistingFiles();
         fileListStatus.textContent = "File deleted from the website.";
         return;
