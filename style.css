@@ -1173,3 +1173,9 @@ body.premium-mode .upload-notes-bar{background:#080807!important}
 .premium-theme-blend{position:fixed;inset:0;z-index:99999;pointer-events:none;background:radial-gradient(ellipse at 50% 45%,rgba(245,211,126,.9) 0%,rgba(189,145,60,.72) 18%,rgba(35,27,13,.94) 48%,#070707 82%);opacity:0;transform:scale(.78);animation:bcaPremiumPageBlend 1.9s cubic-bezier(.2,.72,.18,1) forwards;transform-origin:center}
 @keyframes bcaPremiumPageBlend{0%{opacity:0;transform:scale(.78);filter:brightness(1)}28%{opacity:.48;transform:scale(1);filter:brightness(1.12)}68%{opacity:.88;transform:scale(1.12);filter:brightness(.92)}100%{opacity:1;transform:scale(1.28);filter:brightness(.78)}}
 @media(prefers-reduced-motion:reduce){.premium-theme-blend{animation-duration:.35s}}
+
+/* Old Blue Theme switch occupies the Premium button position in Premium mode. */
+.header-old-theme-link{display:none;align-items:center;justify-content:center;gap:6px;white-space:nowrap;padding:9px 13px;border:1px solid #b99548;border-radius:10px;background:linear-gradient(120deg,#f6e6ad,#b8e4ff);color:#172b43;font-size:12px;font-weight:900;cursor:pointer;box-shadow:0 0 13px rgba(201,170,96,.18)}
+body.premium-mode .header-actions .header-premium-link{display:none}
+body.premium-mode .header-actions .header-old-theme-link{display:inline-flex;background:linear-gradient(110deg,#f2d98e,#bd913c);color:#17120a;border-color:#e4c574}
+@media(max-width:650px){.header-old-theme-link{padding:8px 9px;font-size:10px}}
