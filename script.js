@@ -748,21 +748,34 @@ document.addEventListener("click",event=>{
     accountMenuToggle?.setAttribute("aria-expanded","false");
   }
 });
-// Search currently loaded subjects, materials and resource cards.
+// Search loaded subjects and materials, prioritising exact names.
 const siteSearchForm=document.getElementById("siteSearchForm");
 const siteSearchInput=document.getElementById("siteSearchInput");
+function normalizeSearchText(value){
+  return String(value||"").normalize("NFKD").replace(/[\\u0300-\\u036f]/g,"")
+    .toLocaleLowerCase().replace(/\\.pdf$/i,"").replace(/[^a-z0-9]+/g," ").trim().replace(/\\s+/g," ");
+}
 siteSearchForm?.addEventListener("submit",event=>{
   event.preventDefault();
-  const query=(siteSearchInput?.value||"").trim().toLocaleLowerCase();
+  const rawQuery=(siteSearchInput?.value||"").trim();
+  const query=normalizeSearchText(rawQuery);
   if(!query)return;
   const candidates=[...document.querySelectorAll(".semester-card,.subject-item,.material-type,.resource-card,.countdown-card")];
-  const match=candidates.find(node=>node.textContent.toLocaleLowerCase().includes(query));
+  const ranked=candidates.map(node=>({node,text:normalizeSearchText(node.textContent)}))
+    .filter(item=>item.text)
+    .sort((a,b)=>{
+      const aExact=a.text===query?0:1, bExact=b.text===query?0:1;
+      if(aExact!==bExact)return aExact-bExact;
+      const aStarts=a.text.startsWith(query)?0:1, bStarts=b.text.startsWith(query)?0:1;
+      return aStarts-bStarts;
+    });
+  const match=ranked.find(item=>item.text===query)||ranked.find(item=>item.text.includes(query)||query.includes(item.text));
   if(match){
-    match.scrollIntoView({behavior:"smooth",block:"center"});
-    match.classList.add("search-match-highlight");
-    window.setTimeout(()=>match.classList.remove("search-match-highlight"),1800);
+    match.node.scrollIntoView({behavior:"smooth",block:"center"});
+    match.node.classList.add("search-match-highlight");
+    window.setTimeout(()=>match.node.classList.remove("search-match-highlight"),1800);
   }else{
     const browser=document.getElementById("subjectBrowser");
-    if(browser){browser.hidden=false;browser.innerHTML='<p class="browser-empty">No matching item is currently visible. Open the relevant semester or subject first, then search again.</p>';browser.scrollIntoView({behavior:"smooth",block:"center"});}
+    if(browser){browser.hidden=false;browser.innerHTML='<p class="browser-empty">No matching item found. Try the subject or file name, or open its semester/category first.</p>';browser.scrollIntoView({behavior:"smooth",block:"center"});}
   }
 });
