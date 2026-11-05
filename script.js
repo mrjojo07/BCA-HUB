@@ -11,16 +11,32 @@ function applyBcaPremiumTheme(user){
   const shouldAnimate=enabled&&sessionStorage.getItem("bca-sync-premium-transition")==="1";
   if(shouldAnimate){
     sessionStorage.removeItem("bca-sync-premium-transition");
-    const overlay=document.createElement("div");
-    overlay.className="premium-theme-blend";
-    overlay.setAttribute("aria-hidden","true");
-    document.body.appendChild(overlay);
-    document.body.classList.add("premium-transitioning");
-    overlay.addEventListener("animationend",()=>{
+    const selector=".site-header,.hero,.code-card,.floating-chip,.semester-section,.semester-card,.community-upload-section,.countdown-section,.countdown-card,.saved-resources-section,.saved-resources-list,.resource-request-section,.about-section,.site-footer";
+    const parts=[...document.querySelectorAll(selector)];
+    if(!parts.length){
       document.body.classList.add("premium-mode");
-      document.body.classList.remove("premium-transitioning");
-      overlay.remove();
-    },{once:true});
+      return;
+    }
+    document.body.classList.add("premium-transitioning");
+    let completed=0;
+    const finish=()=>{
+      completed++;
+      if(completed===parts.length){
+        document.body.classList.add("premium-mode");
+        document.body.classList.remove("premium-transitioning");
+        document.querySelectorAll(".premium-part-wash").forEach(wash=>wash.remove());
+        document.querySelectorAll(".premium-part-transition").forEach(part=>part.classList.remove("premium-part-transition"));
+      }
+    };
+    parts.forEach((part,index)=>{
+      part.classList.add("premium-part-transition");
+      const wash=document.createElement("span");
+      wash.className="premium-part-wash";
+      wash.setAttribute("aria-hidden","true");
+      wash.style.animationDelay=`${index*420}ms`;
+      wash.addEventListener("animationend",finish,{once:true});
+      part.prepend(wash);
+    });
   }else{
     document.body.classList.toggle("premium-mode",enabled);
   }
