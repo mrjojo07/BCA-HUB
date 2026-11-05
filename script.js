@@ -32,7 +32,8 @@ function applyBcaPremiumTheme(user){
         document.body.classList.remove("premium-transitioning");
         window.bcaPremiumTransitionTimers=[];
       },2300);
-      window.bcaPremiumTransitionTimers.push(finishTimer);\n      updateSidebarThemeLabel();
+      window.bcaPremiumTransitionTimers.push(finishTimer);
+      updateSidebarThemeLabel();
     },450);
     window.bcaPremiumTransitionTimers.push(beginTimer);
   }else{
@@ -53,7 +54,8 @@ oldThemeButton?.addEventListener("click",()=>{
   (window.bcaPremiumTransitionTimers||[]).forEach(timer=>window.clearTimeout(timer));
   window.bcaPremiumTransitionTimers=[];
   document.body.classList.remove("premium-mode","premium-transitioning");
-  oldThemeButton.blur();\n  updateSidebarThemeLabel();
+  oldThemeButton.blur();
+  updateSidebarThemeLabel();
 });
 document.querySelector(".sidebar-premium")?.addEventListener("click",(event)=>{
   if(!document.body.classList.contains("premium-mode")) return;
