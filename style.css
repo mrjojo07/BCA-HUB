@@ -1522,3 +1522,11 @@ body.premium-mode .material-type:hover{
   border-color:#e0b77a!important;
   box-shadow:0 14px 30px rgba(0,0,0,.4),0 0 18px rgba(197,139,90,.12)!important;
 }
+
+
+/* Match the subject progress panel surface to the restored study cards. */
+body.premium-mode .learning-progress{
+  background:linear-gradient(145deg,#21180f 0%,#120e09 72%)!important;
+  border:1px solid rgba(197,139,90,.48)!important;
+  box-shadow:0 10px 26px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,235,195,.055)!important;
+}
