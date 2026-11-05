@@ -87,11 +87,13 @@
           <option value="important-questions">Important Questions</option>
           <option value="previous-year-questions">Previous Year Questions</option>
         </select>
-        <label for="materialAccess">Access type</label>
-        <select id="materialAccess" required>
-          <option value="free" selected>Free — everyone can access</option>
-          <option value="premium">Premium — Premium members only</option>
-        </select>
+        <div id="materialAccessField">
+          <label for="materialAccess">Notes access type</label>
+          <select id="materialAccess" required>
+            <option value="free" selected>Free — everyone can access</option>
+            <option value="premium">Premium — Premium members only</option>
+          </select>
+        </div>
         <div id="notesModuleField" hidden><label for="notesModule">Notes module</label><select id="notesModule"><option value="module-1">Module 1</option><option value="module-2">Module 2</option><option value="module-3">Module 3</option><option value="module-4">Module 4</option></select></div>
         <label for="materialFiles">Select files (PDF, images, documents)</label><input id="materialFiles" type="file" multiple accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.txt,.docx,.pptx,.xlsx"><div class="admin-toolbar"><button class="admin-action" id="uploadMaterials" type="button">↑ Upload &amp; Publish</button></div><p id="materialUploadStatus" class="admin-intro" aria-live="polite">Choose files to upload directly to BCA SYNC.</p>
         <div class="admin-remove-area">
@@ -365,7 +367,13 @@
     }
     const categorySelect = document.getElementById("category");
     const notesModuleField = document.getElementById("notesModuleField");
-    function updateNotesModuleVisibility() { notesModuleField.hidden = categorySelect.value !== "notes"; }
+    const materialAccessField = document.getElementById("materialAccessField");
+    function updateNotesModuleVisibility() {
+      const notesSelected = categorySelect.value === "notes";
+      notesModuleField.hidden = !notesSelected;
+      materialAccessField.hidden = !notesSelected;
+      if (!notesSelected) document.getElementById("materialAccess").value = "free";
+    }
     categorySelect.addEventListener("change", () => { updateNotesModuleVisibility(); loadExistingFiles(); });
     document.getElementById("materialAccess").addEventListener("change", loadExistingFiles);
     document.getElementById("notesModule").addEventListener("change", loadExistingFiles);
