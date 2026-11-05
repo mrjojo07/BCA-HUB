@@ -22,9 +22,16 @@
   <link rel="stylesheet" href="welcome-auth.css?v=14">
   <script>try{if(sessionStorage.getItem("bcaSyncNewUserWelcome")==="1"){document.documentElement.classList.add("show-new-user-welcome");document.documentElement.dataset.welcomeName=sessionStorage.getItem("bcaSyncWelcomeName")||"Student";sessionStorage.removeItem("bcaSyncNewUserWelcome");sessionStorage.removeItem("bcaSyncWelcomeName");}}catch(e){}</script>
   <style>html.show-new-user-welcome .header-actions,html.show-new-user-welcome .header-search,html.show-new-user-welcome #brandMenuToggle,html.show-new-user-welcome .nav-links{display:none!important}html.show-new-user-welcome,html.show-new-user-welcome body{overflow:hidden!important;overscroll-behavior:none!important;touch-action:none}html.show-new-user-welcome body{position:fixed;inset:0;width:100%}</style>
-  <script type="module" src="script.js?v=63"></script>
+  <script type="module" src="script.js?v=64"></script>
 </head>
 <body>
+  <script>
+    try {
+      if (sessionStorage.getItem("bca-sync-experience") === "premium") {
+        document.body.classList.add("premium-mode");
+      }
+    } catch (error) {}
+  </script>
   <header class="site-header">
     <a class="brand" id="brandMenuToggle" href="#" aria-label="Open BCA SYNC menu" aria-expanded="false" aria-controls="navLinks"><img class="brand-mark brand-logo" src="assets/bca-sync-logo.svg?v=3" alt="" aria-hidden="true"><span>BCA <b>SYNC</b></span></a>
     <form class="header-search" id="siteSearchForm" role="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg><input id="siteSearchInput" type="search" placeholder="Search notes, subjects..." aria-label="Search BCA SYNC"><button type="submit" aria-label="Search">Search</button></form>
@@ -289,7 +296,7 @@
         <div class="eyebrow"><span class="eyebrow-dot"></span> YOUR BCA LEARNING COMPANION</div>
         <h1>Learn smarter.<br><span>Build your future.</span></h1>
         <p class="hero-copy">Your student-friendly space for BCA study notes, previous question papers, practical resources and exam preparation.</p>
-        <div class="hero-actions"><a class="button button-gold" href="#semesters">Explore semesters <span>↗</span></a><button class="text-link" id="savedNotesHeroButton" type="button" hidden>Saved Notes <span>★</span></button></div>
+        <div class="hero-actions"><a class="button button-gold" href="#semesters">Explore semesters <span>↗</span></a><button class="text-link" id="savedNotesHeroButton" type="button">Saved Notes <span>★</span></button></div>
         <div class="hero-note"><span class="note-icon">✦</span> Made for BCA students, one topic at a time.</div>
       </div>
       <div class="hero-art" aria-hidden="true">
