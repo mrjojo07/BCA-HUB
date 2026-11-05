@@ -105,6 +105,36 @@ async function showMaterials(category, moduleNumber = 0) {
       if (!uniqueFiles.has(key)) uniqueFiles.set(key, file);
     }
     const files = [...uniqueFiles.values()];
+    const { data: { user: signedInUser } } = await supabase.auth.getUser();
+    const appMeta = signedInUser?.app_metadata || {};
+    let canReadPremium = appMeta.premium === true || appMeta.premium_access === true;
+    if (!canReadPremium && (appMeta.role === "admin" || appMeta.admin === true)) {
+      const { data: assurance } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+      canReadPremium = assurance?.currentLevel === "aal2";
+    }
+    if (canReadPremium) {
+      const { data: premiumRows, error: premiumError } = await supabase
+        .from("premium_materials")
+        .select("id,title,storage_path,created_at")
+        .eq("semester", Number(currentSemester))
+        .eq("subject_slug", subjectSlug(currentSubject))
+        .eq("category", category)
+        .eq("is_published", true)
+        .order("created_at", { ascending: false });
+      if (premiumError) throw premiumError;
+      for (const item of (premiumRows || [])) {
+        const { data: signedFile, error: signedError } = await supabase.storage
+          .from("bca-premium-materials")
+          .createSignedUrl(item.storage_path, 3600);
+        if (signedError) throw signedError;
+        files.push({
+          name: item.title || item.storage_path.split("/").pop(),
+          url: signedFile.signedUrl,
+          preview: signedFile.signedUrl,
+          premium: true
+        });
+      }
+    }
     const heading = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · '+labels[category].toUpperCase()+'</div><h3>'+labels[category]+'</h3></div><button class="browser-close" data-back="'+backTarget+'" type="button">'+backLabel+'</button></div>';
     if (!files.length) {
       subjectBrowser.innerHTML = heading+'<p class="browser-empty">No files have been uploaded here yet.</p>';
@@ -114,9 +144,15 @@ async function showMaterials(category, moduleNumber = 0) {
     list.className = 'subject-list';
     files.forEach(file => {
       const row = document.createElement('div');
-      row.className = 'subject-item';
+      row.className = 'subject-item' + (file.premium ? ' premium-resource-item' : '');
       const title = document.createElement('strong');
       title.textContent = file.name;
+      if (file.premium) {
+        const premiumTag = document.createElement('span');
+        premiumTag.textContent = 'PREMIUM';
+        premiumTag.style.cssText = 'margin-left:8px;padding:3px 7px;border-radius:20px;background:#e8c76b;color:#172033;font-size:10px;font-weight:800;letter-spacing:.04em';
+        title.appendChild(premiumTag);
+      }
       const link = document.createElement('a');
       link.href = file.url;
       link.target = '_blank';
