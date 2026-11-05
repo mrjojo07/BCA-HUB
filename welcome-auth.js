@@ -1,16 +1,32 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm";
 const supabase = createClient("https://efbkhmfekfujbwfdpfhk.supabase.co", "sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH");
 const overlay = document.getElementById("welcomeAuthOverlay");
-const continueButton = document.getElementById("welcomeAuthContinue");
 const closePopup = () => { if (overlay) overlay.hidden = true; };
-continueButton?.addEventListener("click", closePopup);
-const { data: { session } } = await supabase.auth.getSession();
-if (session?.user) closePopup();
+const firstLoginWelcome = document.documentElement.classList.contains("show-new-user-welcome");
+
+// Keep the auth welcome hidden until Supabase has restored the saved session.
+// This prevents a signed-in user from seeing the login card flash on refresh.
+try {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session?.user || firstLoginWelcome) {
+    closePopup();
+  } else if (overlay) {
+    overlay.hidden = false;
+  }
+} catch (error) {
+  // If session restoration fails, avoid incorrectly blocking the public home page.
+  if (!firstLoginWelcome && overlay) overlay.hidden = false;
+}
+
 supabase.auth.onAuthStateChange((_event, sessionNow) => {
-  if (sessionNow?.user) closePopup();
+  if (sessionNow?.user || firstLoginWelcome) {
+    closePopup();
+  } else if (overlay) {
+    overlay.hidden = false;
+  }
 });
 
-if (document.documentElement.classList.contains("show-new-user-welcome")) {
+if (firstLoginWelcome) {
   const studentName = document.documentElement.dataset.welcomeName || "Student";
   const greeting = document.getElementById("welcomeOrbitGreeting");
   if (greeting) greeting.textContent = `Welcome, ${studentName}!`;
