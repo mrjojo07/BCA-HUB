@@ -748,34 +748,88 @@ document.addEventListener("click",event=>{
     accountMenuToggle?.setAttribute("aria-expanded","false");
   }
 });
-// Search loaded subjects and materials, prioritising exact names.
+// Search visible items first, then search published Semester 1 filenames.
 const siteSearchForm=document.getElementById("siteSearchForm");
 const siteSearchInput=document.getElementById("siteSearchInput");
 function normalizeSearchText(value){
   return String(value||"").normalize("NFKD").replace(/[\u0300-\u036f]/g,"")
     .toLocaleLowerCase().replace(/\.pdf$/i,"").replace(/[^a-z0-9]+/g," ").trim().replace(/\s+/g," ");
 }
-siteSearchForm?.addEventListener("submit",event=>{
+siteSearchForm?.addEventListener("submit",async event=>{
   event.preventDefault();
-  const rawQuery=(siteSearchInput?.value||"").trim();
-  const query=normalizeSearchText(rawQuery);
+  const query=normalizeSearchText(siteSearchInput?.value||"");
   if(!query)return;
+  const browser=document.getElementById("subjectBrowser");
   const candidates=[...document.querySelectorAll(".semester-card,.subject-item,.material-type,.resource-card,.countdown-card")];
-  const ranked=candidates.map(node=>({node,text:normalizeSearchText(node.textContent)}))
-    .filter(item=>item.text)
-    .sort((a,b)=>{
-      const aExact=a.text===query?0:1, bExact=b.text===query?0:1;
-      if(aExact!==bExact)return aExact-bExact;
-      const aStarts=a.text.startsWith(query)?0:1, bStarts=b.text.startsWith(query)?0:1;
-      return aStarts-bStarts;
-    });
-  const match=ranked.find(item=>item.text===query)||ranked.find(item=>item.text.includes(query)||query.includes(item.text));
+  const ranked=candidates.map(node=>({node,text:normalizeSearchText(node.textContent)})).filter(item=>item.text);
+  const match=ranked.find(item=>item.text===query)||ranked.find(item=>item.text.includes(query));
   if(match){
     match.node.scrollIntoView({behavior:"smooth",block:"center"});
     match.node.classList.add("search-match-highlight");
     window.setTimeout(()=>match.node.classList.remove("search-match-highlight"),1800);
-  }else{
-    const browser=document.getElementById("subjectBrowser");
-    if(browser){browser.hidden=false;browser.innerHTML='<p class="browser-empty">No matching item found. Try the subject or file name, or open its semester/category first.</p>';browser.scrollIntoView({behavior:"smooth",block:"center"});}
+    return;
+  }
+  if(!browser)return;
+  browser.hidden=false;
+  browser.innerHTML='<p class="browser-empty">Searching published study materials…</p>';
+  browser.scrollIntoView({behavior:"smooth",block:"center"});
+  const categories=[
+    {key:"notes",label:"Notes"},
+    {key:"important-questions",label:"Important Questions"},
+    {key:"previous-year-questions",label:"Previous Year Questions"}
+  ];
+  const isPyqQuery=query.includes("previous year")||query.includes("pyq")||query.includes("question paper");
+  const searchCategories=isPyqQuery?categories.filter(item=>item.key==="previous-year-questions"):categories;
+  const results=[];
+  try{
+    for(const subject of (semesterSubjects[1]||[])){
+      const slug=subjectSlug(subject);
+      for(const category of searchCategories){
+        const folder="resources/semester-1/"+category.key+"/"+slug;
+        const [storageResult,githubResponse]=await Promise.all([
+          supabase.storage.from("bca-hub-materials").list(folder,{limit:100,sortBy:{column:"name",order:"asc"}}),
+          fetch("https://api.github.com/repos/mrjojo07/BCA-HUB/contents/"+folder,{headers:{Accept:"application/vnd.github+json"}})
+        ]);
+        if(storageResult.error)throw storageResult.error;
+        const files=(storageResult.data||[]).filter(file=>file.id&&file.name).map(file=>({
+          name:file.name.replace(/^[0-9a-f-]{36}-/i,""),
+          url:"https://efbkhmfekfujbwfdpfhk.supabase.co/storage/v1/object/public/bca-hub-materials/"+folder+"/"+encodeURIComponent(file.name),
+          category:category.label,subject
+        }));
+        if(githubResponse.ok){
+          const remote=await githubResponse.json();
+          remote.filter(file=>file.type==="file").forEach(file=>files.push({
+            name:file.name,url:file.download_url||file.html_url,category:category.label,subject
+          }));
+        }
+        files.forEach(file=>{
+          if((isPyqQuery||normalizeSearchText(file.name).includes(query))&&!results.some(item=>item.url===file.url))results.push(file);
+        });
+      }
+    }
+    browser.replaceChildren();
+    const heading=document.createElement("div");heading.className="browser-heading";
+    const title=document.createElement("div");title.innerHTML='<div class="eyebrow">SEARCH RESULTS</div><h3>Study materials</h3>';
+    const close=document.createElement("button");close.type="button";close.className="browser-close";close.textContent="Close";
+    close.addEventListener("click",()=>{browser.hidden=true;});
+    heading.append(title,close);browser.append(heading);
+    if(!results.length){
+      const empty=document.createElement("p");empty.className="browser-empty";
+      empty.textContent="No matching published files found in the available Semester 1 folders.";
+      browser.append(empty);
+    }else{
+      const list=document.createElement("div");list.className="subject-list";
+      results.forEach(file=>{
+        const row=document.createElement("div");row.className="subject-item";
+        const name=document.createElement("strong");name.textContent=file.name;
+        const detail=document.createElement("small");detail.textContent=file.subject+" · "+file.category;
+        const link=document.createElement("a");link.className="subject-arrow";link.href=file.url;link.target="_blank";link.rel="noopener noreferrer";link.textContent="Open ↗";
+        row.append(name,detail,link);list.append(row);
+      });
+      browser.append(list);
+    }
+  }catch(error){
+    browser.innerHTML='<p class="browser-empty">Search could not load materials. Please try again.</p>';
+    console.error("BCA SYNC search error:",error);
   }
 });
