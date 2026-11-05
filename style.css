@@ -1121,7 +1121,7 @@ body.premium-mode .admin-footnote,body.premium-mode .admin-intro,body.premium-mo
 .account-dropdown a,.account-dropdown button{display:block;width:100%;padding:11px 12px;border:0;border-radius:8px;background:transparent;color:#e6efff;text-align:left;font:600 12px "DM Sans",sans-serif;cursor:pointer}
 .account-dropdown a:hover,.account-dropdown button:hover{background:#142b49;color:#7fc1ff}
 .sidebar-backdrop{position:fixed;inset:76px 0 0;background:#020611a8;backdrop-filter:blur(3px);z-index:29}
-.nav-links{position:fixed;z-index:30;top:76px;left:0;bottom:0;width:270px;padding:22px 16px 30px;display:flex;flex-direction:column;align-items:stretch;gap:7px;overflow-y:auto;background:linear-gradient(180deg,#071329,#050b18 75%);border-right:1px solid #1c3a61;box-shadow:18px 0 48px #0008;transform:translateX(-105%);visibility:hidden;transition:transform .25s ease,visibility .25s}
+.nav-links{display:flex;position:fixed;z-index:30;top:76px;left:0;bottom:0;width:270px;padding:22px 16px 30px;display:flex;flex-direction:column;align-items:stretch;gap:7px;overflow-y:auto;background:linear-gradient(180deg,#071329,#050b18 75%);border-right:1px solid #1c3a61;box-shadow:18px 0 48px #0008;transform:translateX(-105%);visibility:hidden;transition:transform .25s ease,visibility .25s}
 .nav-links.open{transform:translateX(0);visibility:visible}
 .sidebar-brand{display:flex;align-items:center;gap:12px;padding:4px 12px 22px;margin-bottom:8px;border-bottom:1px solid #1b3556;font:700 18px "Space Grotesk",sans-serif}
 .sidebar-brand img{width:45px;height:45px;object-fit:contain}
@@ -1158,3 +1158,6 @@ body.premium-mode .admin-footnote,body.premium-mode .admin-intro,body.premium-mo
  .header-actions .header-premium-link{padding:8px 7px;font-size:9px}
  .header-actions{gap:5px}
 }
+
+@media(max-width:650px){.nav-links.open{display:flex}}
+.search-match-highlight{outline:2px solid #d9ad3e!important;box-shadow:0 0 24px #d9ad3e55!important;transition:box-shadow .2s}
