@@ -1837,3 +1837,12 @@ body.premium-mode .saved-resources-section[hidden]{
     padding:17px!important;
   }
 }
+
+
+/* Premium menu-open state: turn the header's blue logo into warm gold. */
+body.premium-mode #brandMenuToggle[aria-expanded="true"] .brand-mark.brand-logo{
+  filter:sepia(1) saturate(2.1) hue-rotate(350deg) brightness(1.22)
+    drop-shadow(0 0 5px rgba(226,185,112,.58))
+    drop-shadow(0 2px 10px rgba(197,139,90,.42))!important;
+  transition:filter .35s ease;
+}
