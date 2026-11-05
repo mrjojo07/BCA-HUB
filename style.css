@@ -1742,3 +1742,15 @@ body:not(.premium-mode) .syllabus-link span{
   -webkit-text-fill-color:#7dd3fc!important;
   border-bottom-color:rgba(125,211,252,.55)!important;
 }
+
+
+/* Blue theme: Electric Cyan accents for hero line numbers and syllabus link. */
+body:not(.premium-mode) .code-lines em{
+  color:#22d3ee!important;
+}
+body:not(.premium-mode) .syllabus-link,
+body:not(.premium-mode) .syllabus-link span{
+  color:#22d3ee!important;
+  -webkit-text-fill-color:#22d3ee!important;
+  border-bottom-color:rgba(34,211,238,.62)!important;
+}
