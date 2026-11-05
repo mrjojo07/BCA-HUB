@@ -1779,7 +1779,7 @@ body.premium-mode .chip-notes span{
 }
 
 
-/* Subtle shine sweep across semester cards every five seconds. */
+/* Synchronized, slow premium shine across all semester cards. */
 .semester-card{
   position:relative;
   overflow:hidden;
@@ -1794,19 +1794,16 @@ body.premium-mode .chip-notes span{
   left:0;
   width:34%;
   pointer-events:none;
-  background:linear-gradient(105deg,transparent 0%,rgba(255,255,255,.04) 25%,rgba(255,255,255,.38) 50%,rgba(255,255,255,.04) 75%,transparent 100%);
+  background:linear-gradient(105deg,transparent 0%,rgba(255,255,255,.035) 25%,rgba(255,255,255,.30) 50%,rgba(255,255,255,.035) 75%,transparent 100%);
   transform:translateX(-160%) skewX(-22deg);
-  animation:semesterCardShine 5s ease-in-out infinite;
+  animation:semesterCardShine 8s ease-in-out infinite;
 }
-.semester-card:nth-child(2)::after{animation-delay:.35s}
-.semester-card:nth-child(3)::after{animation-delay:.7s}
-.semester-card:nth-child(4)::after{animation-delay:1.05s}
 body.premium-mode .semester-card::after{
-  background:linear-gradient(105deg,transparent 0%,rgba(255,226,164,.05) 25%,rgba(255,232,177,.48) 50%,rgba(255,226,164,.05) 75%,transparent 100%);
+  background:linear-gradient(105deg,transparent 0%,rgba(255,226,164,.045) 25%,rgba(255,232,177,.42) 50%,rgba(255,226,164,.045) 75%,transparent 100%);
 }
 @keyframes semesterCardShine{
   0%{transform:translateX(-160%) skewX(-22deg)}
-  16%,100%{transform:translateX(360%) skewX(-22deg)}
+  65%,100%{transform:translateX(360%) skewX(-22deg)}
 }
 @media(prefers-reduced-motion:reduce){
   .semester-card::after{animation:none!important;display:none!important}
