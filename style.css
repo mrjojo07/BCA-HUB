@@ -1809,3 +1809,31 @@ body.premium-mode .semester-card::after{
 @media(prefers-reduced-motion:reduce){
   .semester-card::after{animation:none!important;display:none!important}
 }
+
+
+/* Premium theme: keep the Saved Notes library as a visible floating panel. */
+body.premium-mode .saved-resources-section{
+  position:fixed!important;
+  z-index:1200!important;
+  top:82px!important;
+  right:22px!important;
+  left:auto!important;
+  width:min(440px,calc(100vw - 28px))!important;
+  max-height:calc(100vh - 104px)!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  margin:0!important;
+  padding:22px!important;
+}
+body.premium-mode .saved-resources-section[hidden]{
+  display:none!important;
+}
+@media(max-width:600px){
+  body.premium-mode .saved-resources-section{
+    top:72px!important;
+    right:10px!important;
+    width:calc(100vw - 20px)!important;
+    max-height:calc(100vh - 84px)!important;
+    padding:17px!important;
+  }
+}
