@@ -1553,8 +1553,8 @@ body.premium-mode main .about-section h2 span{
 body.premium-mode #savedNotesHeroButton,
 body.premium-mode .hero-actions #savedNotesHeroButton,
 body.premium-mode .saved-notes-button{
-  color:#17110b!important;
-  -webkit-text-fill-color:#17110b!important;
+  color:#21160d!important;
+  -webkit-text-fill-color:#21160d!important;
 }
 body.premium-mode #savedNotesHeroButton svg,
-body.premium-mode .saved-notes-button svg{stroke:#17110b!important}
+body.premium-mode .saved-notes-button svg{stroke:#21160d!important}
