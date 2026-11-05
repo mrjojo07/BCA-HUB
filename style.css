@@ -1463,3 +1463,26 @@ body.premium-mode .browser-empty{color:#c9b99f!important}
 body.premium-mode .semester-card:focus-visible,
 body.premium-mode .subject-item:focus-visible,
 body.premium-mode .browser-close:focus-visible{outline-color:#e0b77a!important}
+
+
+/* Premium material cards: contrasting royal-wine surface against the black and gold shell. */
+body.premium-mode .material-type{
+  background:linear-gradient(135deg,#38202d 0%,#281622 48%,#1b101a 100%)!important;
+  border:1px solid rgba(191,145,135,.58)!important;
+  box-shadow:0 12px 28px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,224,210,.10),inset 0 -18px 34px rgba(8,4,9,.18)!important;
+  position:relative;overflow:hidden;
+}
+body.premium-mode .material-type::before{
+  content:"";position:absolute;inset:0 auto 0 0;width:3px;
+  background:linear-gradient(180deg,#f0d29a,#bd845f 55%,#8d596d);
+  opacity:.9;
+}
+body.premium-mode .material-type:hover{
+  background:linear-gradient(135deg,#482638 0%,#321b2b 52%,#21131f 100%)!important;
+  border-color:#d5ad9a!important;
+  box-shadow:0 16px 32px rgba(0,0,0,.42),0 0 20px rgba(155,91,112,.16),inset 0 1px 0 rgba(255,230,215,.13)!important;
+}
+body.premium-mode .material-type>span{color:#e4b98d!important;text-shadow:0 0 14px rgba(228,185,141,.24)}
+body.premium-mode .material-type h4{color:#ffe8d2!important}
+body.premium-mode .material-type p{color:#d7c0c1!important}
+body.premium-mode .material-type small{color:#e5bd87!important}
