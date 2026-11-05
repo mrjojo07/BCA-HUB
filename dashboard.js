@@ -121,9 +121,8 @@ async function loadDashboard() {
   const { data: userData, error: userError } = await supabase.auth.getUser();
   const user = userData?.user;
   const trustedMeta=user?.app_metadata||{};
-  if(trustedMeta.role==="admin"||trustedMeta.admin===true||trustedMeta.premium===true||trustedMeta.premium_access===true){
-    document.body.classList.add("premium-mode");
-  }
+  const hasPremiumAccess=trustedMeta.role==="admin"||trustedMeta.admin===true||trustedMeta.premium===true||trustedMeta.premium_access===true;
+  document.body.classList.toggle("premium-mode",hasPremiumAccess&&sessionStorage.getItem("bca-sync-experience")==="premium");
   if (userError || !user) {
     message("Please log in to view your student dashboard.", "error");
     const link = document.createElement("a");
