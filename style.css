@@ -1547,3 +1547,14 @@ body.premium-mode main .about-section h2 span{
   background:none!important;
   text-shadow:none!important;
 }
+
+
+/* Premium saved notes action keeps dark text on its gold surface. */
+body.premium-mode #savedNotesHeroButton,
+body.premium-mode .hero-actions #savedNotesHeroButton,
+body.premium-mode .saved-notes-button{
+  color:#17110b!important;
+  -webkit-text-fill-color:#17110b!important;
+}
+body.premium-mode #savedNotesHeroButton svg,
+body.premium-mode .saved-notes-button svg{stroke:#17110b!important}
