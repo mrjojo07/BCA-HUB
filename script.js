@@ -14,34 +14,21 @@ function applyBcaPremiumTheme(user){
   const shouldAnimate=enabled&&sessionStorage.getItem("bca-sync-premium-transition")==="1";
   if(shouldAnimate){
     sessionStorage.removeItem("bca-sync-premium-transition");
-    const selector=".site-header,.hero,.code-card,.floating-chip,.semester-section,.semester-card,.community-upload-section,.countdown-section,.countdown-card,.saved-resources-section,.saved-resources-list,.resource-request-section,.about-section,.site-footer";
-    const parts=[...document.querySelectorAll(selector)].filter(part=>part.getClientRects().length>0);
-    if(!parts.length){
-      document.body.classList.add("premium-mode");
-      return;
-    }
-    document.body.classList.add("premium-transitioning");
-    const stepMs=850;
+    document.body.classList.remove("premium-mode","premium-transitioning");
     window.bcaPremiumTransitionTimers=[];
-    const finish=()=>{
-      document.body.classList.add("premium-mode");
-      document.body.classList.remove("premium-transitioning");
-      parts.forEach(part=>part.classList.remove("premium-part-gold"));
-      window.bcaPremiumTransitionTimers=[];
-    };
-    parts.forEach((part,index)=>{
-      const timer=window.setTimeout(()=>{
-        if(!document.body.classList.contains("premium-transitioning")) return;
-        part.classList.add("premium-part-gold");
-        if(index===parts.length-1){
-          const finishTimer=window.setTimeout(finish,900);
-          window.bcaPremiumTransitionTimers.push(finishTimer);
-        }
-      },index*stepMs);
-      window.bcaPremiumTransitionTimers.push(timer);
-    });
+    const beginTimer=window.setTimeout(()=>{
+      if(!document.body.isConnected) return;
+      document.body.classList.add("premium-transitioning","premium-mode");
+      const finishTimer=window.setTimeout(()=>{
+        document.body.classList.remove("premium-transitioning");
+        window.bcaPremiumTransitionTimers=[];
+      },2300);
+      window.bcaPremiumTransitionTimers.push(finishTimer);
+    },450);
+    window.bcaPremiumTransitionTimers.push(beginTimer);
   }else{
     document.body.classList.toggle("premium-mode",enabled);
+    document.body.classList.remove("premium-transitioning");
   }
 }
 (async()=>{
@@ -49,14 +36,12 @@ function applyBcaPremiumTheme(user){
   applyBcaPremiumTheme(session?.user||null);
   supabase.auth.onAuthStateChange((_event,nextSession)=>applyBcaPremiumTheme(nextSession?.user||null));
 })();
-
 const oldThemeButton=document.getElementById("oldThemeButton");
 oldThemeButton?.addEventListener("click",()=>{
   sessionStorage.removeItem("bca-sync-experience");
   sessionStorage.removeItem("bca-sync-premium-transition");
   (window.bcaPremiumTransitionTimers||[]).forEach(timer=>window.clearTimeout(timer));
   window.bcaPremiumTransitionTimers=[];
-  document.querySelectorAll(".premium-part-gold").forEach(part=>part.classList.remove("premium-part-gold"));
   document.body.classList.remove("premium-mode","premium-transitioning");
   oldThemeButton.blur();
 });
