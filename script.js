@@ -31,6 +31,13 @@ function applyBcaPremiumTheme(user){
   supabase.auth.onAuthStateChange((_event,nextSession)=>applyBcaPremiumTheme(nextSession?.user||null));
 })();
 
+const oldThemeButton=document.getElementById("oldThemeButton");
+oldThemeButton?.addEventListener("click",()=>{
+  sessionStorage.removeItem("bca-sync-experience");
+  sessionStorage.removeItem("bca-sync-premium-transition");
+  document.body.classList.remove("premium-mode","premium-transitioning");
+  oldThemeButton.blur();
+});
 const menuToggle = document.getElementById("menuToggle");
 
 // If the browser restores this page from its back-forward cache, reload it cleanly.
