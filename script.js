@@ -1,6 +1,18 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm";
 const supabase = createClient("https://efbkhmfekfujbwfdpfhk.supabase.co", "sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH");
 
+// Premium theme is enabled only from trusted app_metadata, never user-editable metadata.
+function applyBcaPremiumTheme(user){
+  const meta=user?.app_metadata||{};
+  const enabled=meta.role==="admin"||meta.admin===true||meta.premium===true||meta.premium_access===true;
+  document.body.classList.toggle("premium-mode",enabled);
+}
+(async()=>{
+  const {data:{session}}=await supabase.auth.getSession();
+  applyBcaPremiumTheme(session?.user||null);
+  supabase.auth.onAuthStateChange((_event,nextSession)=>applyBcaPremiumTheme(nextSession?.user||null));
+})();
+
 const menuToggle = document.getElementById("menuToggle");
 
 // If the browser restores this page from its back-forward cache, reload it cleanly.
