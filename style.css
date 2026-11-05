@@ -1855,3 +1855,10 @@ body.premium-mode .nav-links.open .sidebar-brand img{
     drop-shadow(0 2px 10px rgba(197,139,90,.42))!important;
   transition:filter .35s ease;
 }
+
+
+/* Old Theme: disable the semester-card shine; keep it only in Premium Theme. */
+body:not(.premium-mode) .semester-card::after{
+  animation:none!important;
+  display:none!important;
+}
