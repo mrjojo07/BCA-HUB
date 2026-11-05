@@ -1560,12 +1560,10 @@ body.premium-mode #savedNotesHeroButton svg,
 body.premium-mode .saved-notes-button svg{stroke:#21160d!important}
 
 
-/* Premium styling for the student dashboard only. */
+/* Premium dashboard canvas: deep black behind the existing cards. */
 body.dashboard-page.premium-mode{
-  background:
-    radial-gradient(ellipse at 16% 0%,rgba(197,139,90,.13),transparent 34%),
-    radial-gradient(ellipse at 88% 18%,rgba(226,190,132,.08),transparent 30%),
-    #090806!important;
+  background:#000000!important;
+  background-image:none!important;
   color:#f5eee3!important;
 }
 body.dashboard-page.premium-mode .site-header{
