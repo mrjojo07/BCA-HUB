@@ -6,7 +6,10 @@ const supabase = createClient("https://efbkhmfekfujbwfdpfhk.supabase.co", "sb_pu
 function applyBcaPremiumTheme(user){
   const meta=user?.app_metadata||{};
   const hasAccess=meta.role==="admin"||meta.admin===true;
-  if(!user) sessionStorage.removeItem("bca-sync-experience");
+  if(!user){
+    sessionStorage.removeItem("bca-sync-experience");
+    sessionStorage.removeItem("bca-sync-premium-transition");
+  }
   const enabled=hasAccess&&sessionStorage.getItem("bca-sync-experience")==="premium";
   const shouldAnimate=enabled&&sessionStorage.getItem("bca-sync-premium-transition")==="1";
   if(shouldAnimate){
@@ -18,24 +21,17 @@ function applyBcaPremiumTheme(user){
       return;
     }
     document.body.classList.add("premium-transitioning");
-    let completed=0;
+    const stepMs=850;
     const finish=()=>{
-      completed++;
-      if(completed===parts.length){
-        document.body.classList.add("premium-mode");
-        document.body.classList.remove("premium-transitioning");
-        document.querySelectorAll(".premium-part-wash").forEach(wash=>wash.remove());
-        document.querySelectorAll(".premium-part-transition").forEach(part=>part.classList.remove("premium-part-transition"));
-      }
+      document.body.classList.add("premium-mode");
+      document.body.classList.remove("premium-transitioning");
+      parts.forEach(part=>part.classList.remove("premium-part-gold"));
     };
     parts.forEach((part,index)=>{
-      part.classList.add("premium-part-transition");
-      const wash=document.createElement("span");
-      wash.className="premium-part-wash";
-      wash.setAttribute("aria-hidden","true");
-      wash.style.animationDelay=`${index*650}ms`;
-      wash.addEventListener("animationend",finish,{once:true});
-      part.prepend(wash);
+      window.setTimeout(()=>{
+        part.classList.add("premium-part-gold");
+        if(index===parts.length-1) window.setTimeout(finish,900);
+      },index*stepMs);
     });
   }else{
     document.body.classList.toggle("premium-mode",enabled);
