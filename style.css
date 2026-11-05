@@ -1678,3 +1678,11 @@ body.dashboard-page.premium-mode,
 body.dashboard-page.premium-mode .dashboard-main{
   background-color:#090806!important;
 }
+
+
+/* Final premium dashboard canvas override: defeat legacy transparent dashboard rule. */
+html body.dashboard-page.premium-mode,
+html body.dashboard-page.premium-mode .dashboard-main{
+  background:#090806!important;
+  background-color:#090806!important;
+}
