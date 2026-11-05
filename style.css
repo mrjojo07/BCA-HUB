@@ -1796,15 +1796,15 @@ body.premium-mode .chip-notes span{
   pointer-events:none;
   background:linear-gradient(105deg,transparent 0%,rgba(255,255,255,.035) 25%,rgba(255,255,255,.30) 50%,rgba(255,255,255,.035) 75%,transparent 100%);
   transform:translateX(-160%) skewX(-22deg);
-  animation:semesterCardShine 8s ease-in-out infinite;
+  animation:semesterCardShine 6s linear infinite;
 }
 body.premium-mode .semester-card::after{
   background:linear-gradient(105deg,transparent 0%,rgba(255,226,164,.045) 25%,rgba(255,232,177,.42) 50%,rgba(255,226,164,.045) 75%,transparent 100%);
 }
 @keyframes semesterCardShine{
   0%{transform:translateX(-160%) skewX(-22deg)}
-  68%{transform:translateX(-10%) skewX(-22deg)}
-  80%,100%{transform:translateX(360%) skewX(-22deg)}
+  62%{transform:translateX(-10%) skewX(-22deg)}
+  74%,100%{transform:translateX(360%) skewX(-22deg)}
 }
 @media(prefers-reduced-motion:reduce){
   .semester-card::after{animation:none!important;display:none!important}
