@@ -1509,3 +1509,16 @@ body.premium-mode .learning-progress input[type=checkbox]{accent-color:#c58b5a!i
 /* Keep study category titles in clean white for readability. */
 body.premium-mode .material-type h4,
 body.premium-mode .learning-progress h4{color:#f5f5f5!important}
+
+
+/* Restore the previous dark bronze surface for study category cards. */
+body.premium-mode .material-type{
+  background:linear-gradient(145deg,#21180f 0%,#120e09 72%)!important;
+  border:1px solid rgba(197,139,90,.48)!important;
+  box-shadow:0 10px 26px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,235,195,.055)!important;
+}
+body.premium-mode .material-type:hover{
+  background:linear-gradient(145deg,#302115,#191109)!important;
+  border-color:#e0b77a!important;
+  box-shadow:0 14px 30px rgba(0,0,0,.4),0 0 18px rgba(197,139,90,.12)!important;
+}
