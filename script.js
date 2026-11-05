@@ -125,7 +125,7 @@ async function showMaterials(category, moduleNumber = 0) {
       for (const item of (premiumRows || [])) {
         const { data: signedFile, error: signedError } = await supabase.storage
           .from("bca-premium-materials")
-          .createSignedUrl(item.storage_path, 3600);
+          .createSignedUrl(item.storage_path, 600);
         if (signedError) throw signedError;
         files.push({
           name: item.title || item.storage_path.split("/").pop(),
@@ -168,7 +168,7 @@ async function showMaterials(category, moduleNumber = 0) {
         name: file.name, url: link.href, subject: currentSubject,
         category: labels[category], semester: currentSemester
       }, save));
-      row.append(title, link, save);
+      if (file.premium) row.append(title, link); else row.append(title, link, save);
       list.appendChild(row);
       if (/\.(png|jpe?g|webp|gif)$/i.test(file.name)) {
         const preview = document.createElement('img');
