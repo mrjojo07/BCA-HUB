@@ -21,39 +21,39 @@
   <link rel="stylesheet" href="style.css?v=44">
   <link rel="stylesheet" href="welcome-auth.css?v=14">
   <script>try{if(sessionStorage.getItem("bcaSyncNewUserWelcome")==="1"){document.documentElement.classList.add("show-new-user-welcome");document.documentElement.dataset.welcomeName=sessionStorage.getItem("bcaSyncWelcomeName")||"Student";sessionStorage.removeItem("bcaSyncNewUserWelcome");sessionStorage.removeItem("bcaSyncWelcomeName");}}catch(e){}</script>
-  <style>html.show-new-user-welcome .header-dashboard,html.show-new-user-welcome .header-shortcuts,html.show-new-user-welcome #menuToggle,html.show-new-user-welcome .nav-links{display:none!important}html.show-new-user-welcome,html.show-new-user-welcome body{overflow:hidden!important;overscroll-behavior:none!important;touch-action:none}html.show-new-user-welcome body{position:fixed;inset:0;width:100%}</style>
+  <style>html.show-new-user-welcome .header-actions,html.show-new-user-welcome .header-search,html.show-new-user-welcome #brandMenuToggle,html.show-new-user-welcome .nav-links{display:none!important}html.show-new-user-welcome,html.show-new-user-welcome body{overflow:hidden!important;overscroll-behavior:none!important;touch-action:none}html.show-new-user-welcome body{position:fixed;inset:0;width:100%}</style>
   <script type="module" src="script.js?v=52"></script>
 </head>
 <body>
   <header class="site-header">
-    <a class="brand" href="#" aria-label="BCA SYNC home"><img class="brand-mark brand-logo" src="assets/bca-sync-logo.svg?v=3" alt="" aria-hidden="true"><span>BCA <b>SYNC</b></span></a>
-    <div class="header-shortcuts">
-      <div class="header-top-row">
-        
-        <div class="notification-wrap" id="notificationWrap">
-          <button class="notification-bell" id="notificationBell" type="button" aria-label="Notifications" aria-expanded="false" aria-controls="notificationPanel">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>
-            <span class="notification-count" id="notificationCount" hidden>0</span>
-          </button>
-          <section class="notification-panel" id="notificationPanel" aria-label="Notifications" hidden>
-            <div class="notification-panel-head"><div><strong>Notifications</strong><small id="notificationSummary">Your BCA SYNC updates</small></div><button type="button" id="markAllNotificationsRead" class="notification-mark-all">Mark all read</button></div>
-            <div class="notification-list" id="notificationList" aria-live="polite"><p class="notification-empty">Sign in to view your notifications.</p></div>
-          </section>
-        </div>
+    <a class="brand" id="brandMenuToggle" href="#" aria-label="Open BCA SYNC menu" aria-expanded="false" aria-controls="navLinks"><img class="brand-mark brand-logo" src="assets/bca-sync-logo.svg?v=3" alt="" aria-hidden="true"><span>BCA <b>SYNC</b></span></a>
+    <form class="header-search" id="siteSearchForm" role="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg><input id="siteSearchInput" type="search" placeholder="Search notes, subjects..." aria-label="Search BCA SYNC"><button type="submit" aria-label="Search">Search</button></form>
+    <div class="header-actions">
+      <a class="header-premium-link" href="premium.html" aria-label="Open BCA SYNC Premium"><span class="premium-spark">♛</span> Premium</a>
+      <div class="notification-wrap" id="notificationWrap">
+        <button class="notification-bell" id="notificationBell" type="button" aria-label="Notifications" aria-expanded="false" aria-controls="notificationPanel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg><span class="notification-count" id="notificationCount" hidden>0</span></button>
+        <section class="notification-panel" id="notificationPanel" aria-label="Notifications" hidden><div class="notification-panel-head"><div><strong>Notifications</strong><small id="notificationSummary">Your BCA SYNC updates</small></div><button type="button" id="markAllNotificationsRead" class="notification-mark-all">Mark all read</button></div><div class="notification-list" id="notificationList" aria-live="polite"><p class="notification-empty">Sign in to view your notifications.</p></div></section>
       </div>
+      <div class="account-menu-wrap"><button class="account-button" id="accountMenuToggle" type="button" aria-label="Account menu" aria-expanded="false"><span class="account-avatar">A</span><span class="account-chevron">⌄</span></button><div class="account-dropdown" id="accountDropdown" hidden><a href="dashboard.html">My Dashboard</a><a href="login.html" id="accountLoginLink">Log in</a><button type="button" id="accountLogoutButton" hidden>Log out</button></div></div>
     </div>
-    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open navigation" aria-expanded="false" onclick="const nav=document.getElementById('navLinks');const opened=nav.classList.toggle('open');this.setAttribute('aria-expanded',String(opened));this.setAttribute('aria-label',opened?'Close navigation':'Open navigation');">☰</button>
-    <nav class="nav-links" id="navLinks">
-<a href="#semesters">Semesters</a><a href="#feedback" id="openFeedbackMenu">Feedback</a><a href="#about">About</a><button class="nav-admin" id="installAppButton" type="button">Install App ↓</button><a class="nav-admin" id="studentLoginMenu" href="login.html">Student Login <span>↗</span></a>
-<a class="nav-admin" href="admin.html">Admin Panel <span>↗</span></a>
-      <button class="nav-admin" id="menuLogout" type="button" hidden>Log out</button>
-    </nav>
   </header>
-  <div class="upload-notes-bar">
-    <a class="header-dashboard" href="dashboard.html" style="margin:0">My Dashboard</a>
-    <a class="header-premium-link" href="premium.html" aria-label="Open BCA SYNC Premium"><span class="premium-spark">✦</span> Premium</a>
-    <a class="header-upload-notes" href="#communityUpload" id="openCommunityUpload">↑ Upload Notes</a>
-  </div>
+  <div class="sidebar-backdrop" id="sidebarBackdrop" hidden></div>
+  <nav class="nav-links" id="navLinks" aria-label="Main navigation">
+    <div class="sidebar-brand"><img src="assets/bca-sync-logo.svg?v=3" alt=""><strong>BCA <span>SYNC</span></strong></div>
+    <a class="sidebar-link active" href="#"><span>⌂</span> Home</a>
+    <a class="sidebar-link" href="dashboard.html">▥ &nbsp; My Dashboard</a>
+    <a class="sidebar-link sidebar-premium" href="premium.html">♛ &nbsp; Premium</a>
+    <a class="sidebar-link" href="#communityUpload" id="openCommunityUpload">⇧ &nbsp; Upload Notes</a>
+    <a class="sidebar-link" href="dashboard.html#saved">▣ &nbsp; Saved</a>
+    <button class="sidebar-link sidebar-notifications" id="sidebarNotifications" type="button">♧ &nbsp; Notifications</button>
+    <a class="sidebar-link" href="#feedback" id="openFeedbackMenu">✉ &nbsp; Feedback</a>
+    <a class="sidebar-link" href="#about">ⓘ &nbsp; About</a>
+    <a class="sidebar-link" href="admin.html">⚙ &nbsp; Admin Panel</a>
+    <button class="sidebar-link" id="installAppButton" type="button">⇩ &nbsp; Install BCA SYNC</button>
+    <a class="sidebar-link" id="studentLoginMenu" href="login.html">⇥ &nbsp; Student Login</a>
+    <button class="sidebar-link" id="menuLogout" type="button" hidden>⇥ &nbsp; Logout</button>
+  </nav>
+  <div class="upload-notes-bar"><a class="header-upload-notes" href="#communityUpload" id="openCommunityUploadBar">↑ Upload Notes</a></div>
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm";
     const supabase = createClient("https://efbkhmfekfujbwfdpfhk.supabase.co", "sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH");
@@ -143,6 +143,8 @@
     }
 
     const communityLink = document.getElementById("openCommunityUpload");
+    const communityLinkBar = document.getElementById("openCommunityUploadBar");
+    communityLinkBar?.addEventListener("click", event => { event.preventDefault(); communityLink?.click(); });
     const communitySection = document.getElementById("communityUpload");
     const communityForm = document.getElementById("communityUploadForm");
     const communityStatus = document.getElementById("communityUploadStatus");
@@ -162,7 +164,8 @@
       event.preventDefault();
       communitySection.hidden = false;
       document.getElementById("navLinks")?.classList.remove("open");
-      document.getElementById("menuToggle")?.setAttribute("aria-expanded","false");
+      document.getElementById("brandMenuToggle")?.setAttribute("aria-expanded","false");
+      document.getElementById("sidebarBackdrop")?.setAttribute("hidden","");
       communitySection.scrollIntoView({behavior:"smooth",block:"start"});
     });
     communitySemester?.addEventListener("change", () => {
