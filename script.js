@@ -22,16 +22,23 @@ function applyBcaPremiumTheme(user){
     }
     document.body.classList.add("premium-transitioning");
     const stepMs=850;
+    window.bcaPremiumTransitionTimers=[];
     const finish=()=>{
       document.body.classList.add("premium-mode");
       document.body.classList.remove("premium-transitioning");
       parts.forEach(part=>part.classList.remove("premium-part-gold"));
+      window.bcaPremiumTransitionTimers=[];
     };
     parts.forEach((part,index)=>{
-      window.setTimeout(()=>{
+      const timer=window.setTimeout(()=>{
+        if(!document.body.classList.contains("premium-transitioning")) return;
         part.classList.add("premium-part-gold");
-        if(index===parts.length-1) window.setTimeout(finish,900);
+        if(index===parts.length-1){
+          const finishTimer=window.setTimeout(finish,900);
+          window.bcaPremiumTransitionTimers.push(finishTimer);
+        }
       },index*stepMs);
+      window.bcaPremiumTransitionTimers.push(timer);
     });
   }else{
     document.body.classList.toggle("premium-mode",enabled);
@@ -47,6 +54,9 @@ const oldThemeButton=document.getElementById("oldThemeButton");
 oldThemeButton?.addEventListener("click",()=>{
   sessionStorage.removeItem("bca-sync-experience");
   sessionStorage.removeItem("bca-sync-premium-transition");
+  (window.bcaPremiumTransitionTimers||[]).forEach(timer=>window.clearTimeout(timer));
+  window.bcaPremiumTransitionTimers=[];
+  document.querySelectorAll(".premium-part-gold").forEach(part=>part.classList.remove("premium-part-gold"));
   document.body.classList.remove("premium-mode","premium-transitioning");
   oldThemeButton.blur();
 });
