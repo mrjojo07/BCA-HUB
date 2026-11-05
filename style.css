@@ -1185,6 +1185,6 @@ body.premium-mode .header-actions .header-old-theme-link{display:inline-flex;bac
 body.premium-transitioning{overflow-x:hidden}
 .premium-part-transition{position:relative!important;isolation:isolate}
 .premium-part-transition>.premium-part-wash{position:absolute;inset:0;z-index:0;display:block;pointer-events:none;border-radius:inherit;background:linear-gradient(145deg,#211a0d 0%,#151108 58%,#090909 100%);border:1px solid rgba(185,148,69,.58);box-shadow:inset 0 0 28px rgba(216,180,91,.08);opacity:0;animation:bcaPremiumPartTurn 900ms cubic-bezier(.2,.72,.18,1) forwards}
-.premium-part-transition>:not(.premium-part-wash){position:relative;z-index:1}
+.premium-part-transition>:not(.premium-part-wash):not(.hero-glow){position:relative;z-index:1}
 @keyframes bcaPremiumPartTurn{0%{opacity:0;filter:brightness(1.12)}45%{opacity:.72;filter:brightness(1.04)}100%{opacity:1;filter:brightness(1)}}
 @media(prefers-reduced-motion:reduce){.premium-part-transition>.premium-part-wash{animation-duration:80ms}}
