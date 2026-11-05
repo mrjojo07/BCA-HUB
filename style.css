@@ -1406,3 +1406,23 @@ body.premium-mode .search-match-highlight{
   body.premium-mode .hero-actions .text-link,
   body.premium-mode #savedNotesHeroButton{transition:none!important}
 }
+
+
+/* BCA SYNC gentle page entrance */
+/* Keep the opening subtle: no splash screen, no delayed content, and no layout shift. */
+@keyframes bcaSyncSoftOpen{
+  from{opacity:0;translate:0 8px}
+  to{opacity:1;translate:0 0}
+}
+.site-header,.upload-notes-bar{
+  animation:bcaSyncSoftOpen 420ms cubic-bezier(.2,.7,.25,1) both;
+}
+main > section{
+  animation:bcaSyncSoftOpen 520ms cubic-bezier(.2,.7,.25,1) both;
+}
+main > section:nth-child(2){animation-delay:35ms}
+main > section:nth-child(3){animation-delay:65ms}
+main > section:nth-child(4){animation-delay:95ms}
+@media(prefers-reduced-motion:reduce){
+  .site-header,.upload-notes-bar,main > section{animation:none!important;translate:none!important}
+}
