@@ -156,6 +156,9 @@ async function loadDashboard() {
   renderSaved(saved);
   status.textContent = "";
   content.hidden = false;
+  if (window.location.hash === "#saved") {
+    document.getElementById("saved")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 }
 $("dashboardLogout").addEventListener("click", async () => {
   $("dashboardLogout").disabled = true;
