@@ -1344,3 +1344,65 @@ body.premium-mode .site-footer{
   body.premium-mode .subject-item,
   body.premium-mode .code-card{transition:none!important}
 }
+
+
+/* Premium accent refresh: replace electric-blue details with champagne bronze. */
+body.premium-mode{
+  --premium-accent:#c58b5a;
+  --premium-accent-light:#f1d6a0;
+  --premium-accent-deep:#80552f;
+}
+body.premium-mode .brand-mark.brand-logo{
+  filter:sepia(1) saturate(1.35) hue-rotate(350deg) brightness(1.12) drop-shadow(0 2px 9px rgba(197,139,90,.32))!important;
+}
+body.premium-mode .header-search{
+  border-color:#987044!important;
+  background:linear-gradient(110deg,#17110b,#0d0b08)!important;
+  box-shadow:inset 0 1px 0 #fff1,0 0 16px rgba(197,139,90,.07)!important;
+}
+body.premium-mode .header-search svg{stroke:#e5bd7c!important}
+body.premium-mode .header-search input::placeholder{color:#bca88e!important}
+body.premium-mode .notification-bell{
+  border-color:#987044!important;background:linear-gradient(145deg,#21170f,#100d09)!important;
+  color:#e8c58e!important;box-shadow:0 0 14px rgba(197,139,90,.10)!important;
+}
+body.premium-mode .notification-bell:hover,
+body.premium-mode .notification-bell[aria-expanded="true"]{
+  border-color:#e0b77a!important;background:#392717!important;color:#fff0d0!important;
+}
+body.premium-mode .account-avatar{
+  background:linear-gradient(145deg,#d6a66d,#80502d)!important;
+  border-color:#f0cf9a!important;color:#1b120b!important;
+  box-shadow:0 0 16px rgba(197,139,90,.24)!important;
+}
+body.premium-mode .eyebrow-dot{
+  background:#d7a16a!important;box-shadow:0 0 12px rgba(215,161,106,.7)!important;
+}
+body.premium-mode .hero-actions .text-link,
+body.premium-mode #savedNotesHeroButton{
+  color:#21160d!important;
+  background:linear-gradient(115deg,#f1d6a0 0%,#c58b5a 52%,#98613b 100%)!important;
+  border:1px solid #e8c28c!important;
+  box-shadow:0 6px 20px rgba(197,139,90,.25),inset 0 1px 0 rgba(255,255,255,.38)!important;
+}
+body.premium-mode .hero-actions .text-link:hover,
+body.premium-mode #savedNotesHeroButton:hover{filter:brightness(1.09)!important;transform:translateY(-2px)}
+body.premium-mode .hero-note .note-icon,
+body.premium-mode .hero-note,
+body.premium-mode .hero .eyebrow{color:#e4bd87!important}
+body.premium-mode .code-top i:nth-child(1){background:#e0b477!important}
+body.premium-mode .code-top i:nth-child(2){background:#c58b5a!important}
+body.premium-mode .code-top i:nth-child(3){background:#8d7655!important}
+body.premium-mode .code-lines b,
+body.premium-mode .code-lines strong{color:#e6bd83!important}
+body.premium-mode .code-lines em{color:#a78b68!important}
+body.premium-mode .hero-art .orbit{border-color:rgba(197,139,90,.22)!important}
+body.premium-mode .nav-links .sidebar-link:hover,
+body.premium-mode .nav-links .sidebar-link.active{color:#fff0d0!important}
+body.premium-mode .search-match-highlight{
+  outline-color:#d5a36d!important;box-shadow:0 0 24px rgba(197,139,90,.34)!important;
+}
+@media(prefers-reduced-motion:reduce){
+  body.premium-mode .hero-actions .text-link,
+  body.premium-mode #savedNotesHeroButton{transition:none!important}
+}
