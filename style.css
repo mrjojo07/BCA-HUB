@@ -1670,3 +1670,11 @@ body.dashboard-page.premium-mode .copyright{color:#b9aa97!important}
 @media(prefers-reduced-motion:reduce){
   body.dashboard-page.premium-mode .dashboard-stat{transition:none!important}
 }
+
+
+/* Ensure the premium dashboard canvas itself stays dark on every viewport. */
+html:has(body.dashboard-page.premium-mode){background:#090806!important;color-scheme:dark}
+body.dashboard-page.premium-mode,
+body.dashboard-page.premium-mode .dashboard-main{
+  background-color:#090806!important;
+}
