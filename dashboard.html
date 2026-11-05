@@ -10,8 +10,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=44">
+  <link rel="stylesheet" href="style.css?v=47">
   <script type="module" src="dashboard.js?v=9"></script>
+<script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm";
+const supabase=createClient("https://efbkhmfekfujbwfdpfhk.supabase.co","sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH");
+async function syncPremiumTheme(){const {data:{session}}=await supabase.auth.getSession();const meta=session?.user?.app_metadata||{};const isAdmin=meta.role==="admin"||meta.admin===true;if(!isAdmin)sessionStorage.removeItem("bca-sync-experience");document.body.classList.toggle("premium-mode",isAdmin&&sessionStorage.getItem("bca-sync-experience")==="premium");}
+syncPremiumTheme();supabase.auth.onAuthStateChange(()=>syncPremiumTheme());
+</script>
 </head>
 <body class="dashboard-page">
   <header class="site-header">
