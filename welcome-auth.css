@@ -28,7 +28,7 @@ html:has(#welcomeAuthOverlay:not([hidden])),body:has(#welcomeAuthOverlay:not([hi
 .welcome-orbit-item{position:absolute;z-index:3;width:70px;height:70px;border:1px solid #4a9cdb;background:linear-gradient(145deg,#153b5d,#091827);border-radius:19px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;box-shadow:0 8px 28px #0008;animation:orbit-float 2.6s ease-in-out infinite}
 .welcome-orbit-item span{font-size:25px;color:#80c7ff;line-height:1}
 .welcome-orbit-item small{font:600 9px "DM Sans";color:#d6eaff}
-.orbit-notes{top:0;left:calc(50% - 35px);--gather-x:0px;--gather-y:calc(var(--scene-size)/2 - 35px);animation-delay:0s}.orbit-books{right:0;top:calc(50% - 35px);--gather-x:calc(-1 * (var(--scene-size)/2 - 35px));--gather-y:0px;animation-delay:.35s}.orbit-videos{bottom:0;left:calc(50% - 35px);--gather-x:0px;--gather-y:calc(-1 * (var(--scene-size)/2 - 35px));animation-delay:.7s}.orbit-ai{left:0;top:calc(50% - 35px);--gather-x:calc(var(--scene-size)/2 - 35px);--gather-y:0px;animation-delay:1.05s}
+.orbit-notes{top:0;left:calc(50% - 35px);--gather-x:0px;--gather-y:calc(var(--scene-size)/2 - 35px);animation-delay:0s}.orbit-books{right:0;top:calc(50% - 35px);--gather-x:calc(-1 * (var(--scene-size)/2 - 35px));--gather-y:0px;animation-delay:.35s}.orbit-videos{bottom:0;left:calc(50% - 35px);--gather-x:0px;--gather-y:calc(-1 * (var(--scene-size)/2 - 35px));animation-delay:.7s}.orbit-quiz{left:0;top:calc(50% - 35px);--gather-x:calc(var(--scene-size)/2 - 35px);--gather-y:0px;animation-delay:1.05s}
 .welcome-orbit-copy span{font:700 10px "DM Sans";letter-spacing:3px;color:#72bdff}.welcome-orbit-copy h2{margin:10px 0 0;font:700 clamp(22px,5vw,30px)/1.2 "Space Grotesk";letter-spacing:-.8px}
 @keyframes orbit-spin{to{transform:rotate(360deg)}}@keyframes orbit-float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-9px) scale(1.04)}}@keyframes orbit-logo-pulse{0%,100%{transform:scale(1);box-shadow:0 0 35px #168cff66,0 0 90px #168cff30}50%{transform:scale(1.07);box-shadow:0 0 48px #168cff99,0 0 110px #168cff45}}@keyframes orbit-screen-in{from{opacity:0}to{opacity:1}}
 @media(prefers-reduced-motion:reduce){.show-new-user-welcome .welcome-orbit-overlay,.welcome-orbit-ring,.welcome-orbit-item,.welcome-orbit-center{animation:none!important}}
@@ -40,11 +40,11 @@ html:has(#welcomeAuthOverlay:not([hidden])),body:has(#welcomeAuthOverlay:not([hi
 .welcome-orbit-overlay.is-exiting .welcome-orbit-item{animation:none;opacity:1;transform:none}
 .welcome-orbit-overlay.is-exiting .orbit-notes{z-index:4}
 .welcome-orbit-overlay.is-exiting .orbit-videos{z-index:5}
-.welcome-orbit-overlay.is-exiting .orbit-ai{z-index:6}
+.welcome-orbit-overlay.is-exiting .orbit-quiz{z-index:6}
 .welcome-orbit-overlay.is-exiting .orbit-books{z-index:7}
 .welcome-orbit-overlay.is-exiting .orbit-notes{animation:gather-to-center 1s cubic-bezier(.18,.72,.22,1) 0s forwards}
 .welcome-orbit-overlay.is-exiting .orbit-videos{animation:gather-to-center 1s cubic-bezier(.18,.72,.22,1) .9s forwards}
-.welcome-orbit-overlay.is-exiting .orbit-ai{animation:gather-to-center 1s cubic-bezier(.18,.72,.22,1) 1.8s forwards}
+.welcome-orbit-overlay.is-exiting .orbit-quiz{animation:gather-to-center 1s cubic-bezier(.18,.72,.22,1) 1.8s forwards}
 .welcome-orbit-overlay.is-exiting .orbit-books{animation:gather-to-center 1s cubic-bezier(.18,.72,.22,1) 2.7s forwards}
 @keyframes gather-to-center{0%{transform:translate(0,0) scale(1)}100%{transform:translate(var(--gather-x),var(--gather-y)) scale(.72)}}
 .welcome-orbit-overlay.is-exiting .welcome-orbit-ring{transform:scale(1);opacity:1;transition:none}
