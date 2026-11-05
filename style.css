@@ -1730,3 +1730,15 @@ body.premium-mode .nav-links #menuLogout:hover{
   background:rgba(255,76,88,.12)!important;
   border-color:rgba(255,98,108,.35)!important;
 }
+
+
+/* Blue theme: soft cyan accents for hero line numbers and syllabus link. */
+body:not(.premium-mode) .code-lines em{
+  color:#7dd3fc!important;
+}
+body:not(.premium-mode) .syllabus-link,
+body:not(.premium-mode) .syllabus-link span{
+  color:#7dd3fc!important;
+  -webkit-text-fill-color:#7dd3fc!important;
+  border-bottom-color:rgba(125,211,252,.55)!important;
+}
