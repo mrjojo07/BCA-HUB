@@ -1059,3 +1059,9 @@ body.image-viewer-open{overflow:hidden}
   .upload-notes-bar .install-app-button{order:0;margin-left:0;margin-right:auto}
   .upload-notes-bar .header-upload-notes{order:1;margin-left:auto;margin-right:0}
 }
+
+
+/* Keep long resource filenames inside their cards on small screens */
+.subject-item{box-sizing:border-box;width:100%;min-width:0}
+.subject-item>strong{flex:1 1 0;min-width:0;overflow-wrap:anywhere;word-break:break-word}
+.subject-item>.subject-arrow,.subject-item>.resource-save{flex:0 0 auto}
