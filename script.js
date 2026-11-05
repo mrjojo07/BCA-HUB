@@ -748,7 +748,6 @@ document.addEventListener("click",event=>{
     accountMenuToggle?.setAttribute("aria-expanded","false");
   }
 });
-document.getElementById("accountLogoutButton")?.addEventListener("click",()=>document.getElementById("menuLogout")?.click());
 document.getElementById("sidebarNotifications")?.addEventListener("click",()=>{
   setSidebarOpen(false);
   document.getElementById("notificationBell")?.click();
