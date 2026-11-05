@@ -1206,3 +1206,141 @@ body.premium-transitioning *{
   body.premium-transitioning,
   body.premium-transitioning *{transition-duration:80ms!important}
 }
+
+
+/* Premium polish: richer gold lighting, glass surfaces and gentle motion. */
+body.premium-mode{
+  background:
+    radial-gradient(ellipse at 12% 8%,rgba(190,148,65,.18),transparent 34%),
+    radial-gradient(ellipse at 88% 34%,rgba(216,180,91,.10),transparent 30%),
+    linear-gradient(145deg,#090806 0%,#12100b 48%,#070707 100%)!important;
+  background-attachment:fixed!important;
+}
+body.premium-mode .site-header{
+  background:linear-gradient(105deg,rgba(7,7,6,.97),rgba(35,27,14,.96),rgba(7,7,6,.97))!important;
+  border-bottom:1px solid rgba(226,190,105,.72)!important;
+  box-shadow:0 8px 34px rgba(0,0,0,.55),0 1px 22px rgba(216,180,91,.12)!important;
+  backdrop-filter:blur(16px);
+}
+body.premium-mode .brand b,
+body.premium-mode .section-heading h2,
+body.premium-mode .hero h1{
+  background:linear-gradient(100deg,#fff0bd 0%,#d8b45b 42%,#fff2c5 72%,#b98a36 100%);
+  background-size:220% auto;
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:bcaGoldTextShine 7s ease-in-out infinite;
+}
+@keyframes bcaGoldTextShine{0%,100%{background-position:0% center}50%{background-position:100% center}}
+body.premium-mode .hero,
+body.premium-mode .semester-section,
+body.premium-mode .countdown-section,
+body.premium-mode .community-upload-section,
+body.premium-mode .saved-resources-section,
+body.premium-mode .resource-request-section,
+body.premium-mode .about-section{
+  position:relative;isolation:isolate;overflow:hidden;
+  border:1px solid rgba(203,164,82,.42)!important;
+  box-shadow:0 18px 48px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,235,180,.07),0 0 26px rgba(190,148,65,.055)!important;
+}
+body.premium-mode .hero:before,
+body.premium-mode .semester-section:before,
+body.premium-mode .countdown-section:before,
+body.premium-mode .community-upload-section:before,
+body.premium-mode .saved-resources-section:before,
+body.premium-mode .resource-request-section:before,
+body.premium-mode .about-section:before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(ellipse at 0% 0%,rgba(231,194,105,.12),transparent 48%);
+}
+body.premium-mode .code-card,
+body.premium-mode .floating-chip,
+body.premium-mode .semester-card,
+body.premium-mode .countdown-card,
+body.premium-mode .resource-card,
+body.premium-mode .subject-item,
+body.premium-mode .saved-resources-list,
+body.premium-mode .dashboard-stat,
+body.premium-mode .dashboard-panel,
+body.premium-mode .admin-card,
+body.premium-mode .admin-section{
+  position:relative;overflow:hidden;
+  border:1px solid rgba(213,177,96,.42)!important;
+  background:linear-gradient(145deg,rgba(43,34,19,.96),rgba(13,12,9,.98) 72%)!important;
+  box-shadow:0 12px 30px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,238,190,.075)!important;
+  transition:transform .28s ease,border-color .28s ease,box-shadow .28s ease,background .28s ease!important;
+}
+body.premium-mode .semester-card:before,
+body.premium-mode .countdown-card:before,
+body.premium-mode .resource-card:before,
+body.premium-mode .subject-item:before{
+  content:"";position:absolute;inset:0 auto 0 0;width:3px;
+  background:linear-gradient(180deg,#fff0bd,#c2943d 55%,#73521d);
+  opacity:.85;pointer-events:none;
+}
+body.premium-mode .semester-card:hover,
+body.premium-mode .countdown-card:hover,
+body.premium-mode .resource-card:hover,
+body.premium-mode .subject-item:hover,
+body.premium-mode .code-card:hover{
+  transform:translateY(-4px);
+  border-color:#f0d58b!important;
+  box-shadow:0 18px 38px rgba(0,0,0,.48),0 0 24px rgba(216,180,91,.15),inset 0 1px 0 rgba(255,238,190,.12)!important;
+}
+body.premium-mode .header-actions .header-old-theme-link,
+body.premium-mode .button-gold,
+body.premium-mode .admin-action,
+body.premium-mode .header-dashboard,
+body.premium-mode .header-upload-notes{
+  background:linear-gradient(115deg,#fff0b7 0%,#d8b45b 38%,#a8792c 100%)!important;
+  border:1px solid #f1d68e!important;
+  color:#171109!important;
+  box-shadow:0 5px 18px rgba(216,180,91,.22),inset 0 1px 0 rgba(255,255,255,.48)!important;
+  transition:transform .22s ease,filter .22s ease,box-shadow .22s ease!important;
+}
+body.premium-mode .header-actions .header-old-theme-link:hover,
+body.premium-mode .button-gold:hover,
+body.premium-mode .admin-action:hover,
+body.premium-mode .header-dashboard:hover,
+body.premium-mode .header-upload-notes:hover{
+  transform:translateY(-2px);filter:brightness(1.08);
+  box-shadow:0 9px 24px rgba(216,180,91,.32)!important;
+}
+body.premium-mode .nav-links{
+  background:linear-gradient(165deg,#211a0d,#090807 76%)!important;
+  border-right:1px solid rgba(216,180,91,.48)!important;
+  box-shadow:18px 0 50px rgba(0,0,0,.58),inset -1px 0 rgba(255,224,155,.05)!important;
+}
+body.premium-mode .nav-links .sidebar-link:hover,
+body.premium-mode .nav-links .sidebar-link.active{
+  background:linear-gradient(100deg,rgba(216,180,91,.22),rgba(90,65,25,.18))!important;
+  border-color:rgba(226,190,105,.62)!important;
+  box-shadow:inset 3px 0 #e4c574,0 0 18px rgba(216,180,91,.08)!important;
+}
+body.premium-mode input:focus,
+body.premium-mode select:focus,
+body.premium-mode textarea:focus{
+  outline:2px solid rgba(226,190,105,.55)!important;
+  outline-offset:2px;box-shadow:0 0 0 5px rgba(216,180,91,.10)!important;
+}
+body.premium-mode .site-footer{
+  background:linear-gradient(180deg,#100e09,#060606)!important;
+  border-top:1px solid rgba(216,180,91,.48)!important;
+}
+@media(hover:none){
+  body.premium-mode .semester-card:hover,
+  body.premium-mode .countdown-card:hover,
+  body.premium-mode .resource-card:hover,
+  body.premium-mode .subject-item:hover,
+  body.premium-mode .code-card:hover{transform:none}
+}
+@media(prefers-reduced-motion:reduce){
+  body.premium-mode .brand b,
+  body.premium-mode .section-heading h2,
+  body.premium-mode .hero h1{animation:none}
+  body.premium-mode .semester-card,
+  body.premium-mode .countdown-card,
+  body.premium-mode .resource-card,
+  body.premium-mode .subject-item,
+  body.premium-mode .code-card{transition:none!important}
+}
