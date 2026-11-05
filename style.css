@@ -1024,8 +1024,8 @@ body.image-viewer-open{overflow:hidden}
 @media(min-width:651px){.install-app-button{display:inline-flex;align-items:center;gap:8px;padding:10px 13px;border:1px solid #2c75b7;border-radius:9px;background:#0b1b2c;color:#a8d5ff;font-size:12px;font-weight:800}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
-/* Place Install at the far left and keep Upload Notes at the far right */
-.upload-notes-bar{justify-content:space-between;gap:10px;flex-wrap:wrap}
+/* Keep Install at the left and Upload Notes at the far right */
+.upload-notes-bar{justify-content:flex-end;gap:10px;flex-wrap:wrap}
 .upload-notes-bar .install-app-button{margin-right:auto}
 .upload-notes-bar .install-app-button{
   display:inline-flex;align-items:center;justify-content:center;gap:6px;
@@ -1055,7 +1055,7 @@ body.image-viewer-open{overflow:hidden}
 
 /* App layout correction: keep Install on the left and Upload Notes on the right. */
 @media (display-mode: standalone){
-  .upload-notes-bar{justify-content:space-between}
+  .upload-notes-bar{justify-content:flex-end}
   .upload-notes-bar .install-app-button{order:0;margin-left:0;margin-right:auto}
   .upload-notes-bar .header-upload-notes{order:1;margin-left:auto;margin-right:0}
 }
@@ -1132,7 +1132,7 @@ body.premium-mode .admin-footnote,body.premium-mode .admin-intro,body.premium-mo
 .nav-links .sidebar-premium{color:#ffd66a}
 .nav-links .sidebar-notifications{appearance:none}
 .upload-notes-bar{padding:8px clamp(14px,3vw,42px) 0;background:#05080e}
-.upload-notes-bar .header-upload-notes{border-color:#dcae36;background:linear-gradient(110deg,#75500a,#c18a18);box-shadow:0 5px 18px #dcae3625}
+.upload-notes-bar .header-upload-notes{border-color:#168cff;background:linear-gradient(110deg,#0756a5,#087fe8);box-shadow:0 5px 16px rgba(0,125,235,.28)}
 @media(max-width:760px){
  .site-header{height:66px;padding:0 12px;gap:9px}
  .brand{gap:6px;font-size:15px}
