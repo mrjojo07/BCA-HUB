@@ -5,7 +5,7 @@ const supabase = createClient("https://efbkhmfekfujbwfdpfhk.supabase.co", "sb_pu
 // plus trusted access from Supabase app_metadata.
 function applyBcaPremiumTheme(user){
   const meta=user?.app_metadata||{};
-  const hasAccess=meta.role==="admin"||meta.admin===true||meta.premium===true||meta.premium_access===true;
+  const hasAccess=meta.role==="admin"||meta.admin===true;
   if(!user) sessionStorage.removeItem("bca-sync-experience");
   const enabled=hasAccess&&sessionStorage.getItem("bca-sync-experience")==="premium";
   document.body.classList.toggle("premium-mode",enabled);
