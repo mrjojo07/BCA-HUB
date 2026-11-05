@@ -1072,3 +1072,30 @@ body.image-viewer-open{overflow:hidden}
 .header-premium-link:hover{transform:translateY(-1px);box-shadow:0 0 18px rgba(201,170,96,.38);color:#10233a}
 .header-premium-link .premium-spark{color:#9b7429;font-size:15px}
 @media(max-width:650px){.header-top-row{gap:6px}.header-dashboard{margin:0;padding:8px 9px;font-size:10px}.header-premium-link{padding:8px 9px;font-size:10px}.notification-bell{width:36px;height:36px}}
+
+
+/* BCA SYNC Premium theme — trusted premium/admin sessions only */
+body.premium-mode{--premium-gold:#e5c77e;--premium-ice:#a9ddf7;background:radial-gradient(ellipse at 15% 0%,#183b55 0%,#0b1b2a 42%,#050b13 100%)!important;color:#f5f7fb}
+body.premium-mode .site-header{background:linear-gradient(100deg,#071827,#102b40 55%,#071827)!important;border-bottom:1px solid #b99a5c88!important;box-shadow:0 8px 30px #0005}
+body.premium-mode .brand b,body.premium-mode .eyebrow,body.premium-mode .section-heading h2 span,body.premium-mode .about-section h2 span{color:var(--premium-ice)!important}
+body.premium-mode .header-dashboard,body.premium-mode .dashboard-nav .dashboard-website-link,body.premium-mode .button-gold,body.premium-mode .admin-action,body.premium-mode .header-upload-notes{color:#132b3d!important;background:linear-gradient(110deg,#f3dfaa,#a9ddf7)!important;border:1px solid #e6d29a!important;box-shadow:0 5px 20px #b9d9ed30!important}
+body.premium-mode .header-premium-link{background:linear-gradient(110deg,#f3dfaa,#a9ddf7)!important;color:#132b3d!important;border-color:#f0d99b!important}
+body.premium-mode .hero,body.premium-mode .semester-section,body.premium-mode .countdown-section,body.premium-mode .community-upload-section,body.premium-mode .saved-resources-section,body.premium-mode .resource-request-section{background:linear-gradient(145deg,#0c2030,#102c40 58%,#0a1927)!important;border-color:#b99a5c55!important}
+body.premium-mode .hero-glow{background:#b7dff52b!important}
+body.premium-mode .code-card,body.premium-mode .floating-chip,body.premium-mode .semester-card,body.premium-mode .countdown-card,body.premium-mode .resource-card,body.premium-mode .subject-item,body.premium-mode .saved-resources-list,body.premium-mode .community-upload-form,body.premium-mode .resource-request-form{border-color:#b99a5c77!important;background:linear-gradient(145deg,#102b40,#0b1b2a)!important;box-shadow:0 10px 28px #0003!important}
+body.premium-mode .semester-card:hover,body.premium-mode .subject-item:hover{border-color:#a9ddf7!important}
+body.premium-mode.dashboard-page,body.premium-mode .dashboard-main{background:transparent!important}
+body.premium-mode .dashboard-stat,body.premium-mode .dashboard-panel{background:linear-gradient(145deg,#102b40,#0b1b2a)!important;border-color:#c4a76788!important;box-shadow:0 12px 32px #0004!important}
+body.premium-mode .dashboard-welcome h1,body.premium-mode .dashboard-student-name{color:#f6e6bd!important}
+body.premium-mode .dashboard-stat strong,body.premium-mode .dashboard-score{color:#bce7ff!important}
+body.premium-mode .dashboard-progress-ring{border-color:#bce7ff!important}
+body.premium-mode .about-section{background:linear-gradient(110deg,#d8eaf3,#f2e6c8)!important;color:#102b40!important}
+body.premium-mode .about-section p{color:#28465a!important}
+body.premium-mode .site-footer{border-top:1px solid #b99a5c66!important;background:#071827!important}
+body.premium-mode .admin-page,body.premium-mode .admin-main{background:transparent!important}
+body.premium-mode .admin-title span{color:#bce7ff!important}
+body.premium-mode .admin-nav,body.premium-mode .admin-login,body.premium-mode .admin-panel,body.premium-mode .admin-card,body.premium-mode .admin-section,body.premium-mode .admin-toolbar,body.premium-mode .admin-request-card,body.premium-mode .admin-bulk-guide{background:linear-gradient(145deg,#102b40,#0b1b2a)!important;border-color:#c4a76788!important;box-shadow:0 10px 28px #0003!important}
+body.premium-mode .admin-nav a,body.premium-mode .admin-back,body.premium-mode .admin-home-link{border-color:#b99a5c88!important;color:#d8efff!important}
+body.premium-mode .admin-nav a:hover{background:#1a4059!important}
+body.premium-mode input,body.premium-mode select,body.premium-mode textarea{border-color:#9ecbe0!important;background:#081a29!important;color:#f4f8ff!important}
+body.premium-mode .admin-footnote,body.premium-mode .admin-intro,body.premium-mode .admin-request-body{color:#c6d9e6!important}
