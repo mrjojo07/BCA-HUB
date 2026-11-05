@@ -8,9 +8,10 @@ function applyBcaPremiumTheme(user){
   const hasAccess=meta.role==="admin"||meta.admin===true;
   if(!user){
     sessionStorage.removeItem("bca-sync-experience");
+    localStorage.removeItem("bca-sync-experience");
     sessionStorage.removeItem("bca-sync-premium-transition");
   }
-  const enabled=hasAccess&&sessionStorage.getItem("bca-sync-experience")==="premium";
+  const enabled=hasAccess&&(sessionStorage.getItem("bca-sync-experience")==="premium"||localStorage.getItem("bca-sync-experience")==="premium");
   const shouldAnimate=enabled&&sessionStorage.getItem("bca-sync-premium-transition")==="1";
   if(shouldAnimate){
     sessionStorage.removeItem("bca-sync-premium-transition");
@@ -40,6 +41,7 @@ const oldThemeButton=document.getElementById("oldThemeButton");
 oldThemeButton?.addEventListener("click",()=>{
   sessionStorage.removeItem("bca-sync-experience");
   sessionStorage.removeItem("bca-sync-premium-transition");
+  localStorage.removeItem("bca-sync-experience");
   (window.bcaPremiumTransitionTimers||[]).forEach(timer=>window.clearTimeout(timer));
   window.bcaPremiumTransitionTimers=[];
   document.body.classList.remove("premium-mode","premium-transitioning");
