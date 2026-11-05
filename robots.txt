@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /dashboard.html
+Disallow: /login.html
+Disallow: /push-keys.html
+
+Sitemap: https://mrjojo07.github.io/BCA-HUB/sitemap.xml
