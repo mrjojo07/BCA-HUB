@@ -1168,3 +1168,8 @@ body.premium-mode .upload-notes-bar{background:#080807!important}
 
 @media(max-width:650px){.nav-links.open{display:flex}}
 .search-match-highlight{outline:2px solid #d9ad3e!important;box-shadow:0 0 24px #d9ad3e55!important;transition:box-shadow .2s}
+
+/* Premium theme blend: blue home renders first, then black and gold washes over it. */
+.premium-theme-blend{position:fixed;inset:0;z-index:99999;pointer-events:none;background:radial-gradient(ellipse at 50% 45%,rgba(245,211,126,.9) 0%,rgba(189,145,60,.72) 18%,rgba(35,27,13,.94) 48%,#070707 82%);opacity:0;transform:scale(.78);animation:bcaPremiumPageBlend 1.9s cubic-bezier(.2,.72,.18,1) forwards;transform-origin:center}
+@keyframes bcaPremiumPageBlend{0%{opacity:0;transform:scale(.78);filter:brightness(1)}28%{opacity:.48;transform:scale(1);filter:brightness(1.12)}68%{opacity:.88;transform:scale(1.12);filter:brightness(.92)}100%{opacity:1;transform:scale(1.28);filter:brightness(.78)}}
+@media(prefers-reduced-motion:reduce){.premium-theme-blend{animation-duration:.35s}}
