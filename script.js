@@ -559,7 +559,10 @@ subjectBrowser?.addEventListener("click", (event) => {
     if (close.dataset.back === "subjects") showSemester(currentSemester);
     else if (close.dataset.back === "modules") showNotesModules();
     else if (close.dataset.back === "subject") showCategories(currentSubject);
-    else subjectBrowser.hidden = true;
+    else {
+      subjectBrowser.hidden = true;
+      document.getElementById("semesterGrid")?.scrollIntoView({behavior:"smooth",block:"center"});
+    }
     return;
   }
   const item = event.target.closest("[data-subject-index]");
