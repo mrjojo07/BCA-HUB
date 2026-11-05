@@ -718,3 +718,57 @@ supabase.auth.onAuthStateChange((_event,session) => {
   window.setTimeout(loadNotifications,0);
 });
 loadNotifications();
+
+
+// Logo opens/closes the slide-out navigation; backdrop and Escape close it.
+const brandMenuToggle = document.getElementById("brandMenuToggle");
+const sidebarBackdrop = document.getElementById("sidebarBackdrop");
+function setSidebarOpen(open){
+  navLinks?.classList.toggle("open",open);
+  brandMenuToggle?.setAttribute("aria-expanded",String(open));
+  brandMenuToggle?.setAttribute("aria-label",open?"Close BCA SYNC menu":"Open BCA SYNC menu");
+  if(sidebarBackdrop) sidebarBackdrop.hidden=!open;
+}
+brandMenuToggle?.addEventListener("click",event=>{event.preventDefault();setSidebarOpen(!navLinks?.classList.contains("open"));});
+sidebarBackdrop?.addEventListener("click",()=>setSidebarOpen(false));
+navLinks?.querySelectorAll("a,button").forEach(item=>item.addEventListener("click",()=>setSidebarOpen(false)));
+document.addEventListener("keydown",event=>{if(event.key==="Escape"){setSidebarOpen(false);accountDropdown && (accountDropdown.hidden=true);accountMenuToggle?.setAttribute("aria-expanded","false");}});
+
+// Account dropdown and quick notification access.
+const accountMenuToggle=document.getElementById("accountMenuToggle");
+const accountDropdown=document.getElementById("accountDropdown");
+accountMenuToggle?.addEventListener("click",()=>{
+  const opening=accountDropdown?.hidden;
+  if(accountDropdown)accountDropdown.hidden=!opening;
+  accountMenuToggle.setAttribute("aria-expanded",String(Boolean(opening)));
+});
+document.addEventListener("click",event=>{
+  if(!event.target.closest(".account-menu-wrap")){
+    if(accountDropdown)accountDropdown.hidden=true;
+    accountMenuToggle?.setAttribute("aria-expanded","false");
+  }
+});
+document.getElementById("accountLogoutButton")?.addEventListener("click",()=>document.getElementById("menuLogout")?.click());
+document.getElementById("sidebarNotifications")?.addEventListener("click",()=>{
+  setSidebarOpen(false);
+  document.getElementById("notificationBell")?.click();
+});
+
+// Search currently loaded subjects, materials and resource cards.
+const siteSearchForm=document.getElementById("siteSearchForm");
+const siteSearchInput=document.getElementById("siteSearchInput");
+siteSearchForm?.addEventListener("submit",event=>{
+  event.preventDefault();
+  const query=(siteSearchInput?.value||"").trim().toLocaleLowerCase();
+  if(!query)return;
+  const candidates=[...document.querySelectorAll(".semester-card,.subject-item,.material-type,.resource-card,.countdown-card")];
+  const match=candidates.find(node=>node.textContent.toLocaleLowerCase().includes(query));
+  if(match){
+    match.scrollIntoView({behavior:"smooth",block:"center"});
+    match.classList.add("search-match-highlight");
+    window.setTimeout(()=>match.classList.remove("search-match-highlight"),1800);
+  }else{
+    const browser=document.getElementById("subjectBrowser");
+    if(browser){browser.hidden=false;browser.innerHTML='<p class="browser-empty">No matching item is currently visible. Open the relevant semester or subject first, then search again.</p>';browser.scrollIntoView({behavior:"smooth",block:"center"});}
+  }
+});
