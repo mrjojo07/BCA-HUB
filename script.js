@@ -1,10 +1,13 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm";
 const supabase = createClient("https://efbkhmfekfujbwfdpfhk.supabase.co", "sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH");
 
-// Premium theme is enabled only from trusted app_metadata, never user-editable metadata.
+// Premium theme requires an explicit Premium-button choice in this tab,
+// plus trusted access from Supabase app_metadata.
 function applyBcaPremiumTheme(user){
   const meta=user?.app_metadata||{};
-  const enabled=meta.role==="admin"||meta.admin===true||meta.premium===true||meta.premium_access===true;
+  const hasAccess=meta.role==="admin"||meta.admin===true||meta.premium===true||meta.premium_access===true;
+  if(!user) sessionStorage.removeItem("bca-sync-experience");
+  const enabled=hasAccess&&sessionStorage.getItem("bca-sync-experience")==="premium";
   document.body.classList.toggle("premium-mode",enabled);
 }
 (async()=>{
