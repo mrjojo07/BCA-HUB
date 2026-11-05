@@ -8,7 +8,22 @@ function applyBcaPremiumTheme(user){
   const hasAccess=meta.role==="admin"||meta.admin===true;
   if(!user) sessionStorage.removeItem("bca-sync-experience");
   const enabled=hasAccess&&sessionStorage.getItem("bca-sync-experience")==="premium";
-  document.body.classList.toggle("premium-mode",enabled);
+  const shouldAnimate=enabled&&sessionStorage.getItem("bca-sync-premium-transition")==="1";
+  if(shouldAnimate){
+    sessionStorage.removeItem("bca-sync-premium-transition");
+    const overlay=document.createElement("div");
+    overlay.className="premium-theme-blend";
+    overlay.setAttribute("aria-hidden","true");
+    document.body.appendChild(overlay);
+    document.body.classList.add("premium-transitioning");
+    overlay.addEventListener("animationend",()=>{
+      document.body.classList.add("premium-mode");
+      document.body.classList.remove("premium-transitioning");
+      overlay.remove();
+    },{once:true});
+  }else{
+    document.body.classList.toggle("premium-mode",enabled);
+  }
 }
 (async()=>{
   const {data:{session}}=await supabase.auth.getSession();
