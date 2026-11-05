@@ -44,7 +44,7 @@
     </div>
     <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open navigation" aria-expanded="false" onclick="const nav=document.getElementById('navLinks');const opened=nav.classList.toggle('open');this.setAttribute('aria-expanded',String(opened));this.setAttribute('aria-label',opened?'Close navigation':'Open navigation');">☰</button>
     <nav class="nav-links" id="navLinks">
-<a href="#semesters">Semesters</a><a href="#feedback" id="openFeedbackMenu">Feedback</a><a href="#about">About</a><a class="nav-admin" id="studentLoginMenu" href="login.html">Student Login <span>↗</span></a>
+<a href="#semesters">Semesters</a><a href="#premium">Premium</a><a href="#feedback" id="openFeedbackMenu">Feedback</a><a href="#about">About</a><a class="nav-admin" id="studentLoginMenu" href="login.html">Student Login <span>↗</span></a>
 <a class="nav-admin" href="admin.html">Admin Panel <span>↗</span></a>
       <button class="nav-admin" id="menuLogout" type="button" hidden>Log out</button>
     </nav>
@@ -323,6 +323,7 @@
       </form>
     </section>
     <section class="countdown-section" id="examCountdown"><div class="section-heading"><div><div class="eyebrow">STAY EXAM-READY</div><h2>Exam <span>countdown.</span></h2></div><p>Upcoming exam dates published by the BCA SYNC admin.</p></div><div id="examCountdownList" class="countdown-list">No exam timetable published yet.</div></section>
+    <section class="countdown-section premium-section" id="premium"><div class="section-heading"><div><div class="eyebrow">MORE WAYS TO LEARN</div><h2>BCA SYNC <span>Premium.</span></h2></div><p>Extra learning features are being planned. Details will be announced here soon.</p></div><div class="countdown-list"><article class="countdown-card"><h3>Premium is coming soon</h3><p>For now, all available BCA SYNC study materials remain free for everyone.</p></article></div></section>
     <section class="saved-resources-section" id="savedResourcesSection" hidden>
       <div class="saved-panel-heading"><div><div class="eyebrow">YOUR PERSONAL LIBRARY</div><h2>My <span>Saved Resources.</span></h2></div><button type="button" class="saved-panel-close" id="closeSavedResources" aria-label="Close saved resources">×</button></div>
       <div class="saved-resources-list" id="savedResourcesList"></div>
