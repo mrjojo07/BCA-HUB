@@ -441,7 +441,7 @@ syncPremiumTheme();supabase.auth.onAuthStateChange(()=>syncPremiumTheme());
       const files = [...(document.getElementById("materialFiles").files || [])];
       const status = document.getElementById("materialUploadStatus");
       const button = document.getElementById("uploadMaterials");
-      const accessType = document.getElementById("materialAccess").value;
+      const accessType = categorySelect.value === "answer-key" ? "premium" : document.getElementById("materialAccess").value;
       const bucket = accessType === "premium" ? "bca-premium-materials" : "bca-hub-materials";
       if (!folder) { status.textContent = "Choose semester and subject first."; return; }
       if (!files.length) { status.textContent = "Select at least one file to upload."; return; }
