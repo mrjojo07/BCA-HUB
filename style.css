@@ -2326,3 +2326,17 @@ body.premium-mode .community-upload-form input[type="file"]::file-selector-butto
   body.premium-mode .community-upload-form select,
   body.premium-mode .community-upload-form input:not([type="file"]){min-height:46px!important}
 }
+
+
+/* Home page: keep Upload Notes on the left, with Install on the right when present. */
+.upload-notes-bar{justify-content:flex-start!important}
+.upload-notes-bar .header-upload-notes{order:0!important;margin-left:0!important;margin-right:auto!important}
+.upload-notes-bar .install-app-button{order:1!important;margin-left:auto!important;margin-right:0!important}
+@media(display-mode:standalone){
+  .upload-notes-bar{justify-content:flex-start!important}
+  .upload-notes-bar .header-upload-notes{order:0!important;margin-left:0!important;margin-right:auto!important}
+  .upload-notes-bar .install-app-button{order:1!important;margin-left:auto!important;margin-right:0!important}
+}
+@media(max-width:420px){
+  .upload-notes-bar{justify-content:flex-start!important}
+}
