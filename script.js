@@ -39,6 +39,7 @@ function applyBcaPremiumTheme(user){
   }else{
     document.body.classList.toggle("premium-mode",enabled);
     document.body.classList.remove("premium-transitioning");
+    updateSidebarThemeLabel();
   }
 }
 (async()=>{
