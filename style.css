@@ -2055,3 +2055,13 @@ body.premium-mode.admin-page .admin-warning{
   background:#211a0d!important;border-color:#a9853d!important;color:#f0dfb1!important;
 }
 body.premium-mode.admin-page .admin-title span{background:none!important}
+
+
+/* Keep the full BCA SYNC ADMIN title clean white in Premium Theme. */
+body.premium-mode.admin-page .admin-title,
+body.premium-mode.admin-page .admin-title span{
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+  background:none!important;
+  animation:none!important;
+}
