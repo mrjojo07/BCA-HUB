@@ -83,6 +83,11 @@
       "mathematical-foundation-for-computer-applications":"Mathematical Foundation for Computer Applications",
       "discrete-structures-for-computer-applications":"Discrete Structures for Computer Applications"
     };
+    const query=new URLSearchParams(window.location.search);
+    const requestedSubject=query.get("subject");
+    if(requestedSubject&&subjects[requestedSubject])$("dnaSubject").value=requestedSubject;
+    const requestedSemester=query.get("semester");
+    if(requestedSemester&&$("dnaSemester").querySelector('option[value="'+requestedSemester+'"]'))$("dnaSemester").value=requestedSemester;
     const stop=new Set("about above after again against all also an and any are as at be because been before being between both but by can could did do does doing down during each few for from further had has have having he her here hers herself him himself his how i if in into is it its itself just me more most my myself no nor not of off on once only or other our ours ourselves out over own same she should so some such than that the their theirs them themselves then there these they this those through to too under until up very was we were what when where which while who whom why will with would you your".split(" "));
     function cleanText(s){return s.toLowerCase().replace(/[^a-z0-9\s-]/g," ").replace(/\s+/g," ").trim();}
     function extractTerms(text){
