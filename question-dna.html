@@ -70,8 +70,8 @@
       <section class="dna-panel"><h2>Paper year coverage</h2><div id="dnaYears" class="dna-empty">Year distribution will appear here.</div></section>
     </div>
     <div class="dna-results" style="margin-top:14px">
-      <section class="dna-panel dna-wide"><h2>Repeated Questions</h2><div id="dnaRepeated" class="dna-empty">Repeated questions will appear here after analysis.</div></section>
-      <section class="dna-panel"><h2>Important Question Ranking</h2><div id="dnaRanking" class="dna-empty">Priority ranking will appear here.</div></section>
+      <section class="dna-panel dna-wide"><h2>Repeated Questions — All Matches</h2><div id="dnaRepeated" class="dna-empty">Repeated questions will appear here after analysis.</div></section>
+      <section class="dna-panel"><h2>Important Question Ranking — All</h2><div id="dnaRanking" class="dna-empty">Priority ranking will appear here.</div></section>
       <section class="dna-panel"><h2>Module-wise Analysis</h2><div id="dnaModules" class="dna-empty">Module mapping will appear here.</div></section>
     </div>
     <section class="dna-panel" style="margin-top:14px"><h2>Source papers</h2><div id="dnaFiles" class="dna-files"><p class="dna-empty">No papers scanned yet.</p></div></section>
@@ -208,15 +208,21 @@
       }
       return groups.filter(g=>g.items.length>=2).sort((a,b)=>b.items.length-a.items.length);
     }
-    function renderQuestionCards(target,groups,limit=12){
+    function renderQuestionCards(target,groups){
       target.replaceChildren();
       if(!groups.length){target.className="dna-empty";target.textContent="No repeated full questions could be matched confidently. Try papers with selectable text.";return;}
       target.className="dna-list";
-      groups.slice(0,limit).forEach((group,index)=>{
+      groups.forEach((group,index)=>{
         const card=document.createElement("div");card.className="dna-question";
         const title=document.createElement("strong");title.textContent=(index+1)+". "+group.representative;
-        const meta=document.createElement("small");meta.textContent=group.items.length+" papers · "+[...new Set(group.items.map(x=>yearFrom(x.paper.name)))].join(", ");
-        card.append(title,meta);target.append(card);
+        const meta=document.createElement("small");meta.textContent="Repeated in "+group.items.length+" separate papers · "+[...new Set(group.items.map(x=>yearFrom(x.paper.name)))].join(", ");
+        const occurrences=document.createElement("div");occurrences.className="dna-files";
+        group.items.forEach(item=>{
+          const occurrence=document.createElement("div");occurrence.className="dna-file";
+          occurrence.textContent=yearFrom(item.paper.name)+" — "+item.paper.name+"\nMatched wording: "+item.question;
+          occurrences.append(occurrence);
+        });
+        card.append(title,meta,occurrences);target.append(card);
       });
     }
     function renderList(el,items,kind){
@@ -263,8 +269,8 @@
         $("dnaPaperCount").textContent=String(readable.length);$("dnaYearCount").textContent=String(years.size);$("dnaPhraseCount").textContent=String(recurring.length);
         renderList($("dnaTerms"),recurring,"terms");renderList($("dnaYears"),yearItems,"years");
         const repeated=groupRepeatedQuestions(questionEntries);
-        renderQuestionCards($("dnaRepeated"),repeated,12);
-        renderQuestionCards($("dnaRanking"),repeated,8);
+        renderQuestionCards($("dnaRepeated"),repeated);
+        renderQuestionCards($("dnaRanking"),repeated);
         const moduleTarget=$("dnaModules");moduleTarget.className="dna-empty";
         moduleTarget.textContent="Module-wise mapping needs the confirmed Calicut University syllabus for these four subjects. Upload the syllabus PDF to enable reliable module tagging; questions will not be assigned to modules by guesswork.";
         $("dnaStatus").textContent=readable.length+" of "+papers.length+" PDF(s) scanned. Repeated questions are matched by text similarity; ranking reflects how many separate papers contain a similar question."+(result.storageError?" Live folder listing was unavailable; verified file index used.":"");
