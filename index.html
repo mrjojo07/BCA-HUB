@@ -27,7 +27,7 @@
 <body>
   <script>
     try {
-      if (sessionStorage.getItem("bca-sync-experience") === "premium") {
+      if (sessionStorage.getItem("bca-sync-experience") === "premium" || localStorage.getItem("bca-sync-experience") === "premium") {
         document.body.classList.add("premium-mode");
       }
     } catch (error) {}
