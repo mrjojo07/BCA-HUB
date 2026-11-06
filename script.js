@@ -295,8 +295,9 @@ async function showMaterials(category, moduleNumber = 0) {
     if (files.length) subjectBrowser.appendChild(list);
     if (answerKeyLocked) {
       const locked = document.createElement("div");
-      locked.className = "browser-empty premium-answer-key-locked";
-      locked.textContent = "🔒 Answer Keys are Premium-only. Sign in with an account that has Premium access to view them.";
+      locked.className = "premium-answer-key-locked";
+      locked.setAttribute("role", "note");
+      locked.innerHTML = '<div class="answer-key-lock-icon" aria-hidden="true">🔒</div><div class="answer-key-lock-copy"><strong>Premium Answer Key</strong><span>Available to Premium members only. Upgrade your access to open and download the answer key.</span></div><span class="answer-key-premium-tag">PREMIUM</span><button class="answer-key-locked-button" type="button" disabled aria-disabled="true">Locked</button>';
       subjectBrowser.appendChild(locked);
     }
   } catch (error) {
