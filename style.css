@@ -1918,3 +1918,28 @@ body.premium-mode .analytics-ranking,
 body.premium-mode .analytics-ranking *{
   border-color:rgba(197,163,84,.28)!important;
 }
+
+
+/* Premium-only finish for the Website Analytics panel and refresh control. */
+body.premium-mode #analyticsPanel{
+  border-color:rgba(197,163,84,.62)!important;
+  background:linear-gradient(145deg,#211c12 0%,#100e0a 72%,#0b0906 100%)!important;
+  box-shadow:0 16px 42px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,238,190,.07)!important;
+}
+body.premium-mode #analyticsPanel:before{
+  background:linear-gradient(90deg,#e8c58f,#c5a354,#8f6a2e 82%,transparent)!important;
+}
+body.premium-mode #analyticsPanel .admin-toolbar{
+  border-bottom-color:rgba(197,163,84,.38)!important;
+}
+body.premium-mode #analyticsPanel #refreshAnalytics{
+  border:1px solid #c5a354!important;
+  background:linear-gradient(110deg,#f2d98e,#bd913c)!important;
+  color:#21160d!important;
+  box-shadow:0 5px 18px rgba(195,154,69,.24)!important;
+}
+body.premium-mode #analyticsPanel #refreshAnalytics:hover{
+  background:linear-gradient(110deg,#ffe9aa,#d3a84f)!important;
+  border-color:#f2d98e!important;
+  color:#21160d!important;
+}
