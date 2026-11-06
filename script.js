@@ -205,8 +205,8 @@ async function showMaterials(category, moduleNumber = 0) {
       if (!uniqueFiles.has(key)) uniqueFiles.set(key, file);
     }
     const files = [...uniqueFiles.values()];
-    const { data: { user: signedInUser } } = await supabase.auth.getUser();
-    const appMeta = signedInUser?.app_metadata || {};
+    const { data: { session: signedInSession } } = await supabase.auth.getSession();
+    const appMeta = signedInSession?.user?.app_metadata || {};
     let canReadPremium = appMeta.premium === true || appMeta.premium_access === true;
     if (!canReadPremium && (appMeta.role === "admin" || appMeta.admin === true)) {
       const { data: assurance } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
