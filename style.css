@@ -2074,3 +2074,9 @@ body:not(.premium-mode) .account-dropdown #accountLogoutButton:hover{
   background:rgba(255,76,88,.13)!important;
   color:#ff737c!important;
 }
+
+
+/* Premium-only Question DNA entry card */
+body.premium-mode .question-dna-card{border-color:#c49a4e!important;background:linear-gradient(145deg,#21190e,#100d09)!important;box-shadow:0 0 0 1px #c49a4e22,0 12px 28px #0008,0 0 24px #c49a4e18!important}
+body.premium-mode .question-dna-card>span{color:#e5c27c!important;text-shadow:0 0 16px #d5a94d88}
+body.premium-mode .question-dna-card:hover{border-color:#f0d99f!important;box-shadow:0 0 0 1px #e4c27b55,0 16px 34px #000a,0 0 30px #d2a34b30!important}
