@@ -14,12 +14,10 @@ function updateSidebarThemeLabel(){
 function applyBcaPremiumTheme(user){
   const meta=user?.app_metadata||{};
   const hasAccess=meta.role==="admin"||meta.admin===true;
-  if(!user){
-    sessionStorage.removeItem("bca-sync-experience");
-    localStorage.removeItem("bca-sync-experience");
-    sessionStorage.removeItem("bca-sync-premium-transition");
-  }
-  const enabled=hasAccess&&(sessionStorage.getItem("bca-sync-experience")==="premium"||localStorage.getItem("bca-sync-experience")==="premium");
+  const storedPremium=sessionStorage.getItem("bca-sync-experience")==="premium"||localStorage.getItem("bca-sync-experience")==="premium";
+  // Keep the already-selected visual theme during the brief auth-session restore
+  // on refresh; a signed-in non-admin is still switched back to the standard theme.
+  const enabled=storedPremium&&(!user||hasAccess);
   const shouldAnimate=enabled&&sessionStorage.getItem("bca-sync-premium-transition")==="1";
   if(shouldAnimate){
     sessionStorage.removeItem("bca-sync-premium-transition");
