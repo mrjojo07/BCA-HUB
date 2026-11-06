@@ -2080,3 +2080,25 @@ body:not(.premium-mode) .account-dropdown #accountLogoutButton:hover{
 body.premium-mode .question-dna-card{border-color:#c49a4e!important;background:linear-gradient(145deg,#21190e,#100d09)!important;box-shadow:0 0 0 1px #c49a4e22,0 12px 28px #0008,0 0 24px #c49a4e18!important}
 body.premium-mode .question-dna-card>span{color:#e5c27c!important;text-shadow:0 0 16px #d5a94d88}
 body.premium-mode .question-dna-card:hover{border-color:#f0d99f!important;box-shadow:0 0 0 1px #e4c27b55,0 16px 34px #000a,0 0 30px #d2a34b30!important}
+
+
+/* Premium theme: gold Save controls beside study resources */
+body.premium-mode .resource-save{
+  color:#21170b!important;
+  -webkit-text-fill-color:#21170b!important;
+  background:linear-gradient(115deg,#f4dfa2 0%,#d2aa58 52%,#a9792f 100%)!important;
+  border:1px solid #edcf83!important;
+  box-shadow:0 4px 14px rgba(198,155,67,.22)!important;
+}
+body.premium-mode .resource-save:hover{
+  filter:brightness(1.08)!important;
+  border-color:#ffe5a6!important;
+  box-shadow:0 6px 19px rgba(220,177,83,.34)!important;
+}
+body.premium-mode .resource-save.is-saved{
+  color:#fff1c9!important;
+  -webkit-text-fill-color:#fff1c9!important;
+  background:linear-gradient(115deg,#6d5120 0%,#493514 100%)!important;
+  border-color:#e4bf6b!important;
+  box-shadow:inset 0 0 0 1px rgba(255,226,160,.12),0 4px 15px rgba(198,155,67,.18)!important;
+}
