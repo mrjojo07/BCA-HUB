@@ -1884,3 +1884,37 @@ body.premium-mode .semester-card i{
   color:#e8c58f!important;
   -webkit-text-fill-color:#e8c58f!important;
 }
+
+
+/* Premium theme: keep Admin Panel analytics and content cards in the black-and-bronze palette. */
+body.premium-mode .analytics-stat,
+body.premium-mode .analytics-columns>div,
+body.premium-mode .countdown-card,
+body.premium-mode .admin-timetable,
+body.premium-mode .admin-form,
+body.premium-mode .admin-bulk-guide,
+body.premium-mode .admin-request-card,
+body.premium-mode .admin-guide{
+  background:linear-gradient(145deg,#211c12,#100e0a 72%)!important;
+  border-color:rgba(197,163,84,.55)!important;
+  box-shadow:0 10px 28px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,238,190,.06)!important;
+  color:#f5f0e4!important;
+}
+body.premium-mode .analytics-stat span,
+body.premium-mode .admin-bulk-step,
+body.premium-mode .admin-guide ol,
+body.premium-mode .admin-guide p{
+  color:#d6c9a9!important;
+}
+body.premium-mode .analytics-stat strong,
+body.premium-mode .analytics-columns h3,
+body.premium-mode .countdown-card h3,
+body.premium-mode .admin-bulk-step strong,
+body.premium-mode .admin-guide h2{
+  color:#f5f0e4!important;
+}
+body.premium-mode .countdown-days{color:#e8c58f!important}
+body.premium-mode .analytics-ranking,
+body.premium-mode .analytics-ranking *{
+  border-color:rgba(197,163,84,.28)!important;
+}
