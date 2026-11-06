@@ -118,11 +118,16 @@ async function loadDashboard() {
     window.location.replace("login.html");
     return;
   }
+  // Apply the saved theme immediately from the restored session metadata.
+  // Do not wait for the extra network getUser() request, which caused an Old Theme flash on refresh.
+  const sessionUser = sessionData.session.user;
+  const trustedMeta = sessionUser.app_metadata || {};
+  const hasPremiumAccess = trustedMeta.role === "admin" || trustedMeta.admin === true || trustedMeta.premium === true || trustedMeta.premium_access === true;
+  const premiumSelected = sessionStorage.getItem("bca-sync-experience") === "premium" || localStorage.getItem("bca-sync-experience") === "premium";
+  document.body.classList.toggle("premium-mode", hasPremiumAccess && premiumSelected);
+
   const { data: userData, error: userError } = await supabase.auth.getUser();
   const user = userData?.user;
-  const trustedMeta=user?.app_metadata||{};
-  const hasPremiumAccess=trustedMeta.role==="admin"||trustedMeta.admin===true||trustedMeta.premium===true||trustedMeta.premium_access===true;
-  document.body.classList.toggle("premium-mode",hasPremiumAccess&&(sessionStorage.getItem("bca-sync-experience")==="premium"||localStorage.getItem("bca-sync-experience")==="premium"));
   if (userError || !user) {
     message("Please log in to view your student dashboard.", "error");
     const link = document.createElement("a");
