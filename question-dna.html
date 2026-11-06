@@ -188,14 +188,26 @@
       return overlap/(A.size+B.size-overlap);
     }
     function extractQuestions(text){
-      const lines=text.split(/\n+/).map(x=>x.replace(/\s+/g," ").trim()).filter(Boolean),candidates=[];
-      for(const line of lines){
-        const cleaned=line.replace(/^\s*(?:Q(?:uestion)?\s*)?\d{1,2}[.)]\s*/i,"").trim();
-        if(cleaned.length<28||cleaned.length>420||/^(?:time allowed|maximum marks|answer all|section [a-z]|part [a-z]|write the answers)/i.test(cleaned))continue;
-        const words=cleaned.split(/\s+/);
-        if(words.length<5||words.length>55)continue;
-        if(/[?]$/.test(cleaned)||/^(?:define|explain|describe|discuss|differentiate|distinguish|compare|what|why|how|write|list|state|illustrate|prove|calculate|find|evaluate|derive|mention|outline)\b/i.test(cleaned))candidates.push(cleaned.replace(/^\d+[.)]\s*/,"").trim());
+      const rawLines=text.split(/\\n+/).map(x=>x.replace(/\\s+/g," ").trim()).filter(Boolean);
+      const chunks=[];let current="";
+      const questionStart=/^(?:(?:q(?:uestion)?\\s*)?\\d{1,2}\\s*[.)]|\\d{1,2}\\s*\\([a-h]\\)\\s*|\\(?[a-h]\\)\\s*)/i;
+      const stopLine=/^(?:page\\s+\\d+|semester|time allowed|maximum marks|total marks|answer all questions|section [a-z]|part [a-z]|university of calicut|register number)/i;
+      for(const line of rawLines){
+        if(stopLine.test(line))continue;
+        if(questionStart.test(line)){if(current)chunks.push(current);current=line;}
+        else if(current&&current.length<650)current+=" "+line;
+        else{if(current)chunks.push(current);current=line;}
       }
+      if(current)chunks.push(current);
+      const candidates=[];
+      const command=/\\b(?:define|explain|describe|discuss|differentiate|distinguish|compare|what|why|how|write|list|state|illustrate|prove|calculate|find|evaluate|derive|mention|outline|identify|classify|expand|give|draw|show|compute|simplify|construct|represent)\\b/i;
+      const add=(value)=>{
+        const cleaned=value.replace(/^\\s*(?:(?:q(?:uestion)?\\s*)?\\d{1,2}\\s*[.)]|\\d{1,2}\\s*\\([a-h]\\)\\s*|\\(?[a-h]\\)\\s*)/i,"").replace(/\\s+/g," ").trim();
+        const words=cleaned.split(/\\s+/);
+        if(cleaned.length>=24&&cleaned.length<=520&&words.length>=5&&words.length<=75&&(/[?]$/.test(cleaned)||command.test(cleaned))&&!/^answers?\\b/i.test(cleaned))candidates.push(cleaned);
+      };
+      chunks.forEach(add);
+      for(let i=0;i<rawLines.length;i++)for(let span=1;span<=3&&i+span<=rawLines.length;span++)add(rawLines.slice(i,i+span).join(" "));
       return [...new Set(candidates)];
     }
     function groupRepeatedQuestions(entries){
@@ -203,7 +215,7 @@
       for(const entry of entries)for(const question of entry.questions){
         let best=null,bestScore=0;
         for(const group of groups){const score=questionSimilarity(question,group.representative);if(score>bestScore){bestScore=score;best=group;}}
-        if(best&&bestScore>=0.48){if(!best.items.some(x=>x.paper.name===entry.paper.name))best.items.push({question,paper:entry.paper});}
+        if(best&&bestScore>=0.36){if(!best.items.some(x=>x.paper.name===entry.paper.name))best.items.push({question,paper:entry.paper});}
         else groups.push({representative:question,items:[{question,paper:entry.paper}]});
       }
       return groups.filter(g=>g.items.length>=2).sort((a,b)=>b.items.length-a.items.length);
