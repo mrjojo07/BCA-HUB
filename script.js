@@ -269,7 +269,7 @@ async function showMaterials(category, moduleNumber = 0) {
     list.className = 'subject-list';
     files.forEach(file => {
       const row = document.createElement('div');
-      row.className = file.locked ? 'subject-item premium-answer-key-locked' : ('subject-item' + (file.premium ? ' premium-resource-item' : ''));
+      row.className = file.locked ? 'subject-item answer-key-locked-row' : ('subject-item' + (file.premium ? ' premium-resource-item' : ''));
       const title = document.createElement('strong');
       title.textContent = file.name;
       if (file.locked) {
