@@ -2347,3 +2347,15 @@ body.premium-mode .community-upload-form input[type="file"]::file-selector-butto
   display:block;margin-top:6px;font-size:12px;line-height:1.5;color:var(--muted,#aeb8c8);
 }
 body.premium-mode .answer-key-availability{color:#d1c29e}
+
+
+/* Hero floating chips: match the reference layout around the code card. */
+.hero-art{position:relative;isolation:isolate}
+.hero-art .code-card{position:relative;z-index:1}
+.hero-art .floating-chip{position:absolute;z-index:3;white-space:nowrap}
+.hero-art .chip-notes{top:43px;right:3px;bottom:auto;left:auto}
+.hero-art .chip-code{bottom:42px;left:2px;top:auto;right:auto}
+@media(max-width:650px){
+  .hero-art .chip-notes{top:25px;right:0}
+  .hero-art .chip-code{bottom:20px;left:0}
+}
