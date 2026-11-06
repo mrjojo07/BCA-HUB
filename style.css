@@ -2138,3 +2138,21 @@ body.premium-mode .resource-save.is-saved{
 /* Premium theme only: keep the first hero line white and the second gold. */
 body.premium-mode .hero-content h1{color:#fff!important;-webkit-text-fill-color:#fff!important;background:none!important;animation:none!important}
 body.premium-mode .hero-content h1 span{color:#e2bd68!important;-webkit-text-fill-color:#e2bd68!important;background:none!important;animation:none!important}
+
+/* Premium hero tagline only; leave the Old Theme's original heading colours untouched. */
+body.premium-mode .hero h1,
+body.premium-mode .hero-content h1{
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+  background:none!important;
+  background-image:none!important;
+  animation:none!important;
+}
+body.premium-mode .hero h1 span,
+body.premium-mode .hero-content h1 span{
+  color:#e2bd68!important;
+  -webkit-text-fill-color:#e2bd68!important;
+  background:none!important;
+  background-image:none!important;
+  animation:none!important;
+}
