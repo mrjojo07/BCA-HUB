@@ -42,10 +42,10 @@
 <body class="question-dna-page">
   <header class="site-header">
     <a class="brand" href="index.html"><img class="brand-mark brand-logo" src="assets/bca-sync-logo.svg?v=3" alt=""><span>BCA <b>SYNC</b></span></a>
-    <a class="admin-back" href="index.html">← Back to website</a>
+    <a class="admin-back" href="index.html">← Back to subject</a>
   </header>
   <main class="dna-main">
-    <a class="dna-back" href="index.html">← Back to BCA SYNC</a>
+    <a class="dna-back" href="index.html">← Back to subject</a>
     <div class="dna-kicker">PREMIUM SECRET STUDY LAB · EXPERIMENT 01</div>
     <h1 class="dna-title">Question <span>DNA</span></h1>
     <p class="dna-intro">Explore the patterns hidden inside your Previous Year Question Papers. Question DNA scans available PDFs and finds recurring words and phrases across papers.</p>
@@ -110,6 +110,11 @@
       "discrete-structures-for-computer-applications":"Discrete Structures for Computer Applications"
     };
     const query=new URLSearchParams(window.location.search);
+    const returnSemester=Number(query.get("semester")||1);
+    const returnSubject=query.get("subject")||"";
+    document.querySelectorAll(".admin-back,.dna-back").forEach(link=>{
+      link.href="index.html?returnSemester="+encodeURIComponent(returnSemester)+"&returnSubject="+encodeURIComponent(returnSubject);
+    });
     const requestedSubject=query.get("subject");
     if(requestedSubject&&subjects[requestedSubject])$("dnaSubject").value=requestedSubject;
     const requestedSemester=query.get("semester");
