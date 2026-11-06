@@ -1,4 +1,4 @@
-const CACHE_NAME = "bca-sync-mobile-v8";
+const CACHE_NAME = "bca-sync-mobile-v9";
 const APP_ROOT = new URL("./", self.location.href);
 const SHELL_FILES = ["./","index.html","style.css","welcome-auth.css","script.js","welcome-auth.js","question-dna.html","assets/bca-sync-logo.svg"];
 self.addEventListener("install", event => {
