@@ -137,7 +137,8 @@ function showSemester(number) {
 function showCategories(name) {
   currentSubject = name;
   const quizCard = '<button type="button" class="material-type" data-material="mcq"><span>✓</span><h4>MCQ Quiz</h4><p>Take a 10-question random quiz from 30 important questions.</p><small>Start quiz ↗</small></button>';
-  subjectBrowser.innerHTML = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · SUBJECT</div><h3>'+name+'</h3></div><button class="browser-close" data-back="subjects" type="button">← Subjects</button></div><div class="material-grid"><button type="button" class="material-type" data-material="notes"><span>▤</span><h4>Notes</h4><p>Module-wise study notes (Modules 1–4).</p><small>Choose module ↗</small></button><button type="button" class="material-type" data-material="important-questions"><span>✦</span><h4>Important Questions</h4><p>Key questions for revision and exam preparation.</p><small>Open category ↗</small></button><button type="button" class="material-type" data-material="previous-year-questions"><span>▧</span><h4>Previous Year Questions</h4><p>Previous examination question papers.</p><small>Open category ↗</small></button>'+quizCard+'</div>'+progressTrackerMarkup(name);
+  const questionDnaCard = document.body.classList.contains("premium-mode") ? '<button type="button" class="material-type question-dna-card" data-material="question-dna"><span>🧬</span><h4>Question DNA</h4><p>Find recurring terms and patterns in previous year papers.</p><small>Open Secret Study Lab ↗</small></button>' : '';
+  subjectBrowser.innerHTML = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · SUBJECT</div><h3>'+name+'</h3></div><button class="browser-close" data-back="subjects" type="button">← Subjects</button></div><div class="material-grid"><button type="button" class="material-type" data-material="notes"><span>▤</span><h4>Notes</h4><p>Module-wise study notes (Modules 1–4).</p><small>Choose module ↗</small></button><button type="button" class="material-type" data-material="important-questions"><span>✦</span><h4>Important Questions</h4><p>Key questions for revision and exam preparation.</p><small>Open category ↗</small></button><button type="button" class="material-type" data-material="previous-year-questions"><span>▧</span><h4>Previous Year Questions</h4><p>Previous examination question papers.</p><small>Open category ↗</small></button>'+quizCard+questionDnaCard+'</div>'+progressTrackerMarkup(name);
   loadSubjectProgress(name);
   subjectBrowser.scrollIntoView({behavior:"smooth",block:"start"});
 }
@@ -601,6 +602,7 @@ subjectBrowser?.addEventListener("click", (event) => {
   const material = event.target.closest("[data-material]");
   if (material) {
     if (material.dataset.material === "notes") showNotesModules();
+    else if (material.dataset.material === "question-dna") window.location.href = "question-dna.html?semester="+encodeURIComponent(currentSemester)+"&subject="+encodeURIComponent(subjectSlug(currentSubject));
     else showMaterials(material.dataset.material);
     return;
   }
