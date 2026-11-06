@@ -93,9 +93,10 @@ syncPremiumTheme();supabase.auth.onAuthStateChange(()=>syncPremiumTheme());
           <option value="notes">Notes</option>
           <option value="important-questions">Important Questions</option>
           <option value="previous-year-questions">Previous Year Questions</option>
+          <option value="answer-key">Answer Key (Premium only)</option>
         </select>
         <div id="materialAccessField">
-          <label for="materialAccess">Notes access type</label>
+          <label for="materialAccess">Access type</label>
           <select id="materialAccess" required>
             <option value="free" selected>Free — everyone can access</option>
             <option value="premium">Premium — Premium members only</option>
@@ -377,9 +378,14 @@ syncPremiumTheme();supabase.auth.onAuthStateChange(()=>syncPremiumTheme());
     const materialAccessField = document.getElementById("materialAccessField");
     function updateNotesModuleVisibility() {
       const notesSelected = categorySelect.value === "notes";
+      const answerKeySelected = categorySelect.value === "answer-key";
       notesModuleField.hidden = !notesSelected;
-      materialAccessField.hidden = !notesSelected;
-      if (!notesSelected) document.getElementById("materialAccess").value = "free";
+      materialAccessField.hidden = !(notesSelected || answerKeySelected);
+      if (answerKeySelected) document.getElementById("materialAccess").value = "premium";
+      else if (!notesSelected) document.getElementById("materialAccess").value = "free";
+      const accessLabel = materialAccessField.querySelector("label");
+      if (accessLabel) accessLabel.textContent = answerKeySelected ? "Answer Key access (locked to Premium)" : "Notes access type";
+      document.getElementById("materialAccess").disabled = answerKeySelected;
     }
     categorySelect.addEventListener("change", () => { updateNotesModuleVisibility(); loadExistingFiles(); });
     document.getElementById("materialAccess").addEventListener("change", loadExistingFiles);
@@ -391,7 +397,7 @@ syncPremiumTheme();supabase.auth.onAuthStateChange(()=>syncPremiumTheme());
     const renameButton = document.getElementById("renameButton");
     async function loadExistingFiles() {
       const folder = selectedFolder();
-      const accessType = document.getElementById("materialAccess").value;
+      const accessType = categorySelect.value === "answer-key" ? "premium" : document.getElementById("materialAccess").value;
       const bucket = accessType === "premium" ? "bca-premium-materials" : "bca-hub-materials";
       existingFiles.innerHTML = '<option value="">Loading files...</option>';
       existingFiles.disabled = true;
