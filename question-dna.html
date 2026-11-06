@@ -108,7 +108,7 @@
       return text;
     }
     async function findPapers(semester,slug){
-      const folder="resources/"+semester+"/previous-year-questions/"+slug;
+      const semesterFolder=String(semester).startsWith("semester-")?String(semester):"semester-"+semester;const folder="resources/"+semesterFolder+"/previous-year-questions/"+slug;
       const [gh,storage]=await Promise.all([
         fetch("https://api.github.com/repos/mrjojo07/BCA-HUB/contents/"+folder,{headers:{Accept:"application/vnd.github+json"}}),
         supabase.storage.from("bca-hub-materials").list(folder,{limit:100,sortBy:{column:"name",order:"asc"}})
