@@ -2342,23 +2342,8 @@ body.premium-mode .community-upload-form input[type="file"]::file-selector-butto
 }
 
 
-/* Answer Key lock card — shared across both visual themes; never exposes a file URL. */
-.premium-answer-key-locked{
-  display:flex;align-items:center;gap:13px;margin:16px 0;padding:16px;
-  border:1px solid #4779b5;border-radius:15px;
-  background:linear-gradient(145deg,#102746,#0b1728);
-  color:#eaf2ff;box-shadow:0 10px 26px rgba(0,0,0,.18);
+/* Locked Answer Key uses the exact same subject-item theme styling as other resources. */
+.answer-key-availability{
+  display:block;margin-top:6px;font-size:12px;line-height:1.5;color:var(--muted,#aeb8c8);
 }
-.answer-key-lock-icon{width:42px;height:42px;flex:0 0 42px;display:grid;place-items:center;border-radius:12px;background:#17365b;font-size:19px}
-.answer-key-lock-copy{display:grid;gap:5px;min-width:0;flex:1}
-.answer-key-lock-copy strong{font-size:14px;color:#f2f7ff}
-.answer-key-lock-copy span{font-size:12px;line-height:1.55;color:#b9cce4}
-.answer-key-premium-tag{flex:none;padding:5px 8px;border-radius:20px;background:#dceaff;color:#17365b;font-size:9px;font-weight:900;letter-spacing:.07em}
-.answer-key-locked-button{flex:none;padding:8px 11px;border:1px solid #54769d;border-radius:9px;background:#14263d;color:#a9bfd9;font-size:11px;font-weight:800;cursor:not-allowed;opacity:1}
-body.premium-mode .premium-answer-key-locked{border-color:#c6a24e;background:linear-gradient(145deg,#282113,#151109);color:#f7edcf}
-body.premium-mode .answer-key-lock-icon{background:#453719}
-body.premium-mode .answer-key-lock-copy strong{color:#f7e4ad}
-body.premium-mode .answer-key-lock-copy span{color:#d1c29e}
-body.premium-mode .answer-key-premium-tag{background:linear-gradient(110deg,#f3dc91,#c39a45);color:#211907}
-body.premium-mode .answer-key-locked-button{border-color:#92763b;background:#251e10;color:#d9c28a}
-@media(max-width:520px){.premium-answer-key-locked{gap:9px;padding:12px}.answer-key-lock-icon{width:36px;height:36px;flex-basis:36px}.answer-key-lock-copy strong{font-size:13px}.answer-key-lock-copy span{font-size:11px}.answer-key-premium-tag{display:none}.answer-key-locked-button{padding:7px 9px}}
+body.premium-mode .answer-key-availability{color:#d1c29e}
