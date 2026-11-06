@@ -116,7 +116,7 @@
       const files=[];
       if(gh.ok){const items=await gh.json();for(const f of items.filter(x=>x.type==="file"&&/\.pdf$/i.test(x.name)))files.push({name:f.name,url:f.download_url||f.html_url});}
       if(storage.error) throw storage.error;
-      for(const f of (storage.data||[]).filter(x=>x.id&&(/\.pdf$/i.test(x.name)||x.metadata?.mimetype==="application/pdf"||x.metadata?.contentType==="application/pdf"))){
+      for(const f of (storage.data||[]).filter(x=>/\.pdf$/i.test(x.name)||String(x.metadata?.mimetype||x.metadata?.contentType||"").toLowerCase().split(";")[0]==="application/pdf")){
         const path=folder+"/"+f.name;
         files.push({name:f.name.replace(/^[0-9a-f-]{36}-/i,""),url:"https://efbkhmfekfujbwfdpfhk.supabase.co/storage/v1/object/public/bca-hub-materials/"+path.split("/").map(encodeURIComponent).join("/")});
       }
