@@ -69,12 +69,39 @@ window.addEventListener("pageshow", event => {
 });
 const navLinks = document.getElementById("navLinks");
 
-navLinks?.querySelectorAll("a").forEach((link) => {
-  link.addEventListener("click", () => {
+function setActiveSidebarLink(activeLink){
+  navLinks?.querySelectorAll(".sidebar-link").forEach(link=>{
+    const active=link===activeLink;
+    link.classList.toggle("active",active);
+    if(active) link.setAttribute("aria-current","page");
+    else link.removeAttribute("aria-current");
+  });
+}
+
+function syncSidebarActiveLink(){
+  if(!navLinks) return;
+  const hash=window.location.hash;
+  const pathname=window.location.pathname.split("/").pop()||"index.html";
+  let target=null;
+  if(hash){
+    target=Array.from(navLinks.querySelectorAll(".sidebar-link")).find(link=>{
+      const href=link.getAttribute("href")||"";
+      return href.startsWith("#")&&href===hash;
+    });
+  }
+  if(!target&&pathname==="index.html") target=navLinks.querySelector('.sidebar-link[href="#"]');
+  if(target) setActiveSidebarLink(target);
+}
+
+navLinks?.querySelectorAll(".sidebar-link").forEach(link=>{
+  link.addEventListener("click",()=>{
+    setActiveSidebarLink(link);
     navLinks.classList.remove("open");
-    menuToggle?.setAttribute("aria-expanded", "false");
+    menuToggle?.setAttribute("aria-expanded","false");
   });
 });
+window.addEventListener("hashchange",syncSidebarActiveLink);
+syncSidebarActiveLink();
 
 const year = document.getElementById("year");
 if (year) year.textContent = new Date().getFullYear();
