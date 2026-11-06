@@ -2244,3 +2244,85 @@ body.dashboard-page.premium-mode .dashboard-nav>a.dashboard-website-link:hover{
 body.dashboard-page.premium-mode .site-header .brand-mark.brand-logo{
   filter:sepia(1) saturate(2.1) hue-rotate(350deg) brightness(1.22)!important;
 }
+
+
+/* Premium Theme — refined gold selectors and form controls for community note uploads. */
+body.premium-mode .community-upload-form{
+  gap:14px!important;
+  padding:clamp(16px,3vw,24px)!important;
+  border:1px solid rgba(212,174,91,.42)!important;
+  border-radius:18px!important;
+  background:linear-gradient(145deg,rgba(35,29,18,.96),rgba(12,11,9,.98))!important;
+  box-shadow:0 14px 34px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,235,190,.05)!important;
+}
+body.premium-mode .community-upload-form label{
+  color:#e8d4a8!important;
+  font-size:12px!important;
+  font-weight:700!important;
+  letter-spacing:.025em!important;
+  margin:4px 0 7px!important;
+}
+body.premium-mode .community-upload-form select,
+body.premium-mode .community-upload-form input:not([type="file"]),
+body.premium-mode .community-upload-form textarea{
+  box-sizing:border-box!important;
+  width:100%!important;
+  min-height:48px!important;
+  padding:12px 14px!important;
+  border:1px solid rgba(199,157,72,.62)!important;
+  border-radius:12px!important;
+  background-color:#100e0a!important;
+  color:#f5ead1!important;
+  -webkit-text-fill-color:#f5ead1!important;
+  font:500 14px "DM Sans",sans-serif!important;
+  color-scheme:dark;
+  box-shadow:inset 0 1px 0 rgba(255,239,200,.035),0 4px 14px rgba(0,0,0,.16)!important;
+  transition:border-color .18s ease,box-shadow .18s ease,background-color .18s ease!important;
+}
+body.premium-mode .community-upload-form select{
+  appearance:none!important;
+  -webkit-appearance:none!important;
+  padding-right:42px!important;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23e2bd68' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")!important;
+  background-repeat:no-repeat!important;
+  background-position:right 14px center!important;
+  background-size:17px!important;
+}
+body.premium-mode .community-upload-form select option{
+  background:#17130c!important;
+  color:#f5ead1!important;
+}
+body.premium-mode .community-upload-form select:disabled{
+  opacity:.58!important;
+  border-color:rgba(180,148,86,.28)!important;
+}
+body.premium-mode .community-upload-form select:focus,
+body.premium-mode .community-upload-form input:focus,
+body.premium-mode .community-upload-form textarea:focus{
+  outline:none!important;
+  border-color:#f0d58a!important;
+  box-shadow:0 0 0 3px rgba(220,181,94,.16),0 0 18px rgba(207,164,75,.12)!important;
+}
+body.premium-mode .community-upload-form input[type="file"]{
+  box-sizing:border-box!important;
+  width:100%!important;
+  padding:10px!important;
+  border:1px dashed rgba(199,157,72,.58)!important;
+  border-radius:12px!important;
+  background:#100e0a!important;
+  color:#e8d9b9!important;
+}
+body.premium-mode .community-upload-form input[type="file"]::file-selector-button{
+  margin-right:10px!important;
+  padding:9px 12px!important;
+  border:1px solid #d5b46c!important;
+  border-radius:9px!important;
+  background:linear-gradient(120deg,#f0d58a,#b88a35)!important;
+  color:#17120a!important;
+  font-weight:700!important;
+}
+@media(max-width:600px){
+  body.premium-mode .community-upload-form{gap:12px!important}
+  body.premium-mode .community-upload-form select,
+  body.premium-mode .community-upload-form input:not([type="file"]){min-height:46px!important}
+}
