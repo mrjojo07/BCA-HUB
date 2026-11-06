@@ -70,7 +70,7 @@ function applyBcaPremiumTheme(user){
     applyBcaPremiumTheme(null);
     console.warn("Could not restore auth session; subject navigation was restored independently.",error);
   }
-})(););
+})();
 const oldThemeButton=document.getElementById("oldThemeButton");
 oldThemeButton?.addEventListener("click",()=>{
   sessionStorage.removeItem("bca-sync-experience");
