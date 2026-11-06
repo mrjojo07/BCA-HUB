@@ -2359,3 +2359,12 @@ body.premium-mode .answer-key-availability{color:#d1c29e}
   .hero-art .chip-notes{top:25px;right:0}
   .hero-art .chip-code{bottom:20px;left:0}
 }
+
+
+/* Keep the reference hero-chip arrangement in the Premium theme too. */
+body.premium-mode .hero-art .chip-notes{top:43px!important;right:3px!important;bottom:auto!important;left:auto!important;z-index:3!important}
+body.premium-mode .hero-art .chip-code{bottom:42px!important;left:2px!important;top:auto!important;right:auto!important;z-index:3!important}
+@media(max-width:650px){
+  body.premium-mode .hero-art .chip-notes{top:25px!important;right:0!important;bottom:auto!important;left:auto!important}
+  body.premium-mode .hero-art .chip-code{bottom:20px!important;left:0!important;top:auto!important;right:auto!important}
+}
