@@ -46,6 +46,13 @@
   </header>
   <main class="dna-main">
     <a class="dna-back" href="index.html">← Back to subject</a>
+    <script>
+(() => {
+  const p = new URLSearchParams(location.search);
+  const target = "index.html?returnSemester=" + encodeURIComponent(p.get("semester") || "1") + "&returnSubject=" + encodeURIComponent(p.get("subject") || "");
+  document.querySelectorAll(".admin-back,.dna-back").forEach(a => { a.href = target; });
+})();
+</script>
     <div class="dna-kicker">PREMIUM SECRET STUDY LAB · EXPERIMENT 01</div>
     <h1 class="dna-title">Question <span>DNA</span></h1>
     <p class="dna-intro">Explore repeated questions, paper-year coverage and revision priorities from your Previous Year Question Papers.</p>
