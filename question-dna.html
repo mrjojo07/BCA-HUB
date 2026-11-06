@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080705">
+  <title>Question DNA | BCA SYNC</title>
+  <link rel="stylesheet" href="style.css?v=93">
+  <style>
+    body.question-dna-page{min-height:100vh;background:#080705;color:#f6f0e5}
+    .dna-main{width:min(1040px,92%);margin:42px auto 80px}
+    .dna-kicker{color:#c8a96b;font-size:11px;font-weight:800;letter-spacing:2px}
+    .dna-title{font-size:clamp(34px,6vw,58px);line-height:1.05;margin:12px 0;color:#fff}
+    .dna-title span{background:linear-gradient(100deg,#f8e7b4,#c49a4e,#fff0bd);background-clip:text;-webkit-background-clip:text;color:transparent}
+    .dna-intro{max-width:720px;color:#c9c0b1;line-height:1.75}
+    .dna-controls,.dna-panel{border:1px solid #6e552e;background:linear-gradient(145deg,#17130e,#0b0907);border-radius:18px;padding:20px;box-shadow:0 18px 48px #0008}
+    .dna-controls{display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end;margin:26px 0}
+    .dna-field label{display:block;color:#d9c9a6;font-size:12px;font-weight:700;margin-bottom:8px}
+    .dna-field select{width:100%;min-height:46px;border:1px solid #66512f;border-radius:10px;padding:10px;background:#100d09;color:#fff;font:inherit}
+    .dna-button{min-height:46px;padding:0 20px;border:0;border-radius:10px;background:linear-gradient(110deg,#f1d99c,#b8893f);color:#21170a;font-weight:800;cursor:pointer}
+    .dna-status{color:#d7c8aa;font-size:13px;line-height:1.6;margin:12px 0}
+    .dna-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}
+    .dna-stat{padding:18px;border:1px solid #493a24;border-radius:14px;background:#100d09}
+    .dna-stat strong{display:block;font-size:28px;color:#f1d99c}.dna-stat span{font-size:11px;color:#bfb39e}
+    .dna-results{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .dna-panel h2{font-size:17px;color:#fff;margin:0 0 14px;letter-spacing:0}
+    .dna-empty{color:#bfb39e;font-size:13px;line-height:1.7}
+    .dna-list{display:grid;gap:10px}
+    .dna-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;font-size:13px}
+    .dna-row strong{color:#f3ead8;font-weight:600;overflow-wrap:anywhere}
+    .dna-row span{color:#e0bd79;font-weight:800;font-variant-numeric:tabular-nums}
+    .dna-bar{grid-column:1/-1;height:5px;border-radius:8px;background:#2a2115;overflow:hidden;margin-top:-6px}
+    .dna-bar i{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,#9a7135,#f3d99e)}
+    .dna-files{margin-top:14px;display:grid;gap:8px}
+    .dna-file{padding:10px 12px;border:1px solid #3e3221;border-radius:9px;color:#e5d7bb;font-size:12px;overflow-wrap:anywhere}
+    .dna-note{margin-top:18px;color:#a99d88;font-size:11px;line-height:1.7}
+    .dna-back{display:inline-block;margin-bottom:20px;color:#e2c17f;font-weight:700}
+    @media(max-width:680px){.dna-controls{grid-template-columns:1fr}.dna-stats{grid-template-columns:1fr 1fr}.dna-results{grid-template-columns:1fr}.dna-main{margin-top:26px}}
+  </style>
+</head>
+<body class="question-dna-page">
+  <header class="site-header">
+    <a class="brand" href="index.html"><img class="brand-mark brand-logo" src="assets/bca-sync-logo.svg?v=3" alt=""><span>BCA <b>SYNC</b></span></a>
+    <a class="admin-back" href="index.html">← Back to website</a>
+  </header>
+  <main class="dna-main">
+    <a class="dna-back" href="index.html">← Back to BCA SYNC</a>
+    <div class="dna-kicker">PREMIUM SECRET STUDY LAB · EXPERIMENT 01</div>
+    <h1 class="dna-title">Question <span>DNA</span></h1>
+    <p class="dna-intro">Explore the patterns hidden inside your Previous Year Question Papers. Question DNA scans available PDFs and finds recurring words and phrases across papers.</p>
+    <section class="dna-controls" aria-label="Question DNA filters">
+      <div class="dna-field"><label for="dnaSemester">Semester</label><select id="dnaSemester"><option value="1">Semester 1</option></select></div>
+      <div class="dna-field"><label for="dnaSubject">Subject</label><select id="dnaSubject">
+        <option value="fundamentals-of-computers-and-computational-thinking">Fundamentals of Computers and Computational Thinking</option>
+        <option value="introduction-to-computers-and-office-automation">Introduction to Computers and Office Automation</option>
+        <option value="mathematical-foundation-for-computer-applications">Mathematical Foundation for Computer Applications</option>
+        <option value="discrete-structures-for-computer-applications">Discrete Structures for Computer Applications</option>
+      </select></div>
+      <button class="dna-button" id="dnaAnalyze" type="button">Analyze Papers</button>
+    </section>
+    <p class="dna-status" id="dnaStatus" role="status" aria-live="polite">Choose a subject and analyze its available question papers.</p>
+    <section class="dna-stats" aria-label="Analysis summary">
+      <div class="dna-stat"><strong id="dnaPaperCount">—</strong><span>PDF papers scanned</span></div>
+      <div class="dna-stat"><strong id="dnaYearCount">—</strong><span>Different paper years</span></div>
+      <div class="dna-stat"><strong id="dnaPhraseCount">—</strong><span>Recurring terms found</span></div>
+    </section>
+    <div class="dna-results">
+      <section class="dna-panel"><h2>Recurring terms & phrases</h2><div id="dnaTerms" class="dna-empty">Analysis results will appear here.</div></section>
+      <section class="dna-panel"><h2>Paper year coverage</h2><div id="dnaYears" class="dna-empty">Year distribution will appear here.</div></section>
+    </div>
+    <section class="dna-panel" style="margin-top:14px"><h2>Source papers</h2><div id="dnaFiles" class="dna-files"><p class="dna-empty">No papers scanned yet.</p></div></section>
+    <p class="dna-note">Analysis is based only on readable text extracted from the available PDFs. Repeated terms are clues for revision, not predictions of future exam questions. Scanned image-only PDFs may not contain extractable text. Official module-wise classification will be added only after matching the papers with the confirmed syllabus.</p>
+  </main>
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm";
+    import * as pdfjsLib from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs";
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
+    const supabase=createClient("https://efbkhmfekfujbwfdpfhk.supabase.co","sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH");
+    const $=id=>document.getElementById(id);
+    const subjects={
+      "fundamentals-of-computers-and-computational-thinking":"Fundamentals of Computers and Computational Thinking",
+      "introduction-to-computers-and-office-automation":"Introduction to Computers and Office Automation",
+      "mathematical-foundation-for-computer-applications":"Mathematical Foundation for Computer Applications",
+      "discrete-structures-for-computer-applications":"Discrete Structures for Computer Applications"
+    };
+    const stop=new Set("about above after again against all also an and any are as at be because been before being between both but by can could did do does doing down during each few for from further had has have having he her here hers herself him himself his how i if in into is it its itself just me more most my myself no nor not of off on once only or other our ours ourselves out over own same she should so some such than that the their theirs them themselves then there these they this those through to too under until up very was we were what when where which while who whom why will with would you your".split(" "));
+    function cleanText(s){return s.toLowerCase().replace(/[^a-z0-9\s-]/g," ").replace(/\s+/g," ").trim();}
+    function extractTerms(text){
+      const words=cleanText(text).split(" ").filter(w=>w.length>2&&!stop.has(w)&&!/^\d+$/.test(w));
+      const counts=new Map();
+      for(let i=0;i<words.length;i++){
+        const one=words[i]; counts.set(one,(counts.get(one)||0)+1);
+        if(i<words.length-1){const two=one+" "+words[i+1];counts.set(two,(counts.get(two)||0)+1);}
+      }
+      return counts;
+    }
+    async function readPdf(url){
+      const response=await fetch(url); if(!response.ok) throw new Error("PDF could not be downloaded");
+      const data=new Uint8Array(await response.arrayBuffer());
+      const pdf=await pdfjsLib.getDocument({data}).promise;
+      let text="";
+      for(let p=1;p<=pdf.numPages;p++){const page=await pdf.getPage(p);const content=await page.getTextContent();text+=" "+content.items.map(x=>x.str||"").join(" ");}
+      return text;
+    }
+    async function findPapers(semester,slug){
+      const folder="resources/semester-"+semester+"/previous-year-questions/"+slug;
+      const [gh,storage]=await Promise.all([
+        fetch("https://api.github.com/repos/mrjojo07/BCA-HUB/contents/"+folder,{headers:{Accept:"application/vnd.github+json"}}),
+        supabase.storage.from("bca-hub-materials").list(folder,{limit:100,sortBy:{column:"name",order:"asc"}})
+      ]);
+      const files=[];
+      if(gh.ok){const items=await gh.json();for(const f of items.filter(x=>x.type==="file"&&/\.pdf$/i.test(x.name)))files.push({name:f.name,url:f.download_url||f.html_url});}
+      if(storage.error) throw storage.error;
+      for(const f of (storage.data||[]).filter(x=>x.id&&/\.pdf$/i.test(x.name))){
+        const path=folder+"/"+f.name;
+        files.push({name:f.name.replace(/^[0-9a-f-]{36}-/i,""),url:"https://efbkhmfekfujbwfdpfhk.supabase.co/storage/v1/object/public/bca-hub-materials/"+path.split("/").map(encodeURIComponent).join("/")});
+      }
+      const unique=new Map();for(const f of files){const k=f.name.toLowerCase();if(!unique.has(k))unique.set(k,f);}
+      return [...unique.values()];
+    }
+    function yearFrom(name){const m=name.match(/(?:19|20)\d{2}/);return m?m[0]:"Year not stated";}
+    function renderList(el,items,kind){
+      el.replaceChildren();
+      if(!items.length){el.className="dna-empty";el.textContent="No readable data found yet.";return;}
+      el.className="dna-list";
+      const max=items[0].count||1;
+      items.forEach(item=>{
+        const row=document.createElement("div");row.className="dna-row";
+        const label=document.createElement("strong");label.textContent=item.label;
+        const value=document.createElement("span");value.textContent=kind==="years"?item.count+" paper(s)":item.count+" paper(s)";
+        const bar=document.createElement("div");bar.className="dna-bar";const fill=document.createElement("i");fill.style.width=Math.max(4,item.count/max*100)+"%";bar.append(fill);
+        row.append(label,value,bar);el.append(row);
+      });
+    }
+    async function analyze(){
+      const btn=$("dnaAnalyze"),semester=$("dnaSemester").value,slug=$("dnaSubject").value;
+      btn.disabled=true;btn.textContent="Scanning…";$("dnaStatus").textContent="Finding PDFs and extracting their text…";
+      $("dnaTerms").textContent="Working…";$("dnaYears").textContent="Working…";$("dnaFiles").replaceChildren();
+      try{
+        const papers=await findPapers(semester,slug);
+        if(!papers.length){$("dnaStatus").textContent="No PDF question papers were found for this subject yet. Upload the PYQ PDFs under Previous Year Questions first.";renderList($("dnaTerms"),[]);renderList($("dnaYears"),[]);$("dnaPaperCount").textContent="0";$("dnaYearCount").textContent="0";$("dnaPhraseCount").textContent="0";return;}
+        const termPapers=new Map(),years=new Map(),readable=[],fileList=[];
+        for(let i=0;i<papers.length;i++){
+          const paper=papers[i];$("dnaStatus").textContent="Reading paper "+(i+1)+" of "+papers.length+": "+paper.name;
+          try{
+            const text=await readPdf(paper.url);if(text.trim().length<30)throw new Error("No selectable text");
+            const terms=extractTerms(text);for(const [term,count] of terms){if(count>=2)termPapers.set(term,(termPapers.get(term)||0)+1);}
+            const year=yearFrom(paper.name);years.set(year,(years.get(year)||0)+1);readable.push(paper);
+            const line=document.createElement("div");line.className="dna-file";line.textContent="✓ "+paper.name;fileList.push(line);
+          }catch(err){const line=document.createElement("div");line.className="dna-file";line.textContent="Not readable: "+paper.name;fileList.push(line);}
+        }
+        fileList.forEach(x=>$("dnaFiles").append(x));
+        const recurring=[...termPapers].filter(([term,count])=>count>=2&&term.length>3).map(([label,count])=>({label,count})).sort((a,b)=>b.count-a.count||a.label.localeCompare(b.label)).slice(0,12);
+        const yearItems=[...years].map(([label,count])=>({label,count})).sort((a,b)=>b.label.localeCompare(a.label));
+        $("dnaPaperCount").textContent=String(readable.length);$("dnaYearCount").textContent=String(years.size);$("dnaPhraseCount").textContent=String(recurring.length);
+        renderList($("dnaTerms"),recurring,"terms");renderList($("dnaYears"),yearItems,"years");
+        $("dnaStatus").textContent=readable.length+" of "+papers.length+" PDF(s) scanned. Repeated terms are counted by how many papers contain them.";
+      }catch(error){console.error(error);$("dnaStatus").textContent="Could not analyze the papers: "+(error.message||"Please try again.");}
+      finally{btn.disabled=false;btn.textContent="Analyze Papers";}
+    }
+    async function init(){
+      const {data:{session}}=await supabase.auth.getSession();const meta=session?.user?.app_metadata||{};
+      const allowed=(meta.role==="admin"||meta.admin===true)&&sessionStorage.getItem("bca-sync-experience")==="premium";
+      if(!allowed){document.querySelector(".dna-main").innerHTML='<h1 class="dna-title">Access <span>Restricted</span></h1><p class="dna-intro">Question DNA is available from the administrator account while Premium Theme is active.</p><a class="dna-back" href="index.html">← Return to BCA SYNC</a>';return;}
+      $("dnaAnalyze").addEventListener("click",analyze);
+      analyze();
+    }
+    init();
+  </script>
+</body>
+</html>
