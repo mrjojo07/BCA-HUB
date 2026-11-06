@@ -2156,3 +2156,18 @@ body.premium-mode .hero-content h1 span{
   background-image:none!important;
   animation:none!important;
 }
+
+/* Match Saved Notes button surface to Explore semesters. */
+.hero-actions #savedNotesHeroButton{
+  background:#087de0!important;
+  border:1px solid #087de0!important;
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+}
+body.premium-mode .hero-actions #savedNotesHeroButton{
+  background:linear-gradient(110deg,#f2d98e,#bd913c)!important;
+  border:1px solid #e4c574!important;
+  color:#17120a!important;
+  -webkit-text-fill-color:#17120a!important;
+  box-shadow:0 5px 20px #c39a4530!important;
+}
