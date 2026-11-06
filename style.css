@@ -1878,3 +1878,9 @@ body:not(.premium-mode) .nav-links.open .sidebar-brand span{
   color:#55aaff!important;
   -webkit-text-fill-color:#55aaff!important;
 }
+
+/* Match the semester-card arrow to the gold semester number in Premium Theme. */
+body.premium-mode .semester-card i{
+  color:#e8c58f!important;
+  -webkit-text-fill-color:#e8c58f!important;
+}
