@@ -43,6 +43,19 @@ function applyBcaPremiumTheme(user){
 (async()=>{
   const {data:{session}}=await supabase.auth.getSession();
   applyBcaPremiumTheme(session?.user||null);
+  const returnParams=new URLSearchParams(window.location.search);
+  const returnSlug=returnParams.get("returnSubject");
+  const returnSemester=Number(returnParams.get("returnSemester")||1);
+  if(returnSlug){
+    const subjects=semesterSubjects[returnSemester]||[];
+    const match=subjects.find(name=>subjectSlug(name)===returnSlug);
+    if(match){
+      currentSemester=returnSemester;
+      showCategories(match);
+      subjectBrowser?.scrollIntoView({behavior:"auto",block:"start"});
+    }
+    history.replaceState(null,"",window.location.pathname+window.location.hash);
+  }
   supabase.auth.onAuthStateChange((_event,nextSession)=>applyBcaPremiumTheme(nextSession?.user||null));
 })();
 const oldThemeButton=document.getElementById("oldThemeButton");
@@ -602,7 +615,12 @@ subjectBrowser?.addEventListener("click", (event) => {
   const material = event.target.closest("[data-material]");
   if (material) {
     if (material.dataset.material === "notes") showNotesModules();
-    else if (material.dataset.material === "question-dna") window.location.href = "question-dna.html?build=20261106-2&semester="+encodeURIComponent(currentSemester)+"&subject="+encodeURIComponent(subjectSlug(currentSubject));
+    else if (material.dataset.material === "question-dna") {
+      const slug=subjectSlug(currentSubject);
+      const returnUrl="index.html?returnSemester="+encodeURIComponent(currentSemester)+"&returnSubject="+encodeURIComponent(slug);
+      history.replaceState({bcaSyncReturn:true},"",returnUrl);
+      window.location.href = "question-dna.html?build=20261106-2&semester="+encodeURIComponent(currentSemester)+"&subject="+encodeURIComponent(slug);
+    }
     else showMaterials(material.dataset.material);
     return;
   }
