@@ -2368,3 +2368,14 @@ body.premium-mode .hero-art .chip-code{bottom:42px!important;left:2px!important;
   body.premium-mode .hero-art .chip-notes{top:25px!important;right:0!important;bottom:auto!important;left:auto!important}
   body.premium-mode .hero-art .chip-code{bottom:20px!important;left:0!important;top:auto!important;right:auto!important}
 }
+
+
+/* Force chip placement in both themes, overriding any inherited theme positioning. */
+.hero-art{position:relative!important}
+.hero-art .floating-chip{position:absolute!important;z-index:5!important;transform:none!important;white-space:nowrap!important}
+.hero-art .chip-notes{top:43px!important;right:3px!important;bottom:auto!important;left:auto!important}
+.hero-art .chip-code{top:auto!important;right:auto!important;bottom:42px!important;left:2px!important}
+@media(max-width:650px){
+  .hero-art .chip-notes{top:25px!important;right:0!important;bottom:auto!important;left:auto!important}
+  .hero-art .chip-code{top:auto!important;right:auto!important;bottom:20px!important;left:0!important}
+}
