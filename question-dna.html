@@ -273,7 +273,11 @@
         row.append(label,value,bar);el.append(row);
       });
     }
+    let dnaAccessReady=false;
+    let dnaAccessAllowed=false;
     async function analyze(){
+      if(!dnaAccessReady){$("dnaStatus").textContent="Checking administrator access… please wait.";return;}
+      if(!dnaAccessAllowed){$("dnaStatus").textContent="Question DNA access could not be verified. Please sign in again and reopen Premium Theme.";return;}
       const btn=$("dnaAnalyze"),semester=$("dnaSemester").value,slug=$("dnaSubject").value;
       btn.disabled=true;btn.textContent="Scanning…";$("dnaStatus").textContent="Finding PDFs and extracting their text…";
       $("dnaTerms").textContent="Working…";$("dnaYears").textContent="Working…";$("dnaFiles").replaceChildren();
@@ -313,11 +317,32 @@
       finally{btn.disabled=false;btn.textContent="Analyze Papers";}
     }
     async function init(){
-      const {data:{session}}=await supabase.auth.getSession();const meta=session?.user?.app_metadata||{};
-      const premiumActive=sessionStorage.getItem("bca-sync-experience")==="premium"||localStorage.getItem("bca-sync-experience")==="premium";const allowed=(meta.role==="admin"||meta.admin===true)&&premiumActive;
-      if(!allowed){document.querySelector(".dna-main").innerHTML='<h1 class="dna-title">Access <span>Restricted</span></h1><p class="dna-intro">Question DNA is available from the administrator account while Premium Theme is active.</p><a class="dna-back" href="index.html">← Return to BCA SYNC</a>';return;}
-      $("dnaAnalyze").addEventListener("click",analyze);
-      analyze();
+      const button=$("dnaAnalyze");
+      button.disabled=true;
+      button.textContent="Checking access…";
+      $("dnaStatus").textContent="Checking administrator access…";
+      button.addEventListener("click",analyze);
+      try{
+        const {data:{session}}=await supabase.auth.getSession();
+        const meta=session?.user?.app_metadata||{};
+        const premiumActive=sessionStorage.getItem("bca-sync-experience")==="premium"||localStorage.getItem("bca-sync-experience")==="premium";
+        dnaAccessAllowed=(meta.role==="admin"||meta.admin===true)&&premiumActive;
+        dnaAccessReady=true;
+        if(!dnaAccessAllowed){
+          document.querySelector(".dna-main").innerHTML='<h1 class="dna-title">Access <span>Restricted</span></h1><p class="dna-intro">Question DNA is available from the administrator account while Premium Theme is active.</p><a class="dna-back" href="index.html">← Return to BCA SYNC</a>';
+          return;
+        }
+        button.disabled=false;
+        button.textContent="Analyze Papers";
+        analyze();
+      }catch(error){
+        console.error("Question DNA access check failed:",error);
+        dnaAccessReady=true;
+        dnaAccessAllowed=false;
+        button.disabled=true;
+        button.textContent="Access check failed";
+        $("dnaStatus").textContent="Could not verify your admin session. Please sign in again, activate Premium Theme, and reopen Question DNA.";
+      }
     }
     init();
   </script>
