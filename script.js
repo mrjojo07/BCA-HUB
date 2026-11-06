@@ -44,8 +44,10 @@ function applyBcaPremiumTheme(user){
   const {data:{session}}=await supabase.auth.getSession();
   applyBcaPremiumTheme(session?.user||null);
   const returnParams=new URLSearchParams(window.location.search);
-  const returnSlug=returnParams.get("returnSubject");
-  const returnSemester=Number(returnParams.get("returnSemester")||1);
+  const savedReturnSlug=sessionStorage.getItem("bca-sync-return-subject")||"";
+  const savedReturnSemester=Number(sessionStorage.getItem("bca-sync-return-semester")||1);
+  const returnSlug=returnParams.get("returnSubject")||savedReturnSlug;
+  const returnSemester=Number(returnParams.get("returnSemester")||savedReturnSemester||1);
   if(returnSlug){
     const subjects=semesterSubjects[returnSemester]||[];
     const match=subjects.find(name=>subjectSlug(name)===returnSlug);
@@ -53,8 +55,10 @@ function applyBcaPremiumTheme(user){
       currentSemester=returnSemester;
       showCategories(match);
       subjectBrowser?.scrollIntoView({behavior:"auto",block:"start"});
+      sessionStorage.removeItem("bca-sync-return-subject");
+      sessionStorage.removeItem("bca-sync-return-semester");
+      history.replaceState(null,"",window.location.pathname+window.location.hash);
     }
-    history.replaceState(null,"",window.location.pathname+window.location.hash);
   }
   supabase.auth.onAuthStateChange((_event,nextSession)=>applyBcaPremiumTheme(nextSession?.user||null));
 })();
@@ -618,6 +622,8 @@ subjectBrowser?.addEventListener("click", (event) => {
     else if (material.dataset.material === "question-dna") {
       const slug=subjectSlug(currentSubject);
       const returnUrl="index.html?returnSemester="+encodeURIComponent(currentSemester)+"&returnSubject="+encodeURIComponent(slug);
+      sessionStorage.setItem("bca-sync-return-semester",String(currentSemester));
+      sessionStorage.setItem("bca-sync-return-subject",slug);
       history.replaceState({bcaSyncReturn:true},"",returnUrl);
       window.location.href = "question-dna.html?build=20261106-2&semester="+encodeURIComponent(currentSemester)+"&subject="+encodeURIComponent(slug);
     }
