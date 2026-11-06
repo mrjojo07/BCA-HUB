@@ -22,7 +22,7 @@
   <link rel="stylesheet" href="welcome-auth.css?v=14">
   <script>try{if(sessionStorage.getItem("bcaSyncNewUserWelcome")==="1"){document.documentElement.classList.add("show-new-user-welcome");document.documentElement.dataset.welcomeName=sessionStorage.getItem("bcaSyncWelcomeName")||"Student";sessionStorage.removeItem("bcaSyncNewUserWelcome");sessionStorage.removeItem("bcaSyncWelcomeName");}}catch(e){}</script>
   <style>html.show-new-user-welcome .header-actions,html.show-new-user-welcome .header-search,html.show-new-user-welcome #brandMenuToggle,html.show-new-user-welcome .nav-links{display:none!important}html.show-new-user-welcome,html.show-new-user-welcome body{overflow:hidden!important;overscroll-behavior:none!important;touch-action:none}html.show-new-user-welcome body{position:fixed;inset:0;width:100%}</style>
-  <script type="module" src="script.js?v=80"></script>
+  <script type="module" src="script.js?v=81"></script>
 </head>
 <body>
   <script>
@@ -136,14 +136,6 @@
         "Discrete Structures for Computer Applications"
       ]
     };
-    communityLink?.addEventListener("click", event => {
-      event.preventDefault();
-      communitySection.hidden = false;
-      document.getElementById("navLinks")?.classList.remove("open");
-      document.getElementById("brandMenuToggle")?.setAttribute("aria-expanded","false");
-      document.getElementById("sidebarBackdrop")?.setAttribute("hidden","");
-      communitySection.scrollIntoView({behavior:"smooth",block:"start"});
-    });
     communitySemester?.addEventListener("change", () => {
       const subjects = communitySubjects[Number(communitySemester.value)] || [];
       communitySubject.replaceChildren(new Option("Choose subject",""));
@@ -377,35 +369,6 @@
     </section>
     
   </main>
-  <script>
-    (() => {
-      const feedbackLink = document.getElementById("openFeedbackMenu");
-      const feedbackSection = document.getElementById("feedback");
-      if (!feedbackLink || !feedbackSection) return;
-      feedbackLink.addEventListener("click", (event) => {
-        event.preventDefault();
-        feedbackSection.hidden = false;
-        feedbackSection.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
-    })();
-  </script>
-  <script>
-    // Keep these navigation actions independent of Supabase/module loading.
-    document.addEventListener("click", (event) => {
-      const link = event.target.closest("#openCommunityUpload, #openCommunityUploadBar, #openFeedbackMenu");
-      if (!link) return;
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      const isFeedback = link.id === "openFeedbackMenu";
-      const section = document.getElementById(isFeedback ? "feedback" : "communityUpload");
-      if (!section) return;
-      section.hidden = false;
-      document.getElementById("navLinks")?.classList.remove("open");
-      document.getElementById("brandMenuToggle")?.setAttribute("aria-expanded", "false");
-      document.getElementById("sidebarBackdrop")?.setAttribute("hidden", "");
-      section.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, true);
-  </script>
   <footer class="site-footer"><span class="copyright">© <span id="year"></span> BCA SYNC</span><nav class="footer-links" aria-label="Footer"><a href="about.html">About Us</a><a href="contact.html">Contact Us</a><a href="privacy-policy.html">Privacy Policy</a></nav></footer>
   <script type="module" src="pwa.js?v=1"></script>
 </body>
