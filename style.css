@@ -2134,3 +2134,13 @@ body.premium-mode .resource-save.is-saved{
   .site-footer .footer-links{gap:4px!important}
   .site-footer .footer-links a{font-size:10px!important}
 }
+
+
+/* BCA SYNC: keep all page headings consistently white in both themes */
+h1,h2,h3,h1 span,h2 span,h3 span{
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+  background:none!important;
+  -webkit-background-clip:border-box!important;
+  background-clip:border-box!important;
+}
