@@ -165,7 +165,7 @@
     }
     async function init(){
       const {data:{session}}=await supabase.auth.getSession();const meta=session?.user?.app_metadata||{};
-      const allowed=(meta.role==="admin"||meta.admin===true)&&sessionStorage.getItem("bca-sync-experience")==="premium";
+      const premiumActive=sessionStorage.getItem("bca-sync-experience")==="premium"||localStorage.getItem("bca-sync-experience")==="premium";const allowed=(meta.role==="admin"||meta.admin===true)&&premiumActive;
       if(!allowed){document.querySelector(".dna-main").innerHTML='<h1 class="dna-title">Access <span>Restricted</span></h1><p class="dna-intro">Question DNA is available from the administrator account while Premium Theme is active.</p><a class="dna-back" href="index.html">← Return to BCA SYNC</a>';return;}
       $("dnaAnalyze").addEventListener("click",analyze);
       analyze();
