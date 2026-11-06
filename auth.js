@@ -129,6 +129,9 @@ otpForm.addEventListener("submit", async (event) => {
   if (!/^\d{6}$/.test(token)) return showStatus("Enter the 6-digit code from your email.", "error");
   const button = otpForm.querySelector('button[type="submit"]');
   button.disabled = true; button.textContent = "Verifying…";
+  // Keep the SIGNED_IN listener from showing the intermediate account panel
+  // while a newly-created student account is being verified.
+  signupInProgress = true;
   let result;
   try {
     result = await supabase.auth.verifyOtp({
@@ -137,10 +140,12 @@ otpForm.addEventListener("submit", async (event) => {
       type: "signup"
     });
   } catch (error) {
+    signupInProgress = false;
     button.disabled = false; button.textContent = "Verify email";
     return showStatus(readableError(error), "error");
   }
   const { data, error } = result;
+  signupInProgress = false;
   button.disabled = false; button.textContent = "Verify email";
   if (error) return showStatus(readableError(error), "error");
   pendingOtpEmail = "";
