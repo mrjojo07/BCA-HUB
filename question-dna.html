@@ -217,7 +217,7 @@
     function extractQuestions(text){
       const rawLines=text.split(/\n+/).map(x=>x.replace(/\s+/g," ").trim()).filter(Boolean);
       const chunks=[];let current="";
-      const questionStart=/^(?:(?:q(?:uestion)?\s*)?\d{1,2}\s*[.)]|\d{1,2}\s*\\([a-h]\\)\s*|\\(?[a-h]\\)\s*)/i;
+      const questionStart=/^(?:(?:q(?:uestion)?\s*)?\d{1,2}\s*[.)]|\d{1,2}\s*\([a-h]\)\s*|\(?[a-h]\)\s*)/i;
       const stopLine=/^(?:page\s+\d+|semester|time allowed|maximum marks|total marks|answer all questions|section [a-z]|part [a-z]|university of calicut|register number)/i;
       for(const line of rawLines){
         if(stopLine.test(line))continue;
@@ -229,7 +229,7 @@
       const candidates=[];
       const command=/\b(?:define|explain|describe|discuss|differentiate|distinguish|compare|what|why|how|write|list|state|illustrate|prove|calculate|find|evaluate|derive|mention|outline|identify|classify|expand|give|draw|show|compute|simplify|construct|represent)\b/i;
       const add=(value)=>{
-        const cleaned=value.replace(/^\s*(?:(?:q(?:uestion)?\s*)?\d{1,2}\s*[.)]|\d{1,2}\s*\\([a-h]\\)\s*|\\(?[a-h]\\)\s*)/i,"").replace(/\s+/g," ").trim();
+        const cleaned=value.replace(/^\s*(?:(?:q(?:uestion)?\s*)?\d{1,2}\s*[.)]|\d{1,2}\s*\([a-h]\)\s*|\(?[a-h]\)\s*)/i,"").replace(/\s+/g," ").trim();
         const words=cleaned.split(/\s+/);
         if(cleaned.length>=24&&cleaned.length<=520&&words.length>=5&&words.length<=75&&(/[?]$/.test(cleaned)||command.test(cleaned))&&!/^answers?\b/i.test(cleaned))candidates.push(cleaned);
       };
@@ -239,7 +239,7 @@
     }
     function normalizeExactQuestion(value){
       return cleanText(value)
-        .replace(/^(?:(?:q(?:uestion)?\s*)?\d{1,2}\s*[.)]|\d{1,2}\s*\\([a-h]\\)\s*|\\(?[a-h]\\)\s*)/i,"")
+        .replace(/^(?:(?:q(?:uestion)?\s*)?\d{1,2}\s*[.)]|\d{1,2}\s*\([a-h]\)\s*|\(?[a-h]\)\s*)/i,"")
         .replace(/\s+/g," ")
         .trim();
     }
