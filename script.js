@@ -222,6 +222,20 @@ async function showMaterials(category, moduleNumber = 0) {
       const { data: assurance } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
       canReadPremium = assurance?.currentLevel === "aal2";
     }
+    if (category === "previous-year-questions" && !canReadPremium) {
+      const { data: answerKeyCatalog, error: catalogError } = await supabase.rpc(
+        "get_published_answer_key_catalog",
+        { p_semester: Number(currentSemester), p_subject_slug: subjectSlug(currentSubject) }
+      );
+      if (catalogError) throw catalogError;
+      for (const item of (answerKeyCatalog || [])) {
+        files.push({
+          name: item.title,
+          answerKey: true,
+          locked: true
+        });
+      }
+    }
     if (canReadPremium) {
       const { data: premiumRows, error: premiumError } = await supabase
         .from("premium_materials")
@@ -247,8 +261,7 @@ async function showMaterials(category, moduleNumber = 0) {
       }
     }
     const heading = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · '+labels[category].toUpperCase()+'</div><h3>'+labels[category]+'</h3></div><button class="browser-close" data-back="'+backTarget+'" type="button">'+backLabel+'</button></div>';
-    const answerKeyLocked = category === "previous-year-questions" && !canReadPremium;
-    if (!files.length && !answerKeyLocked) {
+    if (!files.length) {
       subjectBrowser.innerHTML = heading+'<p class="browser-empty">No files have been uploaded here yet.</p>';
       return;
     }
@@ -256,31 +269,38 @@ async function showMaterials(category, moduleNumber = 0) {
     list.className = 'subject-list';
     files.forEach(file => {
       const row = document.createElement('div');
-      row.className = 'subject-item' + (file.premium ? ' premium-resource-item' : '');
+      row.className = file.locked ? 'subject-item premium-answer-key-locked' : ('subject-item' + (file.premium ? ' premium-resource-item' : ''));
       const title = document.createElement('strong');
-      title.textContent = file.answerKey ? "Answer Key · " + file.name : file.name;
-      if (file.premium) {
-        const premiumTag = document.createElement('span');
-        premiumTag.textContent = 'PREMIUM';
-        premiumTag.style.cssText = 'margin-left:8px;padding:3px 7px;border-radius:20px;background:#e8c76b;color:#172033;font-size:10px;font-weight:800;letter-spacing:.04em';
-        title.appendChild(premiumTag);
+      title.textContent = file.name;
+      if (file.locked) {
+        const note = document.createElement('span');
+        note.className = 'answer-key-availability';
+        note.textContent = 'Available for Premium members only';
+        row.append(title, note);
+      } else {
+        if (file.premium) {
+          const premiumTag = document.createElement('span');
+          premiumTag.textContent = 'PREMIUM';
+          premiumTag.style.cssText = 'margin-left:8px;padding:3px 7px;border-radius:20px;background:#e8c76b;color:#172033;font-size:10px;font-weight:800;letter-spacing:.04em';
+          title.appendChild(premiumTag);
+        }
+        const link = document.createElement('a');
+        link.href = file.url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.className = 'subject-arrow';
+        link.textContent = 'Open ↗';
+        const save = document.createElement('button');
+        save.type = 'button';
+        save.className = 'resource-save' + (isResourceSaved(link.href) ? ' is-saved' : '');
+        save.textContent = isResourceSaved(link.href) ? '★ Saved' : '☆ Save';
+        save.setAttribute('aria-pressed', String(isResourceSaved(link.href)));
+        save.addEventListener('click', () => toggleSavedResource({
+          name: file.name, url: link.href, subject: currentSubject,
+          category: labels[category], semester: currentSemester
+        }, save));
+        if (file.premium) row.append(title, link); else row.append(title, link, save);
       }
-      const link = document.createElement('a');
-      link.href = file.url;
-      link.target = '_blank';
-      link.rel = 'noopener noreferrer';
-      link.className = 'subject-arrow';
-      link.textContent = 'Open ↗';
-      const save = document.createElement('button');
-      save.type = 'button';
-      save.className = 'resource-save' + (isResourceSaved(link.href) ? ' is-saved' : '');
-      save.textContent = isResourceSaved(link.href) ? '★ Saved' : '☆ Save';
-      save.setAttribute('aria-pressed', String(isResourceSaved(link.href)));
-      save.addEventListener('click', () => toggleSavedResource({
-        name: file.name, url: link.href, subject: currentSubject,
-        category: labels[category], semester: currentSemester
-      }, save));
-      if (file.premium) row.append(title, link); else row.append(title, link, save);
       list.appendChild(row);
       if (/\.(png|jpe?g|webp|gif)$/i.test(file.name)) {
         const preview = document.createElement('img');
@@ -293,13 +313,7 @@ async function showMaterials(category, moduleNumber = 0) {
     });
     subjectBrowser.innerHTML = heading;
     if (files.length) subjectBrowser.appendChild(list);
-    if (answerKeyLocked) {
-      const locked = document.createElement("div");
-      locked.className = "premium-answer-key-locked";
-      locked.setAttribute("role", "note");
-      locked.innerHTML = '<div class="answer-key-lock-icon" aria-hidden="true">🔒</div><div class="answer-key-lock-copy"><strong>Premium Answer Key</strong><span>Available to Premium members only. Upgrade your access to open and download the answer key.</span></div><span class="answer-key-premium-tag">PREMIUM</span><button class="answer-key-locked-button" type="button" disabled aria-disabled="true">Locked</button>';
-      subjectBrowser.appendChild(locked);
-    }
+
   } catch (error) {
     const heading = subjectBrowser.querySelector('.browser-heading')?.outerHTML || '';
     subjectBrowser.innerHTML = heading+'<p class="browser-empty">'+error.message+'</p>';
