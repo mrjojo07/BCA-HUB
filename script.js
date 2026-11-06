@@ -187,7 +187,7 @@ function showNotesModules() {
 }
 async function showMaterials(category, moduleNumber = 0) {
   if (category === "mcq") { startMcqQuiz(); return; }
-  const labels = {"notes":"Notes","important-questions":"Important Questions","previous-year-questions":"Previous Year Questions","mcq":"MCQ"};
+  const labels = {"notes":"Notes","important-questions":"Important Questions","previous-year-questions":"Previous Year Questions","answer-key":"Answer Key","mcq":"MCQ"};
   const backTarget = category === "notes" && moduleNumber ? "modules" : "subject";
   const backLabel = backTarget === "modules" ? "← Back to modules" : "← Back to subject";
   subjectBrowser.innerHTML = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · '+labels[category].toUpperCase()+'</div><h3>'+labels[category]+'</h3></div><button class="browser-close" data-back="'+backTarget+'" type="button">'+backLabel+'</button></div><p class="browser-empty">Loading materials…</p>';
@@ -228,7 +228,7 @@ async function showMaterials(category, moduleNumber = 0) {
         .select("id,title,storage_path,created_at")
         .eq("semester", Number(currentSemester))
         .eq("subject_slug", subjectSlug(currentSubject))
-        .eq("category", category)
+        .in("category", category === "previous-year-questions" ? ["previous-year-questions","answer-key"] : [category])
         .eq("is_published", true)
         .order("created_at", { ascending: false });
       if (premiumError) throw premiumError;
@@ -241,12 +241,14 @@ async function showMaterials(category, moduleNumber = 0) {
           name: item.title || item.storage_path.split("/").pop(),
           url: signedFile.signedUrl,
           preview: signedFile.signedUrl,
-          premium: true
+          premium: true,
+          answerKey: item.category === "answer-key"
         });
       }
     }
     const heading = '<div class="browser-heading"><div><div class="eyebrow">SEMESTER '+currentSemester+' · '+labels[category].toUpperCase()+'</div><h3>'+labels[category]+'</h3></div><button class="browser-close" data-back="'+backTarget+'" type="button">'+backLabel+'</button></div>';
-    if (!files.length) {
+    const answerKeyLocked = category === "previous-year-questions" && !canReadPremium;
+    if (!files.length && !answerKeyLocked) {
       subjectBrowser.innerHTML = heading+'<p class="browser-empty">No files have been uploaded here yet.</p>';
       return;
     }
@@ -256,7 +258,7 @@ async function showMaterials(category, moduleNumber = 0) {
       const row = document.createElement('div');
       row.className = 'subject-item' + (file.premium ? ' premium-resource-item' : '');
       const title = document.createElement('strong');
-      title.textContent = file.name;
+      title.textContent = file.answerKey ? "Answer Key · " + file.name : file.name;
       if (file.premium) {
         const premiumTag = document.createElement('span');
         premiumTag.textContent = 'PREMIUM';
@@ -290,7 +292,13 @@ async function showMaterials(category, moduleNumber = 0) {
       }
     });
     subjectBrowser.innerHTML = heading;
-    subjectBrowser.appendChild(list);
+    if (files.length) subjectBrowser.appendChild(list);
+    if (answerKeyLocked) {
+      const locked = document.createElement("div");
+      locked.className = "browser-empty premium-answer-key-locked";
+      locked.textContent = "🔒 Answer Keys are Premium-only. Sign in with an account that has Premium access to view them.";
+      subjectBrowser.appendChild(locked);
+    }
   } catch (error) {
     const heading = subjectBrowser.querySelector('.browser-heading')?.outerHTML || '';
     subjectBrowser.innerHTML = heading+'<p class="browser-empty">'+error.message+'</p>';
