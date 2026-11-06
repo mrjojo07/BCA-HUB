@@ -1954,3 +1954,104 @@ body.premium-mode #analyticsPanel .analytics-columns h3:before{
   background:linear-gradient(180deg,#f2d98e,#bd913c)!important;
   box-shadow:0 0 10px rgba(197,163,84,.38)!important;
 }
+
+
+/* Complete black-and-gold treatment for every Admin Panel section in Premium Theme. */
+body.premium-mode.admin-page{
+  color:#f5f0e4!important;
+  background:
+    radial-gradient(ellipse at 12% 5%,rgba(190,148,65,.16),transparent 34%),
+    radial-gradient(ellipse at 88% 42%,rgba(216,180,91,.08),transparent 32%),
+    linear-gradient(145deg,#080806 0%,#12100b 52%,#070707 100%)!important;
+  background-attachment:fixed!important;
+}
+body.premium-mode.admin-page .admin-title,
+body.premium-mode.admin-page .admin-title span{
+  color:#f4dfb0!important;
+  -webkit-text-fill-color:#f4dfb0!important;
+}
+body.premium-mode.admin-page .eyebrow{color:#d8b45b!important}
+body.premium-mode.admin-page .admin-back,
+body.premium-mode.admin-page .admin-home-link{color:#e8c58f!important}
+body.premium-mode.admin-page .admin-nav,
+body.premium-mode.admin-page .admin-login,
+body.premium-mode.admin-page .admin-timetable,
+body.premium-mode.admin-page .admin-form,
+body.premium-mode.admin-page .admin-bulk-guide,
+body.premium-mode.admin-page .admin-guide,
+body.premium-mode.admin-page .admin-request-card,
+body.premium-mode.admin-page .admin-resource-requests,
+body.premium-mode.admin-page #analyticsPanel{
+  background:linear-gradient(145deg,#211c12 0%,#100e0a 72%,#090806 100%)!important;
+  border:1px solid rgba(197,163,84,.58)!important;
+  color:#f5f0e4!important;
+  box-shadow:0 12px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,238,190,.06)!important;
+}
+body.premium-mode.admin-page .admin-nav a,
+body.premium-mode.admin-page .admin-nav a span{
+  color:#f0dfb1!important;
+  border-color:rgba(197,163,84,.28)!important;
+}
+body.premium-mode.admin-page .admin-nav a:hover,
+body.premium-mode.admin-page .admin-nav a:focus-visible{
+  background:rgba(197,163,84,.16)!important;
+  border-color:#c5a354!important;
+}
+body.premium-mode.admin-page .admin-toolbar h2,
+body.premium-mode.admin-page .admin-timetable h2,
+body.premium-mode.admin-page .admin-login h2{
+  color:#f4dfb0!important;
+}
+body.premium-mode.admin-page .admin-intro,
+body.premium-mode.admin-page .admin-footnote,
+body.premium-mode.admin-page .admin-bulk-step,
+body.premium-mode.admin-page .admin-form label,
+body.premium-mode.admin-page .admin-login label{
+  color:#d6c9a9!important;
+}
+body.premium-mode.admin-page .admin-form input,
+body.premium-mode.admin-page .admin-form select,
+body.premium-mode.admin-page .admin-form textarea,
+body.premium-mode.admin-page .admin-login input,
+body.premium-mode.admin-page #examJson{
+  color:#f5f0e4!important;
+  background:#090806!important;
+  border:1px solid rgba(197,163,84,.48)!important;
+}
+body.premium-mode.admin-page input[type="file"]{
+  color:#e8d8b5!important;
+  background:#100e0a!important;
+  border:1px solid rgba(197,163,84,.42)!important;
+  border-radius:9px;
+}
+body.premium-mode.admin-page input[type="file"]::file-selector-button{
+  color:#21160d!important;
+  background:linear-gradient(110deg,#f2d98e,#bd913c)!important;
+  border:1px solid #c5a354!important;
+  border-radius:7px;padding:8px 12px;margin-right:10px;font-weight:700;
+}
+body.premium-mode.admin-page .admin-back-button{
+  color:#f0dfb1!important;
+  background:#171208!important;
+  border:1px solid #a9853d!important;
+}
+body.premium-mode.admin-page .admin-back-button:hover{
+  background:#2b2110!important;border-color:#e8c58f!important;
+}
+body.premium-mode.admin-page .admin-action{
+  color:#21160d!important;
+  background:linear-gradient(110deg,#f2d98e,#bd913c)!important;
+  border:1px solid #e8c58f!important;
+}
+body.premium-mode.admin-page .admin-action:hover{filter:brightness(1.08)!important}
+body.premium-mode.admin-page .admin-bulk-step strong,
+body.premium-mode.admin-page .admin-resource-requests strong{color:#f4dfb0!important}
+body.premium-mode.admin-page .exam-admin-row,
+body.premium-mode.admin-page .admin-resource-requests>*{
+  border-color:rgba(197,163,84,.28)!important;
+}
+body.premium-mode.admin-page .admin-error{color:#ffaaaa!important}
+body.premium-mode.admin-page .admin-warning{
+  background:#211a0d!important;border-color:#a9853d!important;color:#f0dfb1!important;
+}
+body.premium-mode.admin-page .admin-title span{background:none!important}
