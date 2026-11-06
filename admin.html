@@ -19,6 +19,7 @@ syncPremiumTheme();supabase.auth.onAuthStateChange(()=>syncPremiumTheme());
 </script>
 </head>
 <body class="admin-page">
+  <script>try{if(sessionStorage.getItem("bca-sync-experience")==="premium"||localStorage.getItem("bca-sync-experience")==="premium"){document.body.classList.add("premium-mode");}}catch(e){}</script>
   <header class="site-header">
     <a class="brand" href="index.html"><img class="brand-mark brand-logo" src="assets/bca-sync-logo.svg?v=3" alt="" aria-hidden="true"><span>BCA <b>SYNC</b></span></a>
     <a class="admin-back" href="index.html">← Back to website</a>
@@ -222,7 +223,7 @@ syncPremiumTheme();supabase.auth.onAuthStateChange(()=>syncPremiumTheme());
       }
       const appMeta = user.app_metadata || {};
       const isAdmin = appMeta.role === "admin" || appMeta.admin === true;
-      const premiumChosen=sessionStorage.getItem("bca-sync-experience")==="premium";
+      const premiumChosen=sessionStorage.getItem("bca-sync-experience")==="premium"||localStorage.getItem("bca-sync-experience")==="premium";
       document.body.classList.toggle("premium-mode",isAdmin&&premiumChosen);
       if (!isAdmin) {
         // Keep the student's session active; deny only Admin Panel access.
