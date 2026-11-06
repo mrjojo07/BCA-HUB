@@ -2171,3 +2171,7 @@ body.premium-mode .hero-actions #savedNotesHeroButton{
   -webkit-text-fill-color:#17120a!important;
   box-shadow:0 5px 20px #c39a4530!important;
 }
+
+/* Keep the page behind the mobile navigation from scrolling; allow the menu itself to scroll. */
+body.sidebar-scroll-locked{overflow:hidden!important;overscroll-behavior:none!important}
+.nav-links{overscroll-behavior:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch}
