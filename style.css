@@ -2241,3 +2241,8 @@ body.dashboard-page.premium-mode .dashboard-nav>a.dashboard-website-link:hover{
 @media(prefers-reduced-motion:reduce){
   body.dashboard-page.premium-mode .dashboard-nav>a.dashboard-website-link{animation:none!important}
 }
+
+/* Premium student dashboard: keep the logo gold, but remove its shadow. */
+body.dashboard-page.premium-mode .site-header .brand-mark.brand-logo{
+  filter:sepia(1) saturate(2.1) hue-rotate(350deg) brightness(1.22)!important;
+}
