@@ -269,10 +269,14 @@ async function showMaterials(category, moduleNumber = 0) {
     list.className = 'subject-list';
     files.forEach(file => {
       const row = document.createElement('div');
-      row.className = file.locked ? 'subject-item answer-key-locked-row' : ('subject-item' + (file.premium ? ' premium-resource-item' : ''));
+      row.className = file.locked ? 'subject-item premium-resource-item answer-key-locked-row' : ('subject-item' + (file.premium ? ' premium-resource-item' : ''));
       const title = document.createElement('strong');
       title.textContent = file.name;
       if (file.locked) {
+        const premiumTag = document.createElement('span');
+        premiumTag.textContent = 'PREMIUM';
+        premiumTag.style.cssText = 'margin-left:8px;padding:3px 7px;border-radius:20px;background:#e8c76b;color:#172033;font-size:10px;font-weight:800;letter-spacing:.04em';
+        title.appendChild(premiumTag);
         const note = document.createElement('span');
         note.className = 'answer-key-availability';
         note.textContent = 'Available for Premium members only';
