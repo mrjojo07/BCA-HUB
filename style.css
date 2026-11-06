@@ -2136,11 +2136,5 @@ body.premium-mode .resource-save.is-saved{
 }
 
 
-/* BCA SYNC: keep all page headings consistently white in both themes */
-h1,h2,h3,h1 span,h2 span,h3 span{
-  color:#ffffff!important;
-  -webkit-text-fill-color:#ffffff!important;
-  background:none!important;
-  -webkit-background-clip:border-box!important;
-  background-clip:border-box!important;
-}
+/* Main page titles only */
+h1,h1 span{color:#fff!important;-webkit-text-fill-color:#fff!important;background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important}
