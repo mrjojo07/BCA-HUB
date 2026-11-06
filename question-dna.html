@@ -75,7 +75,7 @@
       <section class="dna-panel"><h2>Module-wise Analysis</h2><div id="dnaModules" class="dna-empty">Module mapping will appear here.</div></section>
     </div>
     <section class="dna-panel" style="margin-top:14px"><h2>Source papers</h2><div id="dnaFiles" class="dna-files"><p class="dna-empty">No papers scanned yet.</p></div></section>
-    <p class="dna-note">Analysis is based only on readable text extracted from the available PDFs. Repeated terms are clues for revision, not predictions of future exam questions. Scanned image-only PDFs may not contain extractable text. Module-wise classification will be enabled after matching the papers with the confirmed Calicut University syllabus.</p>
+    <p class="dna-note">Analysis is based only on readable text extracted from the available PDFs. Exact repeated questions and similar wording are grouped separately where detected. Repeated terms are clues for revision, not predictions of future exam questions. Scanned image-only PDFs may not contain extractable text. Module-wise classification will be enabled after matching the papers with the confirmed Calicut University syllabus.</p>
   </main>
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm";
@@ -217,13 +217,29 @@
       for(let i=0;i<rawLines.length;i++)for(let span=1;span<=3&&i+span<=rawLines.length;span++)add(rawLines.slice(i,i+span).join(" "));
       return [...new Set(candidates)];
     }
+    function normalizeExactQuestion(value){
+      return cleanText(value)
+        .replace(/^(?:(?:q(?:uestion)?\\s*)?\\d{1,2}\\s*[.)]|\\d{1,2}\\s*\\([a-h]\\)\\s*|\\(?[a-h]\\)\\s*)/i,"")
+        .replace(/\\s+/g," ")
+        .trim();
+    }
     function groupRepeatedQuestions(entries){
       const groups=[];
       for(const entry of entries)for(const question of entry.questions){
-        let best=null,bestScore=0;
-        for(const group of groups){const score=questionSimilarity(question,group.representative);if(score>bestScore){bestScore=score;best=group;}}
-        if(best&&bestScore>=0.36){if(!best.items.some(x=>x.paper.name===entry.paper.name))best.items.push({question,paper:entry.paper});}
-        else groups.push({representative:question,items:[{question,paper:entry.paper}]});
+        const exactKey=normalizeExactQuestion(question);
+        if(!exactKey)continue;
+        let best=groups.find(group=>group.exactKey===exactKey)||null;
+        let bestScore=best?1:0;
+        if(!best){
+          for(const group of groups){
+            const score=questionSimilarity(question,group.representative);
+            if(score>bestScore){bestScore=score;best=group;}
+          }
+        }
+        if(best&&bestScore>=0.36){
+          if(!best.items.some(x=>x.paper.name===entry.paper.name))best.items.push({question,paper:entry.paper});
+          if(bestScore===1)best.matchType="Exact match";
+        }else groups.push({representative:question,exactKey,matchType:"Similar match",items:[{question,paper:entry.paper}]});
       }
       return groups.filter(g=>g.items.length>=2).sort((a,b)=>b.items.length-a.items.length);
     }
@@ -234,7 +250,7 @@
       groups.forEach((group,index)=>{
         const card=document.createElement("div");card.className="dna-question";
         const title=document.createElement("strong");title.textContent=(index+1)+". "+group.representative;
-        const meta=document.createElement("small");meta.textContent="Repeated in "+group.items.length+" separate papers · "+[...new Set(group.items.map(x=>yearFrom(x.paper.name)))].join(", ");
+        const meta=document.createElement("small");meta.textContent=(group.matchType||"Similar match")+" · Repeated in "+group.items.length+" separate papers · "+[...new Set(group.items.map(x=>yearFrom(x.paper.name)))].join(", ");
         const occurrences=document.createElement("div");occurrences.className="dna-files";
         group.items.forEach(item=>{
           const occurrence=document.createElement("div");occurrence.className="dna-file";
