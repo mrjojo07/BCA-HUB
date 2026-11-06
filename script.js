@@ -825,7 +825,26 @@ loadNotifications();
 // Logo opens/closes the slide-out navigation; backdrop and Escape close it.
 const brandMenuToggle = document.getElementById("brandMenuToggle");
 const sidebarBackdrop = document.getElementById("sidebarBackdrop");
+let sidebarLockedScrollY=0;
 function setSidebarOpen(open){
+  const isOpen=navLinks?.classList.contains("open");
+  if(open&&!isOpen){
+    sidebarLockedScrollY=window.scrollY||window.pageYOffset||0;
+    document.body.classList.add("sidebar-scroll-locked");
+    document.body.style.position="fixed";
+    document.body.style.top=`-${sidebarLockedScrollY}px`;
+    document.body.style.left="0";
+    document.body.style.right="0";
+    document.body.style.width="100%";
+  }else if(!open&&isOpen){
+    document.body.classList.remove("sidebar-scroll-locked");
+    document.body.style.position="";
+    document.body.style.top="";
+    document.body.style.left="";
+    document.body.style.right="";
+    document.body.style.width="";
+    window.scrollTo(0,sidebarLockedScrollY);
+  }
   navLinks?.classList.toggle("open",open);
   brandMenuToggle?.setAttribute("aria-expanded",String(open));
   brandMenuToggle?.setAttribute("aria-label",open?"Close BCA SYNC menu":"Open BCA SYNC menu");
