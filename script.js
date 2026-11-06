@@ -277,10 +277,7 @@ async function showMaterials(category, moduleNumber = 0) {
         premiumTag.textContent = 'PREMIUM';
         premiumTag.style.cssText = 'margin-left:8px;padding:3px 7px;border-radius:20px;background:#e8c76b;color:#172033;font-size:10px;font-weight:800;letter-spacing:.04em';
         title.appendChild(premiumTag);
-        const note = document.createElement('span');
-        note.className = 'answer-key-availability';
-        note.textContent = 'Available for Premium members only';
-        row.append(title, note);
+        row.append(title);
       } else {
         if (file.premium) {
           const premiumTag = document.createElement('span');
