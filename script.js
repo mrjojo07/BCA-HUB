@@ -41,8 +41,8 @@ function applyBcaPremiumTheme(user){
   }
 }
 (async()=>{
-  const {data:{session}}=await supabase.auth.getSession();
-  applyBcaPremiumTheme(session?.user||null);
+  // Restore the selected subject immediately; do not wait for Supabase session lookup.
+  await Promise.resolve();
   const returnParams=new URLSearchParams(window.location.search);
   const savedReturnSlug=sessionStorage.getItem("bca-sync-return-subject")||"";
   const savedReturnSemester=Number(sessionStorage.getItem("bca-sync-return-semester")||1);
@@ -50,18 +50,27 @@ function applyBcaPremiumTheme(user){
   const returnSemester=Number(returnParams.get("returnSemester")||savedReturnSemester||1);
   if(returnSlug){
     const subjects=semesterSubjects[returnSemester]||[];
-    const match=subjects.find(name=>subjectSlug(name)===returnSlug);
+    const normalizedSlug=String(returnSlug).toLowerCase().trim();
+    const match=subjects.find(name=>subjectSlug(name)===normalizedSlug);
     if(match){
       currentSemester=returnSemester;
       showCategories(match);
-      subjectBrowser?.scrollIntoView({behavior:"auto",block:"start"});
+      subjectBrowser.hidden=false;
+      requestAnimationFrame(()=>subjectBrowser.scrollIntoView({behavior:"auto",block:"start"}));
       sessionStorage.removeItem("bca-sync-return-subject");
       sessionStorage.removeItem("bca-sync-return-semester");
       history.replaceState(null,"",window.location.pathname+window.location.hash);
     }
   }
-  supabase.auth.onAuthStateChange((_event,nextSession)=>applyBcaPremiumTheme(nextSession?.user||null));
-})();
+  try{
+    const {data:{session}}=await supabase.auth.getSession();
+    applyBcaPremiumTheme(session?.user||null);
+    supabase.auth.onAuthStateChange((_event,nextSession)=>applyBcaPremiumTheme(nextSession?.user||null));
+  }catch(error){
+    applyBcaPremiumTheme(null);
+    console.warn("Could not restore auth session; subject navigation was restored independently.",error);
+  }
+})(););
 const oldThemeButton=document.getElementById("oldThemeButton");
 oldThemeButton?.addEventListener("click",()=>{
   sessionStorage.removeItem("bca-sync-experience");
