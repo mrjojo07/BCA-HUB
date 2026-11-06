@@ -77,7 +77,13 @@
     <section class="dna-panel" style="margin-top:14px"><h2>Source papers</h2><div id="dnaFiles" class="dna-files"><p class="dna-empty">No papers scanned yet.</p></div></section>
     <p class="dna-note">Analysis is based only on readable text extracted from the available PDFs. Exact repeated questions and similar wording are grouped separately where detected. Repeated terms are clues for revision, not predictions of future exam questions. Scanned image-only PDFs may not contain extractable text. Module-wise classification will be enabled after matching the papers with the confirmed Calicut University syllabus.</p>
   </main>
-  <script type="module">
+  <script>
+    window.__bcaDnaEngineStarted = true;
+    const dnaBootStatus = document.getElementById("dnaStatus");
+    const dnaBootButton = document.getElementById("dnaAnalyze");
+    if (dnaBootStatus) dnaBootStatus.textContent = "Starting Question DNA engine…";
+    if (dnaBootButton) { dnaBootButton.disabled = true; dnaBootButton.textContent = "Loading…"; }
+    (async () => {
     let createClient, pdfjsLib;
     try{
       const [supabaseModule,pdfModule]=await Promise.all([
@@ -93,7 +99,7 @@
       const button=document.getElementById("dnaAnalyze");
       if(status)status.textContent="Question DNA could not load a required library. Check your internet connection and try again. Details: "+(error?.message||String(error));
       if(button){button.disabled=true;button.textContent="Library loading failed";}
-      throw error;
+      return;
     }
     const supabase=createClient("https://efbkhmfekfujbwfdpfhk.supabase.co","sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH");
     const $=id=>document.getElementById(id);
@@ -359,6 +365,7 @@
       }
     }
     init();
+    })();
   </script>
 </body>
 </html>
