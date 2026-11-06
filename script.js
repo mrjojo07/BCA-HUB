@@ -152,6 +152,7 @@ function showSemester(number) {
   subjectBrowser.scrollIntoView({behavior:"smooth",block:"start"});
 }
 function showCategories(name) {
+  subjectBrowser.hidden = false;
   currentSubject = name;
   const quizCard = '<button type="button" class="material-type" data-material="mcq"><span>✓</span><h4>MCQ Quiz</h4><p>Take a 10-question random quiz from 30 important questions.</p><small>Start quiz ↗</small></button>';
   const questionDnaCard = document.body.classList.contains("premium-mode") ? '<button type="button" class="material-type question-dna-card" data-material="question-dna"><span>🧬</span><h4>Question DNA</h4><p>Find recurring terms and patterns in previous year papers.</p><small>Open Secret Study Lab ↗</small></button>' : '';
