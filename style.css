@@ -1943,3 +1943,14 @@ body.premium-mode #analyticsPanel #refreshAnalytics:hover{
   border-color:#f2d98e!important;
   color:#21160d!important;
 }
+
+
+/* Premium Theme: turn Website Analytics indicator dots and section accent bars gold. */
+body.premium-mode #analyticsPanel .analytics-stat:before{
+  background:#e8c58f!important;
+  box-shadow:0 0 12px rgba(232,197,143,.72),0 0 4px rgba(197,163,84,.55)!important;
+}
+body.premium-mode #analyticsPanel .analytics-columns h3:before{
+  background:linear-gradient(180deg,#f2d98e,#bd913c)!important;
+  box-shadow:0 0 10px rgba(197,163,84,.38)!important;
+}
