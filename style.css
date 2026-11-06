@@ -2065,3 +2065,12 @@ body.premium-mode.admin-page .admin-title span{
   background:none!important;
   animation:none!important;
 }
+
+/* Old Theme profile menu: make the Log out action clearly red. */
+body:not(.premium-mode) .account-dropdown #accountLogoutButton{
+  color:#ff5b65!important;
+}
+body:not(.premium-mode) .account-dropdown #accountLogoutButton:hover{
+  background:rgba(255,76,88,.13)!important;
+  color:#ff737c!important;
+}
