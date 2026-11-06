@@ -2180,3 +2180,37 @@ body.premium-mode .hero-actions #savedNotesHeroButton{
 /* Keep the page behind the mobile navigation from scrolling; allow the menu itself to scroll. */
 body.sidebar-scroll-locked{overflow:hidden!important;overscroll-behavior:none!important}
 .nav-links{overscroll-behavior:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch}
+
+
+/* Keep the BCA SYNC wordmark colours stable when the sidebar opens or closes. */
+body:not(.premium-mode) .site-header #brandMenuToggle.brand,
+body:not(.premium-mode) .site-header #brandMenuToggle.brand b{
+  color:#168cff!important;
+  -webkit-text-fill-color:#168cff!important;
+}
+body:not(.premium-mode) .site-header #brandMenuToggle .brand-mark.brand-logo{
+  filter:drop-shadow(0 2px 8px #087cff30)!important;
+}
+body.premium-mode .site-header #brandMenuToggle.brand,
+body.premium-mode .site-header #brandMenuToggle.brand b{
+  color:#f1d6a0!important;
+  -webkit-text-fill-color:#f1d6a0!important;
+}
+body.premium-mode .site-header #brandMenuToggle .brand-mark.brand-logo{
+  filter:sepia(1) saturate(2.1) hue-rotate(350deg) brightness(1.22)
+    drop-shadow(0 0 5px rgba(226,185,112,.58))
+    drop-shadow(0 2px 10px rgba(197,139,90,.42))!important;
+}
+body:not(.premium-mode) .nav-links .sidebar-brand span{
+  color:#55aaff!important;
+  -webkit-text-fill-color:#55aaff!important;
+}
+body.premium-mode .nav-links .sidebar-brand span{
+  color:#f1d6a0!important;
+  -webkit-text-fill-color:#f1d6a0!important;
+}
+body.premium-mode .nav-links .sidebar-brand img{
+  filter:sepia(1) saturate(2.1) hue-rotate(350deg) brightness(1.22)
+    drop-shadow(0 0 5px rgba(226,185,112,.58))
+    drop-shadow(0 2px 10px rgba(197,139,90,.42))!important;
+}
