@@ -225,7 +225,7 @@ async function showMaterials(category, moduleNumber = 0) {
     if (canReadPremium) {
       const { data: premiumRows, error: premiumError } = await supabase
         .from("premium_materials")
-        .select("id,title,storage_path,created_at")
+        .select("id,title,storage_path,category,created_at")
         .eq("semester", Number(currentSemester))
         .eq("subject_slug", subjectSlug(currentSubject))
         .in("category", category === "previous-year-questions" ? ["previous-year-questions","answer-key"] : [category])
