@@ -75,7 +75,7 @@
       <section class="dna-panel"><h2>Module-wise Analysis</h2><div id="dnaModules" class="dna-empty">Module mapping will appear here.</div></section>
     </div>
     <section class="dna-panel" style="margin-top:14px"><h2>Source papers</h2><div id="dnaFiles" class="dna-files"><p class="dna-empty">No papers scanned yet.</p></div></section>
-    <p class="dna-note">Analysis is based only on readable text extracted from the available PDFs. Repeated terms are clues for revision, not predictions of future exam questions. Scanned image-only PDFs may not contain extractable text. Official module-wise classification will be added only after matching the papers with the confirmed syllabus.</p>
+    <p class="dna-note">Analysis is based only on readable text extracted from the available PDFs. Repeated terms are clues for revision, not predictions of future exam questions. Scanned image-only PDFs may not contain extractable text. Module-wise classification will be enabled after matching the papers with the confirmed Calicut University syllabus.</p>
   </main>
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm";
@@ -265,15 +265,8 @@
         const repeated=groupRepeatedQuestions(questionEntries);
         renderQuestionCards($("dnaRepeated"),repeated,12);
         renderQuestionCards($("dnaRanking"),repeated,8);
-        const moduleCounts=new Map();
-        for(const entry of questionEntries){
-          const moduleMatch=entry.paper.name.match(/module[- _]?(\d+)/i);
-          const moduleLabel=moduleMatch?"Module "+moduleMatch[1]:"Module not stated in PDF filename";
-          moduleCounts.set(moduleLabel,(moduleCounts.get(moduleLabel)||0)+entry.questions.length);
-        }
-        const moduleTarget=$("dnaModules");moduleTarget.replaceChildren();moduleTarget.className="dna-list";
-        if(!moduleCounts.size){moduleTarget.className="dna-empty";moduleTarget.textContent="No module labels could be identified.";}
-        else for(const [label,count] of moduleCounts){const item=document.createElement("div");item.className="dna-module";const bold=document.createElement("b");bold.textContent=label;item.append(bold,document.createTextNode(" · "+count+" question candidates detected"));moduleTarget.append(item);}
+        const moduleTarget=$("dnaModules");moduleTarget.className="dna-empty";
+        moduleTarget.textContent="Module-wise mapping needs the confirmed Calicut University syllabus for these four subjects. Upload the syllabus PDF to enable reliable module tagging; questions will not be assigned to modules by guesswork.";
         $("dnaStatus").textContent=readable.length+" of "+papers.length+" PDF(s) scanned. Repeated questions are matched by text similarity; ranking reflects how many separate papers contain a similar question."+(result.storageError?" Live folder listing was unavailable; verified file index used.":"");
       }catch(error){console.error(error);$("dnaStatus").textContent="Could not analyze the papers: "+(error.message||"Please try again.");}
       finally{btn.disabled=false;btn.textContent="Analyze Papers";}
