@@ -107,22 +107,62 @@
       for(let p=1;p<=pdf.numPages;p++){const page=await pdf.getPage(p);const content=await page.getTextContent();text+=" "+content.items.map(x=>x.str||"").join(" ");}
       return text;
     }
-    async function findPapers(semester,slug){
-      const semesterFolder=String(semester).startsWith("semester-")?String(semester):"semester-"+semester;const folder="resources/"+semesterFolder+"/previous-year-questions/"+slug;
-      const [gh,storage]=await Promise.all([
-        fetch("https://api.github.com/repos/mrjojo07/BCA-HUB/contents/"+folder,{headers:{Accept:"application/vnd.github+json"}}),
-        supabase.storage.from("bca-hub-materials").list(folder,{limit:100,sortBy:{column:"name",order:"asc"}})
-      ]);
-      const files=[];
-      if(gh.ok){const items=await gh.json();for(const f of items.filter(x=>x.type==="file"&&/\.pdf$/i.test(x.name)))files.push({name:f.name,url:f.download_url||f.html_url});}
-      if(storage.error) throw storage.error;
-      for(const f of (storage.data||[]).filter(x=>x&&typeof x.name==="string"&&x.name!=="."&&x.name!==".. "&&x.name!==".emptyFolderPlaceholder")){
-        const path=folder+"/"+f.name;
-        files.push({name:f.name.replace(/^[0-9a-f-]{36}-/i,""),url:"https://efbkhmfekfujbwfdpfhk.supabase.co/storage/v1/object/public/bca-hub-materials/"+path.split("/").map(encodeURIComponent).join("/")});
-      }
-      const unique=new Map();for(const f of files){const k=f.name.toLowerCase();if(!unique.has(k))unique.set(k,f);}
-      return [...unique.values()];
+    const knownPyqPapers={
+      "semester-1|fundamentals-of-computers-and-computational-thinking":[
+        "Previous year question paper 2024",
+        "Previous year question paper 2025"
+      ],
+      "semester-1|introduction-to-computers-and-office-automation":[
+        "Previous year question paper 2024",
+        "Previous year question paper 2025"
+      ],
+      "semester-1|mathematical-foundation-for-computer-applications":[
+        "Previous year improvement question paper 2024",
+        "Previous year question paper 2024",
+        "Previous year question paper 2025"
+      ],
+      "semester-1|discrete-structures-for-computer-applications":[
+        "Previous year question paper 2024",
+        "Previous year question paper 2025"
+      ]
+    };
+    function publicStorageUrl(path){
+      return "https://efbkhmfekfujbwfdpfhk.supabase.co/storage/v1/object/public/bca-hub-materials/"+path.split("/").map(encodeURIComponent).join("/");
     }
+    async function findPapers(semester,slug){
+      const semesterFolder=String(semester).startsWith("semester-")?String(semester):"semester-"+semester;
+      const folder="resources/"+semesterFolder+"/previous-year-questions/"+slug;
+      const files=[];
+      const indexedNames=knownPyqPapers[semesterFolder+"|"+slug]||[];
+      for(const name of indexedNames){
+        const path=folder+"/"+name;
+        files.push({name,path,url:publicStorageUrl(path),source:"verified-index"});
+      }
+      let storageError=null,listedCount=0;
+      try{
+        const storage=await supabase.storage.from("bca-hub-materials").list(folder,{limit:100,sortBy:{column:"name",order:"asc"}});
+        if(storage.error) storageError=storage.error.message||String(storage.error);
+        else{
+          const listed=Array.isArray(storage.data)?storage.data:[];
+          listedCount=listed.length;
+          for(const f of listed){
+            if(!f||typeof f.name!=="string"||!f.name||f.name==="."||f.name===".."||f.name===".emptyFolderPlaceholder")continue;
+            const mime=String(f.metadata?.mimetype||f.metadata?.contentType||"").toLowerCase();
+            if(/\.pdf$/i.test(f.name)||mime==="application/pdf"){
+              const path=folder+"/"+f.name;
+              files.push({name:f.name,path,url:publicStorageUrl(path),source:"storage-list"});
+            }
+          }
+        }
+      }catch(error){storageError=error?.message||String(error);}
+      const unique=new Map();
+      for(const file of files){
+        const key=(file.path||file.name).toLowerCase();
+        if(!unique.has(key))unique.set(key,file);
+      }
+      return {papers:[...unique.values()],folder,listedCount,storageError,indexedCount:indexedNames.length};
+    }
+
     function yearFrom(name){const m=name.match(/(?:19|20)\d{2}/);return m?m[0]:"Year not stated";}
     function renderList(el,items,kind){
       el.replaceChildren();
@@ -142,8 +182,14 @@
       btn.disabled=true;btn.textContent="Scanning…";$("dnaStatus").textContent="Finding PDFs and extracting their text…";
       $("dnaTerms").textContent="Working…";$("dnaYears").textContent="Working…";$("dnaFiles").replaceChildren();
       try{
-        const papers=await findPapers(semester,slug);
-        if(!papers.length){$("dnaStatus").textContent="No PDF question papers were found for this subject yet. Upload the PYQ PDFs under Previous Year Questions first.";renderList($("dnaTerms"),[]);renderList($("dnaYears"),[]);$("dnaPaperCount").textContent="0";$("dnaYearCount").textContent="0";$("dnaPhraseCount").textContent="0";return;}
+        const result=await findPapers(semester,slug);
+        const papers=result.papers;
+        if(!papers.length){
+          $("dnaStatus").textContent="No paper entries were found. Folder checked: "+result.folder+". Storage list returned "+result.listedCount+" item(s)."+(result.storageError?" Storage message: "+result.storageError:"");
+          renderList($("dnaTerms"),[]);renderList($("dnaYears"),[]);
+          $("dnaPaperCount").textContent="0";$("dnaYearCount").textContent="0";$("dnaPhraseCount").textContent="0";
+          return;
+        }
         const termPapers=new Map(),years=new Map(),readable=[],fileList=[];
         for(let i=0;i<papers.length;i++){
           const paper=papers[i];$("dnaStatus").textContent="Reading paper "+(i+1)+" of "+papers.length+": "+paper.name;
@@ -159,7 +205,7 @@
         const yearItems=[...years].map(([label,count])=>({label,count})).sort((a,b)=>b.label.localeCompare(a.label));
         $("dnaPaperCount").textContent=String(readable.length);$("dnaYearCount").textContent=String(years.size);$("dnaPhraseCount").textContent=String(recurring.length);
         renderList($("dnaTerms"),recurring,"terms");renderList($("dnaYears"),yearItems,"years");
-        $("dnaStatus").textContent=readable.length+" of "+papers.length+" PDF(s) scanned. Repeated terms are counted by how many papers contain them.";
+        $("dnaStatus").textContent=readable.length+" of "+papers.length+" PDF(s) scanned. Repeated terms are counted by how many papers contain them."+(result.storageError?" Live folder listing was unavailable; verified file index used.":"");
       }catch(error){console.error(error);$("dnaStatus").textContent="Could not analyze the papers: "+(error.message||"Please try again.");}
       finally{btn.disabled=false;btn.textContent="Analyze Papers";}
     }
