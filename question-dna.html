@@ -156,19 +156,26 @@
       }
       let storageError=null,listedCount=0;
       try{
-        const storage=await supabase.storage.from("bca-hub-materials").list(folder,{limit:100,sortBy:{column:"name",order:"asc"}});
-        if(storage.error) storageError=storage.error.message||String(storage.error);
-        else{
+        const bucket=supabase.storage.from("bca-hub-materials");
+        const pageSize=100,maxPages=20;
+        for(let page=0;page<maxPages;page++){
+          const storage=await bucket.list(folder,{
+            limit:pageSize,
+            offset:page*pageSize,
+            sortBy:{column:"name",order:"asc"}
+          });
+          if(storage.error)throw storage.error;
           const listed=Array.isArray(storage.data)?storage.data:[];
-          listedCount=listed.length;
+          listedCount+=listed.length;
           for(const f of listed){
             if(!f||typeof f.name!=="string"||!f.name||f.name==="."||f.name===".."||f.name===".emptyFolderPlaceholder")continue;
-            const mime=String(f.metadata?.mimetype||f.metadata?.contentType||"").toLowerCase();
-            if(/\.pdf$/i.test(f.name)||mime==="application/pdf"){
-              const path=folder+"/"+f.name;
-              files.push({name:f.name,path,url:publicStorageUrl(path),source:"storage-list"});
-            }
+            const mime=String(f.metadata?.mimetype||f.metadata?.contentType||f.metadata?.content_type||"").toLowerCase();
+            const isPdf=/\.pdf$/i.test(f.name)||mime==="application/pdf";
+            if(!isPdf)continue;
+            const path=folder+"/"+f.name;
+            files.push({name:f.name,path,url:publicStorageUrl(path),source:"storage-list"});
           }
+          if(listed.length<pageSize)break;
         }
       }catch(error){storageError=error?.message||String(error);}
       const unique=new Map();
