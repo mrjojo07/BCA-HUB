@@ -1,6 +1,6 @@
-const CACHE_NAME = "bca-sync-mobile-v4";
+const CACHE_NAME = "bca-sync-mobile-v5";
 const APP_ROOT = new URL("./", self.location.href);
-const SHELL_FILES = ["./","index.html","style.css","welcome-auth.css","script.js","welcome-auth.js","assets/bca-sync-logo.svg"];
+const SHELL_FILES = ["./","index.html","style.css","welcome-auth.css","script.js","welcome-auth.js","question-dna.html","assets/bca-sync-logo.svg"];
 self.addEventListener("install", event => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE_NAME);
