@@ -602,7 +602,7 @@ subjectBrowser?.addEventListener("click", (event) => {
   const material = event.target.closest("[data-material]");
   if (material) {
     if (material.dataset.material === "notes") showNotesModules();
-    else if (material.dataset.material === "question-dna") window.location.href = "question-dna.html?semester="+encodeURIComponent(currentSemester)+"&subject="+encodeURIComponent(subjectSlug(currentSubject));
+    else if (material.dataset.material === "question-dna") window.location.href = "question-dna.html?build=20261106-2&semester="+encodeURIComponent(currentSemester)+"&subject="+encodeURIComponent(subjectSlug(currentSubject));
     else showMaterials(material.dataset.material);
     return;
   }
