@@ -120,10 +120,20 @@ function syncSidebarActiveLink(){
 }
 
 navLinks?.querySelectorAll(".sidebar-link").forEach(link=>{
-  link.addEventListener("click",()=>{
+  link.addEventListener("click",(event)=>{
+    const section = link.id === "openCommunityUpload"
+      ? document.getElementById("communityUpload")
+      : link.id === "openFeedbackMenu"
+        ? document.getElementById("feedback")
+        : null;
+    if(section){
+      event.preventDefault();
+      section.hidden = false;
+    }
     setActiveSidebarLink(link);
-    navLinks.classList.remove("open");
-    menuToggle?.setAttribute("aria-expanded","false");
+    // Use the shared close function so the fixed-body scroll lock is always released.
+    setSidebarOpen(false);
+    if(section) requestAnimationFrame(()=>section.scrollIntoView({behavior:"auto",block:"start"}));
   });
 });
 window.addEventListener("hashchange",syncSidebarActiveLink);
@@ -836,7 +846,8 @@ function setSidebarOpen(open){
     document.body.style.left="0";
     document.body.style.right="0";
     document.body.style.width="100%";
-  }else if(!open&&isOpen){
+  }else if(!open&&(isOpen||document.body.classList.contains("sidebar-scroll-locked")||document.body.style.position==="fixed")){
+    // Release the body lock even if another handler already removed the menu's open class.
     document.body.classList.remove("sidebar-scroll-locked");
     document.body.style.position="";
     document.body.style.top="";
