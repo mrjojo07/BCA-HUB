@@ -34,6 +34,7 @@
     .dna-files{margin-top:14px;display:grid;gap:8px}
     .dna-file{padding:10px 12px;border:1px solid #3e3221;border-radius:9px;color:#e5d7bb;font-size:12px;overflow-wrap:anywhere}
     .dna-note{margin-top:18px;color:#a99d88;font-size:11px;line-height:1.7}
+    .dna-wide{grid-column:1/-1}.dna-question{padding:12px;border:1px solid #493a24;border-radius:11px;background:#100d09}.dna-question strong{display:block;color:#f4e8d1;font-size:13px;line-height:1.55}.dna-question small{display:block;margin-top:7px;color:#c8a96b;font-size:11px}.dna-module{padding:11px 12px;border:1px solid #493a24;border-radius:10px;color:#e8dcc5;font-size:12px;line-height:1.6}.dna-module b{color:#f0d69c}
     .dna-back{display:inline-block;margin-bottom:20px;color:#e2c17f;font-weight:700}
     @media(max-width:680px){.dna-controls{grid-template-columns:1fr}.dna-stats{grid-template-columns:1fr 1fr}.dna-results{grid-template-columns:1fr}.dna-main{margin-top:26px}}
   </style>
@@ -67,6 +68,11 @@
     <div class="dna-results">
       <section class="dna-panel"><h2>Recurring terms & phrases</h2><div id="dnaTerms" class="dna-empty">Analysis results will appear here.</div></section>
       <section class="dna-panel"><h2>Paper year coverage</h2><div id="dnaYears" class="dna-empty">Year distribution will appear here.</div></section>
+    </div>
+    <div class="dna-results" style="margin-top:14px">
+      <section class="dna-panel dna-wide"><h2>Repeated Questions</h2><div id="dnaRepeated" class="dna-empty">Repeated questions will appear here after analysis.</div></section>
+      <section class="dna-panel"><h2>Important Question Ranking</h2><div id="dnaRanking" class="dna-empty">Priority ranking will appear here.</div></section>
+      <section class="dna-panel"><h2>Module-wise Analysis</h2><div id="dnaModules" class="dna-empty">Module mapping will appear here.</div></section>
     </div>
     <section class="dna-panel" style="margin-top:14px"><h2>Source papers</h2><div id="dnaFiles" class="dna-files"><p class="dna-empty">No papers scanned yet.</p></div></section>
     <p class="dna-note">Analysis is based only on readable text extracted from the available PDFs. Repeated terms are clues for revision, not predictions of future exam questions. Scanned image-only PDFs may not contain extractable text. Official module-wise classification will be added only after matching the papers with the confirmed syllabus.</p>
@@ -104,7 +110,17 @@
       const data=new Uint8Array(await response.arrayBuffer());
       const pdf=await pdfjsLib.getDocument({data}).promise;
       let text="";
-      for(let p=1;p<=pdf.numPages;p++){const page=await pdf.getPage(p);const content=await page.getTextContent();text+=" "+content.items.map(x=>x.str||"").join(" ");}
+      for(let p=1;p<=pdf.numPages;p++){
+        const page=await pdf.getPage(p),content=await page.getTextContent();
+        let previousY=null,line="";
+        for(const item of content.items){
+          const value=(item.str||"").trim();if(!value)continue;
+          const y=Array.isArray(item.transform)?item.transform[5]:null;
+          if(previousY!==null&&y!==null&&Math.abs(y-previousY)>3){text+=" "+line+"\n";line="";}
+          line+=(line?" ":"")+value;previousY=y;
+        }
+        text+=" "+line+"\n";
+      }
       return text;
     }
     const knownPyqPapers={
@@ -164,6 +180,45 @@
     }
 
     function yearFrom(name){const m=name.match(/(?:19|20)\d{2}/);return m?m[0]:"Year not stated";}
+    const questionStop=new Set("about above after again all also an and are as at be been before being between both but by can could did do does for from had has have how if in into is it its may might of on or should than that the their them then there these this those through to was were what when where which who why will with would".split(" "));
+    function questionTokens(value){return new Set(cleanText(value).split(" ").filter(w=>w.length>2&&!questionStop.has(w)&&!/^\d+$/.test(w)));}
+    function questionSimilarity(a,b){
+      const A=questionTokens(a),B=questionTokens(b);if(!A.size||!B.size)return 0;
+      let overlap=0;for(const w of A)if(B.has(w))overlap++;
+      return overlap/(A.size+B.size-overlap);
+    }
+    function extractQuestions(text){
+      const lines=text.split(/\n+/).map(x=>x.replace(/\s+/g," ").trim()).filter(Boolean),candidates=[];
+      for(const line of lines){
+        const cleaned=line.replace(/^\s*(?:Q(?:uestion)?\s*)?\d{1,2}[.)]\s*/i,"").trim();
+        if(cleaned.length<28||cleaned.length>420||/^(?:time allowed|maximum marks|answer all|section [a-z]|part [a-z]|write the answers)/i.test(cleaned))continue;
+        const words=cleaned.split(/\s+/);
+        if(words.length<5||words.length>55)continue;
+        if(/[?]$/.test(cleaned)||/^(?:define|explain|describe|discuss|differentiate|distinguish|compare|what|why|how|write|list|state|illustrate|prove|calculate|find|evaluate|derive|mention|outline)\b/i.test(cleaned))candidates.push(cleaned.replace(/^\d+[.)]\s*/,"").trim());
+      }
+      return [...new Set(candidates)];
+    }
+    function groupRepeatedQuestions(entries){
+      const groups=[];
+      for(const entry of entries)for(const question of entry.questions){
+        let best=null,bestScore=0;
+        for(const group of groups){const score=questionSimilarity(question,group.representative);if(score>bestScore){bestScore=score;best=group;}}
+        if(best&&bestScore>=0.48){if(!best.items.some(x=>x.paper.name===entry.paper.name))best.items.push({question,paper:entry.paper});}
+        else groups.push({representative:question,items:[{question,paper:entry.paper}]});
+      }
+      return groups.filter(g=>g.items.length>=2).sort((a,b)=>b.items.length-a.items.length);
+    }
+    function renderQuestionCards(target,groups,limit=12){
+      target.replaceChildren();
+      if(!groups.length){target.className="dna-empty";target.textContent="No repeated full questions could be matched confidently. Try papers with selectable text.";return;}
+      target.className="dna-list";
+      groups.slice(0,limit).forEach((group,index)=>{
+        const card=document.createElement("div");card.className="dna-question";
+        const title=document.createElement("strong");title.textContent=(index+1)+". "+group.representative;
+        const meta=document.createElement("small");meta.textContent=group.items.length+" papers · "+[...new Set(group.items.map(x=>yearFrom(x.paper.name)))].join(", ");
+        card.append(title,meta);target.append(card);
+      });
+    }
     function renderList(el,items,kind){
       el.replaceChildren();
       if(!items.length){el.className="dna-empty";el.textContent="No readable data found yet.";return;}
@@ -187,15 +242,17 @@
         if(!papers.length){
           $("dnaStatus").textContent="No paper entries were found. Folder checked: "+result.folder+". Storage list returned "+result.listedCount+" item(s)."+(result.storageError?" Storage message: "+result.storageError:"");
           renderList($("dnaTerms"),[]);renderList($("dnaYears"),[]);
+          ["dnaRepeated","dnaRanking","dnaModules"].forEach(id=>{const el=$(id);if(el){el.className="dna-empty";el.textContent="No papers available for this subject.";}});
           $("dnaPaperCount").textContent="0";$("dnaYearCount").textContent="0";$("dnaPhraseCount").textContent="0";
           return;
         }
-        const termPapers=new Map(),years=new Map(),readable=[],fileList=[];
+        const termPapers=new Map(),years=new Map(),readable=[],fileList=[],questionEntries=[];
         for(let i=0;i<papers.length;i++){
           const paper=papers[i];$("dnaStatus").textContent="Reading paper "+(i+1)+" of "+papers.length+": "+paper.name;
           try{
             const text=await readPdf(paper.url);if(text.trim().length<30)throw new Error("No selectable text");
             const terms=extractTerms(text);for(const [term,count] of terms){if(count>=2)termPapers.set(term,(termPapers.get(term)||0)+1);}
+            questionEntries.push({paper,questions:extractQuestions(text)});
             const year=yearFrom(paper.name);years.set(year,(years.get(year)||0)+1);readable.push(paper);
             const line=document.createElement("div");line.className="dna-file";line.textContent="✓ "+paper.name;fileList.push(line);
           }catch(err){const line=document.createElement("div");line.className="dna-file";line.textContent="Not readable: "+paper.name;fileList.push(line);}
@@ -205,7 +262,19 @@
         const yearItems=[...years].map(([label,count])=>({label,count})).sort((a,b)=>b.label.localeCompare(a.label));
         $("dnaPaperCount").textContent=String(readable.length);$("dnaYearCount").textContent=String(years.size);$("dnaPhraseCount").textContent=String(recurring.length);
         renderList($("dnaTerms"),recurring,"terms");renderList($("dnaYears"),yearItems,"years");
-        $("dnaStatus").textContent=readable.length+" of "+papers.length+" PDF(s) scanned. Repeated terms are counted by how many papers contain them."+(result.storageError?" Live folder listing was unavailable; verified file index used.":"");
+        const repeated=groupRepeatedQuestions(questionEntries);
+        renderQuestionCards($("dnaRepeated"),repeated,12);
+        renderQuestionCards($("dnaRanking"),repeated,8);
+        const moduleCounts=new Map();
+        for(const entry of questionEntries){
+          const moduleMatch=entry.paper.name.match(/module[- _]?(\d+)/i);
+          const moduleLabel=moduleMatch?"Module "+moduleMatch[1]:"Module not stated in PDF filename";
+          moduleCounts.set(moduleLabel,(moduleCounts.get(moduleLabel)||0)+entry.questions.length);
+        }
+        const moduleTarget=$("dnaModules");moduleTarget.replaceChildren();moduleTarget.className="dna-list";
+        if(!moduleCounts.size){moduleTarget.className="dna-empty";moduleTarget.textContent="No module labels could be identified.";}
+        else for(const [label,count] of moduleCounts){const item=document.createElement("div");item.className="dna-module";const bold=document.createElement("b");bold.textContent=label;item.append(bold,document.createTextNode(" · "+count+" question candidates detected"));moduleTarget.append(item);}
+        $("dnaStatus").textContent=readable.length+" of "+papers.length+" PDF(s) scanned. Repeated questions are matched by text similarity; ranking reflects how many separate papers contain a similar question."+(result.storageError?" Live folder listing was unavailable; verified file index used.":"");
       }catch(error){console.error(error);$("dnaStatus").textContent="Could not analyze the papers: "+(error.message||"Please try again.");}
       finally{btn.disabled=false;btn.textContent="Analyze Papers";}
     }
