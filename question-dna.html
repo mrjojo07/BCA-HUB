@@ -57,7 +57,7 @@
         <option value="mathematical-foundation-for-computer-applications">Mathematical Foundation for Computer Applications</option>
         <option value="discrete-structures-for-computer-applications">Discrete Structures for Computer Applications</option>
       </select></div>
-      <button class="dna-button" id="dnaAnalyze" type="button">Analyze Papers</button>
+      <button class="dna-button" id="dnaAnalyze" type="button" onclick="this.dataset.tapped='1';document.getElementById('dnaStatus').textContent='Analyze button received your tap. Loading the analysis engine…';">Analyze Papers</button>
     </section>
     <p class="dna-status" id="dnaStatus" role="status" aria-live="polite">Choose a subject and analyze its available question papers.</p>
     <section class="dna-stats" aria-label="Analysis summary">
@@ -81,7 +81,7 @@
     window.__bcaDnaEngineStarted = true;
     const dnaBootStatus = document.getElementById("dnaStatus");
     const dnaBootButton = document.getElementById("dnaAnalyze");
-    if (dnaBootStatus) dnaBootStatus.textContent = "Starting Question DNA engine…";
+    if (dnaBootStatus) dnaBootStatus.textContent = "Starting Question DNA engine (build 2026-11-06.2)…";
     if (dnaBootButton) { dnaBootButton.disabled = true; dnaBootButton.textContent = "Loading…"; }
     (async () => {
     let createClient, pdfjsLib;
@@ -215,10 +215,10 @@
       return overlap/(A.size+B.size-overlap);
     }
     function extractQuestions(text){
-      const rawLines=text.split(/\\n+/).map(x=>x.replace(/\\s+/g," ").trim()).filter(Boolean);
+      const rawLines=text.split(/\n+/).map(x=>x.replace(/\s+/g," ").trim()).filter(Boolean);
       const chunks=[];let current="";
-      const questionStart=/^(?:(?:q(?:uestion)?\\s*)?\\d{1,2}\\s*[.)]|\\d{1,2}\\s*\\([a-h]\\)\\s*|\\(?[a-h]\\)\\s*)/i;
-      const stopLine=/^(?:page\\s+\\d+|semester|time allowed|maximum marks|total marks|answer all questions|section [a-z]|part [a-z]|university of calicut|register number)/i;
+      const questionStart=/^(?:(?:q(?:uestion)?\s*)?\d{1,2}\s*[.)]|\d{1,2}\s*\\([a-h]\\)\s*|\\(?[a-h]\\)\s*)/i;
+      const stopLine=/^(?:page\s+\d+|semester|time allowed|maximum marks|total marks|answer all questions|section [a-z]|part [a-z]|university of calicut|register number)/i;
       for(const line of rawLines){
         if(stopLine.test(line))continue;
         if(questionStart.test(line)){if(current)chunks.push(current);current=line;}
@@ -227,11 +227,11 @@
       }
       if(current)chunks.push(current);
       const candidates=[];
-      const command=/\\b(?:define|explain|describe|discuss|differentiate|distinguish|compare|what|why|how|write|list|state|illustrate|prove|calculate|find|evaluate|derive|mention|outline|identify|classify|expand|give|draw|show|compute|simplify|construct|represent)\\b/i;
+      const command=/\b(?:define|explain|describe|discuss|differentiate|distinguish|compare|what|why|how|write|list|state|illustrate|prove|calculate|find|evaluate|derive|mention|outline|identify|classify|expand|give|draw|show|compute|simplify|construct|represent)\b/i;
       const add=(value)=>{
-        const cleaned=value.replace(/^\\s*(?:(?:q(?:uestion)?\\s*)?\\d{1,2}\\s*[.)]|\\d{1,2}\\s*\\([a-h]\\)\\s*|\\(?[a-h]\\)\\s*)/i,"").replace(/\\s+/g," ").trim();
-        const words=cleaned.split(/\\s+/);
-        if(cleaned.length>=24&&cleaned.length<=520&&words.length>=5&&words.length<=75&&(/[?]$/.test(cleaned)||command.test(cleaned))&&!/^answers?\\b/i.test(cleaned))candidates.push(cleaned);
+        const cleaned=value.replace(/^\s*(?:(?:q(?:uestion)?\s*)?\d{1,2}\s*[.)]|\d{1,2}\s*\\([a-h]\\)\s*|\\(?[a-h]\\)\s*)/i,"").replace(/\s+/g," ").trim();
+        const words=cleaned.split(/\s+/);
+        if(cleaned.length>=24&&cleaned.length<=520&&words.length>=5&&words.length<=75&&(/[?]$/.test(cleaned)||command.test(cleaned))&&!/^answers?\b/i.test(cleaned))candidates.push(cleaned);
       };
       chunks.forEach(add);
       for(let i=0;i<rawLines.length;i++)for(let span=1;span<=3&&i+span<=rawLines.length;span++)add(rawLines.slice(i,i+span).join(" "));
@@ -239,8 +239,8 @@
     }
     function normalizeExactQuestion(value){
       return cleanText(value)
-        .replace(/^(?:(?:q(?:uestion)?\\s*)?\\d{1,2}\\s*[.)]|\\d{1,2}\\s*\\([a-h]\\)\\s*|\\(?[a-h]\\)\\s*)/i,"")
-        .replace(/\\s+/g," ")
+        .replace(/^(?:(?:q(?:uestion)?\s*)?\d{1,2}\s*[.)]|\d{1,2}\s*\\([a-h]\\)\s*|\\(?[a-h]\\)\s*)/i,"")
+        .replace(/\s+/g," ")
         .trim();
     }
     function groupRepeatedQuestions(entries){
