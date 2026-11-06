@@ -2134,7 +2134,3 @@ body.premium-mode .resource-save.is-saved{
   .site-footer .footer-links{gap:4px!important}
   .site-footer .footer-links a{font-size:10px!important}
 }
-
-
-/* Main page titles only */
-h1,h1 span{color:#fff!important;-webkit-text-fill-color:#fff!important;background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important}
