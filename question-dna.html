@@ -250,7 +250,7 @@
       groups.forEach((group,index)=>{
         const card=document.createElement("div");card.className="dna-question";
         const title=document.createElement("strong");title.textContent=(index+1)+". "+group.representative;
-        const meta=document.createElement("small");meta.textContent=(group.matchType||"Similar match")+" · Repeated in "+group.items.length+" separate papers · "+[...new Set(group.items.map(x=>yearFrom(x.paper.name)))].join(", ");
+        const meta=document.createElement("small");meta.textContent="Repeated in "+group.items.length+" separate papers · "+[...new Set(group.items.map(x=>yearFrom(x.paper.name)))].join(", ");
         const occurrences=document.createElement("div");occurrences.className="dna-files";
         group.items.forEach(item=>{
           const occurrence=document.createElement("div");occurrence.className="dna-file";
