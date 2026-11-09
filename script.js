@@ -13,7 +13,7 @@ function updateSidebarThemeLabel(){
 // plus trusted access from Supabase app_metadata.
 function applyBcaPremiumTheme(user){
   const meta=user?.app_metadata||{};
-  const hasAccess=meta.role==="admin"||meta.admin===true;
+  const hasAccess=meta.role==="admin"||meta.admin===true||meta.premium===true||meta.premium_access===true;
   const storedPremium=sessionStorage.getItem("bca-sync-experience")==="premium"||localStorage.getItem("bca-sync-experience")==="premium";
   // Keep the already-selected visual theme during the brief auth-session restore
   // on refresh; a signed-in non-admin is still switched back to the standard theme.
