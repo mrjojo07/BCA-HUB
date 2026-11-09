@@ -42,7 +42,7 @@
         <button class="notification-bell" id="notificationBell" type="button" aria-label="Notifications" aria-expanded="false" aria-controls="notificationPanel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg><span class="notification-count" id="notificationCount" hidden>0</span></button>
         <section class="notification-panel" id="notificationPanel" aria-label="Notifications" hidden><div class="notification-panel-head"><div><strong>Notifications</strong><small id="notificationSummary">Your BCA SYNC updates</small></div><button type="button" id="markAllNotificationsRead" class="notification-mark-all">Mark all read</button></div><div class="notification-list" id="notificationList" aria-live="polite"><p class="notification-empty">Sign in to view your notifications.</p></div></section>
       </div>
-      <div class="account-menu-wrap"><button class="account-button" id="accountMenuToggle" type="button" aria-label="Account menu" aria-expanded="false"><span class="account-avatar">A</span><span class="account-chevron">⌄</span></button><div class="account-dropdown" id="accountDropdown" hidden><a href="dashboard.html">My Dashboard</a><a href="login.html" id="accountLoginLink">Log in</a><button type="button" id="accountLogoutButton" hidden>Log out</button></div></div>
+      <div class="account-menu-wrap"><button class="account-button" id="accountMenuToggle" type="button" aria-label="Profile menu" aria-expanded="false" aria-controls="accountDropdown"><span class="account-avatar" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="8" r="3.5"></circle><path d="M4.8 20a7.2 7.2 0 0 1 14.4 0"></path></svg></span><span class="account-label">Profile</span><span class="account-chevron" aria-hidden="true">⌄</span></button><div class="account-dropdown" id="accountDropdown" hidden><a href="login.html?mode=login" id="accountLoginLink">Log in</a><a href="login.html?mode=signup" id="accountSignupLink">Create account</a><a href="dashboard.html" id="accountProfileLink" hidden>My Profile</a><a href="dashboard.html#saved" id="accountSavedLink" hidden>Saved Notes</a><button type="button" id="accountLogoutButton" hidden>Log out</button></div></div>
     </div>
   </header>
   <div class="sidebar-backdrop" id="sidebarBackdrop" hidden></div>
@@ -234,11 +234,15 @@
       if (loginLink) loginLink.hidden = signedIn;
       if (logoutButton) logoutButton.hidden = !signedIn;
       const accountLogin = document.getElementById("accountLoginLink");
+      const accountSignup = document.getElementById("accountSignupLink");
+      const accountProfile = document.getElementById("accountProfileLink");
+      const accountSaved = document.getElementById("accountSavedLink");
       const accountLogout = document.getElementById("accountLogoutButton");
-      const accountAvatar = document.querySelector(".account-avatar");
       if (accountLogin) accountLogin.hidden = signedIn;
+      if (accountSignup) accountSignup.hidden = signedIn;
+      if (accountProfile) accountProfile.hidden = !signedIn;
+      if (accountSaved) accountSaved.hidden = !signedIn;
       if (accountLogout) accountLogout.hidden = !signedIn;
-      if (accountAvatar) accountAvatar.textContent = (session?.user?.email || "A").trim().charAt(0).toUpperCase();
     };
     const { data } = await supabase.auth.getSession();
     updateMenuAuth(data?.session);
