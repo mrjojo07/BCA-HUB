@@ -2385,3 +2385,13 @@ body.premium-mode .hero-art .chip-code{bottom:42px!important;left:2px!important;
 .site-footer .footer-links{display:flex!important;flex-wrap:wrap!important;justify-content:center!important;align-items:center!important;gap:12px 20px!important;width:100%!important}
 .site-footer .footer-links a{display:inline-flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;white-space:normal!important}
 .site-footer .footer-links a[href="cancellation-refund-policy.html"]{color:#e5c77e!important;font-weight:700!important;text-decoration:underline!important;text-underline-offset:4px!important}
+
+
+/* Profile menu */
+.account-button{gap:8px;padding:5px 9px;border:1px solid #294568;border-radius:24px;background:#0b1728;transition:border-color .2s,background .2s}
+.account-button:hover,.account-button[aria-expanded="true"]{border-color:#55aaff;background:#10233a}
+.account-avatar{width:34px;height:34px;flex:0 0 34px}
+.account-avatar svg{width:20px;height:20px;fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.account-label{font-size:12px;font-weight:700;color:#e6efff}
+.account-dropdown{width:205px}
+@media(max-width:650px){.account-button{gap:5px;padding:4px 7px}.account-avatar{width:32px;height:32px;flex-basis:32px}.account-label{font-size:11px}.account-chevron{font-size:15px}}
