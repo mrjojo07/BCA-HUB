@@ -191,7 +191,15 @@ loginForm.addEventListener("submit", async (event) => {
   button.disabled = false; button.textContent = "Log in";
   if (error) return showStatus(readableError(error), "error");
   if (openAdminPanel(data.user)) return;
-  await showAccount(data.user);
+
+  // After a successful student login, return to the public homepage
+  // and play the existing BCA SYNC welcome-orbit animation.
+  const studentName = data.user.user_metadata?.display_name || data.user.email?.split("@")[0] || "Student";
+  try {
+    sessionStorage.setItem("bcaSyncNewUserWelcome", "1");
+    sessionStorage.setItem("bcaSyncWelcomeName", studentName);
+  } catch (_) {}
+  window.location.replace("index.html");
 });
 
 recoveryForm.addEventListener("submit", async (event) => {
