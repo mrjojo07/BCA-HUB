@@ -4,26 +4,13 @@ const overlay = document.getElementById("welcomeAuthOverlay");
 const closePopup = () => { if (overlay) overlay.hidden = true; };
 const firstLoginWelcome = document.documentElement.classList.contains("show-new-user-welcome");
 
-// Keep the auth welcome hidden until Supabase has restored the saved session.
-// This prevents a signed-in user from seeing the login card flash on refresh.
-try {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (session?.user || firstLoginWelcome) {
-    closePopup();
-  } else if (overlay) {
-    overlay.hidden = false;
-  }
-} catch (error) {
-  // If session restoration fails, avoid incorrectly blocking the public home page.
-  if (!firstLoginWelcome && overlay) overlay.hidden = false;
-}
+// The public homepage should open directly for everyone.
+// Student login and account creation remain available through the site menu
+// and protected actions; they no longer block the homepage on first visit.
+closePopup();
 
-supabase.auth.onAuthStateChange((_event, sessionNow) => {
-  if (sessionNow?.user || firstLoginWelcome) {
-    closePopup();
-  } else if (overlay) {
-    overlay.hidden = false;
-  }
+supabase.auth.onAuthStateChange(() => {
+  closePopup();
 });
 
 if (firstLoginWelcome) {
