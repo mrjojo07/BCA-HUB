@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#05080e">
+  <meta name="description" content="BCA SYNC cancellation and refund policy for optional Premium membership.">
+  <link rel="icon" type="image/svg+xml" href="assets/bca-sync-logo.svg?v=3">
+  <title>Cancellation & Refund Policy | BCA SYNC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{color-scheme:dark;--bg:#05080e;--panel:#0d1420;--line:#202b3a;--text:#eef3fb;--muted:#9aa9bc;--blue:#65a9ff}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:"DM Sans",Arial,sans-serif;line-height:1.7}
+    a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
+    header{min-height:70px;padding:18px max(6vw,22px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{font-family:"Space Grotesk",Arial,sans-serif;font-size:20px;font-weight:700;color:var(--text);letter-spacing:-.5px}.brand b{color:var(--blue)}
+    .back{font-size:13px;color:var(--muted)}
+    main{max-width:850px;margin:0 auto;padding:62px 24px 80px}.eyebrow{font-size:11px;letter-spacing:2px;font-weight:700;color:var(--blue)}
+    h1,h2{font-family:"Space Grotesk",Arial,sans-serif;line-height:1.2}h1{font-size:clamp(32px,6vw,46px);margin:12px 0}
+    h2{font-size:20px;margin:28px 0 8px}p,li{color:#c2ccda}.lead{font-size:17px;max-width:700px}
+    .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px;margin:22px 0}
+    .muted{color:var(--muted);font-size:13px}
+    footer{border-top:1px solid var(--line);padding:22px max(6vw,22px);color:var(--muted);font-size:12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    footer nav{display:flex;gap:16px;flex-wrap:wrap}
+    @media(max-width:520px){header{padding:16px 18px}main{padding:42px 18px 60px}.panel{padding:18px}footer{padding:20px 18px}}
+  </style>
+</head>
+<body>
+  <header><a class="brand" href="index.html">BCA <b>SYNC</b></a><a class="back" href="index.html">← Back to website</a></header>
+  <main>
+    <div class="eyebrow">PREMIUM MEMBERSHIP</div>
+    <h1>Cancellation & Refund Policy</h1>
+    <p class="muted">Last updated: 9 November 2026</p>
+    <p class="lead">This policy explains how cancellation and refund requests are handled for optional BCA SYNC Premium membership. Regular study notes and learning materials remain free.</p>
+    <section class="panel">
+      <h2>1. Premium subscription</h2>
+      <p>BCA SYNC Premium is offered at ₹49 for 6 months. The membership period begins after successful payment verification and activation.</p>
+      <h2>2. Cancellation</h2>
+      <p>Users may contact BCA SYNC to request cancellation of their Premium membership. Cancellation does not automatically guarantee a refund. Any recurring payment arrangement, if introduced, will be explained separately before a user agrees to it.</p>
+      <h2>3. Refund eligibility</h2>
+      <p>Refund requests may be reviewed in cases such as:</p>
+      <ul>
+        <li>A duplicate payment for the same membership.</li>
+        <li>Payment was deducted but Premium access was not activated.</li>
+        <li>A confirmed technical payment error occurred.</li>
+      </ul>
+      <h2>4. Non-refundable cases</h2>
+      <p>Once Premium access has been successfully activated and used, the payment is generally non-refundable, except where a refund is required by applicable law or is approved after reviewing the circumstances.</p>
+      <h2>5. Refund processing</h2>
+      <p>Approved refunds will normally be sent to the original payment method. The time taken for the refund to appear depends on the payment provider and the user's bank.</p>
+      <h2>6. How to request help</h2>
+      <p>For cancellation, refund, duplicate-payment or activation issues, email <a href="mailto:bca.sync.official@gmail.com">bca.sync.official@gmail.com</a>. Include the payment date and transaction reference. Do not email your password, OTP, full card number or UPI PIN.</p>
+      <h2>7. Policy changes</h2>
+      <p>This policy may be updated if BCA SYNC's services or payment arrangements change. The latest version will be published on this page.</p>
+    </section>
+    <p class="muted">Contact: <a href="mailto:bca.sync.official@gmail.com">bca.sync.official@gmail.com</a></p>
+  </main>
+  <footer><span>© <span id="year"></span> BCA SYNC</span><nav><a href="index.html">Home</a><a href="about.html">About Us</a><a href="contact.html">Contact Us</a><a href="privacy-policy.html">Privacy Policy</a><a href="cancellation-refund-policy.html">Cancellation & Refund</a></nav></footer>
+  <script>document.getElementById("year").textContent=new Date().getFullYear();</script>
+  <script type="module">import{createClient}from"https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm";const s=createClient("https://efbkhmfekfujbwfdpfhk.supabase.co","sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH");try{const{data:{session}}=await s.auth.getSession();if(session?.user?.app_metadata?.role==="admin"||session?.user?.app_metadata?.admin===true)document.body.classList.add("premium-mode");}catch(e){}</script>
+</body>
+</html>
