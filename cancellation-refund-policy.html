@@ -36,7 +36,7 @@
     <p class="lead">This policy explains how cancellation and refund requests are handled for optional BCA SYNC Premium membership. Regular study notes and learning materials remain free.</p>
     <section class="panel">
       <h2>1. Premium subscription</h2>
-      <p>BCA SYNC Premium is offered at ₹49 for 6 months. The membership period begins after successful payment verification and activation.</p>
+      <p>BCA SYNC Premium is offered at ₹49 for 5 months. The membership period begins after successful payment verification and activation.</p>
       <h2>2. Cancellation</h2>
       <p>Users may contact BCA SYNC to request cancellation of their Premium membership. Cancellation does not automatically guarantee a refund. Any recurring payment arrangement, if introduced, will be explained separately before a user agrees to it.</p>
       <h2>3. Refund eligibility</h2>
@@ -57,7 +57,7 @@
     </section>
     <p class="muted">Contact: <a href="mailto:bca.sync.official@gmail.com">bca.sync.official@gmail.com</a></p>
   </main>
-  <footer><span>© <span id="year"></span> BCA SYNC</span><nav><a href="index.html">Home</a><a href="about.html">About Us</a><a href="contact.html">Contact Us</a><a href="privacy-policy.html">Privacy Policy</a><a href="cancellation-refund-policy.html">Cancellation & Refund</a></nav></footer>
+  <footer><span>© <span id="year"></span> BCA SYNC</span><nav><a href="index.html">Home</a><a href="about.html">About Us</a><a href="contact.html">Contact Us</a><a href="privacy-policy.html">Privacy Policy</a><a href="terms-and-conditions.html">Terms &amp; Conditions</a><a href="cancellation-refund-policy.html">Cancellation &amp; Refund</a></nav></footer>
   <script>document.getElementById("year").textContent=new Date().getFullYear();</script>
   <script type="module">import{createClient}from"https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm";const s=createClient("https://efbkhmfekfujbwfdpfhk.supabase.co","sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH");try{const{data:{session}}=await s.auth.getSession();if(session?.user?.app_metadata?.role==="admin"||session?.user?.app_metadata?.admin===true)document.body.classList.add("premium-mode");}catch(e){}</script>
 </body>
