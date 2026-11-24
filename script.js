@@ -900,8 +900,6 @@ secretAdminModal?.addEventListener("click",event=>{if(event.target===secretAdmin
 brandMenuToggle?.addEventListener("click",event=>{
   event.preventDefault();
   secretLogoTapCount++;
-  clearTimeout(secretLogoTapTimer);
-  secretLogoTapTimer=setTimeout(()=>{secretLogoTapCount=0;},4000);
   if(secretLogoTapCount>=7){
     secretLogoTapCount=0;
     clearTimeout(secretLogoTapTimer);
