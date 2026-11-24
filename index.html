@@ -24,12 +24,6 @@
   <style>html.show-new-user-welcome .header-actions,html.show-new-user-welcome .header-search,html.show-new-user-welcome #brandMenuToggle,html.show-new-user-welcome .nav-links{display:none!important}html.show-new-user-welcome,html.show-new-user-welcome body{overflow:hidden!important;overscroll-behavior:none!important;touch-action:none}html.show-new-user-welcome body{position:fixed;inset:0;width:100%}</style>
   <script type="module" src="script.js?v=88"></script>
   <style>
-    .secret-admin-modal{position:fixed;inset:0;z-index:1000;background:rgba(1,5,13,.78);backdrop-filter:blur(10px);display:grid;place-items:center;padding:14px}
-    .secret-admin-modal[hidden]{display:none!important}
-    .secret-admin-shell{position:relative;width:min(1120px,96vw);height:min(88vh,900px);border:1px solid #168cff;border-radius:18px;overflow:hidden;background:#05080e;box-shadow:0 0 45px #168cff40}
-    .secret-admin-close{position:absolute;right:8px;top:8px;z-index:3;width:38px;height:38px;border-radius:50%;border:1px solid #315579;background:#07111f;color:#fff;font-size:26px;cursor:pointer}
-    .secret-admin-frame{width:100%;height:100%;border:0;background:#05080e}
-    @media(max-width:620px){.secret-admin-modal{padding:6px}.secret-admin-shell{width:98vw;height:94vh;border-radius:12px}.secret-admin-close{right:5px;top:5px}}
   </style>
 </head>
 <body>
@@ -54,12 +48,7 @@
     </div>
   </header>
   <div class="sidebar-backdrop" id="sidebarBackdrop" hidden></div>
-  <section class="secret-admin-modal" id="secretAdminModal" hidden aria-label="Admin panel">
-    <div class="secret-admin-shell">
-      <button class="secret-admin-close" id="secretAdminClose" type="button" aria-label="Close admin panel">×</button>
-      <iframe class="secret-admin-frame" src="admin.html" title="BCA SYNC Admin Panel"></iframe>
-    </div>
-  </section>
+n>
   <nav class="nav-links" id="navLinks" aria-label="Main navigation">
     <div class="sidebar-brand"><img src="assets/bca-sync-logo.svg?v=3" alt=""><strong>BCA <span>SYNC</span></strong></div>
     <a class="sidebar-link active" href="#"><span>⌂</span> Home</a>
@@ -69,6 +58,7 @@
     <a class="sidebar-link" href="dashboard.html#saved">▣ &nbsp; Saved Notes</a>
     <a class="sidebar-link" href="#feedback" id="openFeedbackMenu">✉ &nbsp; Feedback</a>
     <a class="sidebar-link" href="about.html">ⓘ &nbsp; About</a>
+    <a class="sidebar-link" href="admin.html">Admin Panel</a>
     <button class="sidebar-link" id="installAppButton" type="button">⇩ &nbsp; Install BCA SYNC</button>
     <a class="sidebar-link" id="studentLoginMenu" href="login.html">⇥ &nbsp; Student Login</a>
     <button class="sidebar-link" id="menuLogout" type="button" hidden>⇥ &nbsp; Logout</button>
