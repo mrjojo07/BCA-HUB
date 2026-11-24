@@ -884,10 +884,37 @@ function setSidebarOpen(open){
   brandMenuToggle?.setAttribute("aria-label",open?"Close BCA SYNC menu":"Open BCA SYNC menu");
   if(sidebarBackdrop) sidebarBackdrop.hidden=!open;
 }
-brandMenuToggle?.addEventListener("click",event=>{event.preventDefault();setSidebarOpen(!navLinks?.classList.contains("open"));});
+const secretAdminModal=document.getElementById("secretAdminModal");
+const secretAdminClose=document.getElementById("secretAdminClose");
+let secretLogoTapCount=0;
+let secretLogoTapTimer=null;
+function openSecretAdmin(){
+  if(secretAdminModal) secretAdminModal.hidden=false;
+  setSidebarOpen(false);
+}
+function closeSecretAdmin(){
+  if(secretAdminModal) secretAdminModal.hidden=true;
+}
+secretAdminClose?.addEventListener("click",closeSecretAdmin);
+secretAdminModal?.addEventListener("click",event=>{if(event.target===secretAdminModal)closeSecretAdmin();});
+brandMenuToggle?.addEventListener("click",event=>{
+  event.preventDefault();
+  if(event.target.closest(".brand-logo")){
+    secretLogoTapCount++;
+    clearTimeout(secretLogoTapTimer);
+    secretLogoTapTimer=setTimeout(()=>{secretLogoTapCount=0;},2500);
+    if(secretLogoTapCount>=7){
+      secretLogoTapCount=0;
+      clearTimeout(secretLogoTapTimer);
+      openSecretAdmin();
+    }
+    return;
+  }
+  setSidebarOpen(!navLinks?.classList.contains("open"));
+});
 sidebarBackdrop?.addEventListener("click",()=>setSidebarOpen(false));
 navLinks?.querySelectorAll("a,button").forEach(item=>item.addEventListener("click",()=>setSidebarOpen(false)));
-document.addEventListener("keydown",event=>{if(event.key==="Escape"){setSidebarOpen(false);accountDropdown && (accountDropdown.hidden=true);accountMenuToggle?.setAttribute("aria-expanded","false");}});
+document.addEventListener("keydown",event=>{if(event.key==="Escape"){setSidebarOpen(false);closeSecretAdmin();accountDropdown && (accountDropdown.hidden=true);accountMenuToggle?.setAttribute("aria-expanded","false");}});
 
 // Account dropdown and quick notification access.
 const accountMenuToggle=document.getElementById("accountMenuToggle");
