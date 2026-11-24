@@ -884,28 +884,8 @@ function setSidebarOpen(open){
   brandMenuToggle?.setAttribute("aria-label",open?"Close BCA SYNC menu":"Open BCA SYNC menu");
   if(sidebarBackdrop) sidebarBackdrop.hidden=!open;
 }
-const secretAdminModal=document.getElementById("secretAdminModal");
-const secretAdminClose=document.getElementById("secretAdminClose");
-let secretLogoTapCount=0;
-let secretLogoTapTimer=null;
-function openSecretAdmin(){
-  if(secretAdminModal) secretAdminModal.hidden=false;
-  setSidebarOpen(false);
-}
-function closeSecretAdmin(){
-  if(secretAdminModal) secretAdminModal.hidden=true;
-}
-secretAdminClose?.addEventListener("click",closeSecretAdmin);
-secretAdminModal?.addEventListener("click",event=>{if(event.target===secretAdminModal)closeSecretAdmin();});
 brandMenuToggle?.addEventListener("click",event=>{
   event.preventDefault();
-  secretLogoTapCount++;
-  if(secretLogoTapCount>=7){
-    secretLogoTapCount=0;
-    clearTimeout(secretLogoTapTimer);
-    openSecretAdmin();
-    return;
-  }
   setSidebarOpen(!navLinks?.classList.contains("open"));
 });
 sidebarBackdrop?.addEventListener("click",()=>setSidebarOpen(false));
