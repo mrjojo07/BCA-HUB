@@ -899,15 +899,13 @@ secretAdminClose?.addEventListener("click",closeSecretAdmin);
 secretAdminModal?.addEventListener("click",event=>{if(event.target===secretAdminModal)closeSecretAdmin();});
 brandMenuToggle?.addEventListener("click",event=>{
   event.preventDefault();
-  if(event.target.closest(".brand-logo")){
-    secretLogoTapCount++;
+  secretLogoTapCount++;
+  clearTimeout(secretLogoTapTimer);
+  secretLogoTapTimer=setTimeout(()=>{secretLogoTapCount=0;},4000);
+  if(secretLogoTapCount>=7){
+    secretLogoTapCount=0;
     clearTimeout(secretLogoTapTimer);
-    secretLogoTapTimer=setTimeout(()=>{secretLogoTapCount=0;},2500);
-    if(secretLogoTapCount>=7){
-      secretLogoTapCount=0;
-      clearTimeout(secretLogoTapTimer);
-      openSecretAdmin();
-    }
+    openSecretAdmin();
     return;
   }
   setSidebarOpen(!navLinks?.classList.contains("open"));
