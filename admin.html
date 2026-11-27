@@ -524,14 +524,22 @@ syncPremiumTheme();supabase.auth.onAuthStateChange(()=>syncPremiumTheme());
           const { error } = await supabase.storage.from(bucket).move(oldPath, newPath);
           if (error) throw error;
           if (isPremiumFile) {
-            const { error: metadataError } = await supabase.from("premium_materials").update({ storage_path: newPath, title: cleanName }).eq("storage_path", oldPath);
-            if (metadataError) {
-              await supabase.storage.from(bucket).move(newPath, oldPath);
-              throw metadataError;
+            const { data: updatedRows, error: metadataError } = await supabase
+              .from("premium_materials")
+              .update({ storage_path: newPath, title: cleanName })
+              .eq("storage_path", oldPath)
+              .select("id,title,storage_path");
+            if (metadataError || !updatedRows?.length) {
+              const rollback = await supabase.storage.from(bucket).move(newPath, oldPath);
+              if (rollback.error) {
+                throw new Error("Premium listing update failed and storage rollback also failed: " +
+                  (metadataError?.message || "No matching Premium listing") + " · " + rollback.error.message);
+              }
+              throw metadataError || new Error("No Premium listing matched the old storage path. Rename was rolled back.");
             }
           }
           await loadExistingFiles();
-          fileListStatus.textContent = "File renamed successfully.";
+          fileListStatus.textContent = "File renamed successfully. Premium title and file path are updated.";
         } catch (error) {
           fileListStatus.textContent = "Could not rename file: " + (error.message || "Please try again.");
           renameButton.disabled = false;
