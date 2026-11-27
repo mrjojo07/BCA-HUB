@@ -521,8 +521,9 @@ syncPremiumTheme();supabase.auth.onAuthStateChange(()=>syncPremiumTheme());
           const folder = selectedFolder();
           const bucket = isPremiumFile ? "bca-premium-materials" : "bca-hub-materials";
           const newPath = oldPath.slice(0, oldPath.lastIndexOf("/") + 1) + cleanName;
-          const { error } = await supabase.storage.from(bucket).move(oldPath, newPath);
-          if (error) throw error;
+          // Copy first; Storage move has been returning "Object not found" despite a verified object path.
+          const { error: copyError } = await supabase.storage.from(bucket).copy(oldPath, newPath);
+          if (copyError) throw copyError;
           if (isPremiumFile) {
             const { data: updatedRows, error: metadataError } = await supabase
               .from("premium_materials")
@@ -530,13 +531,17 @@ syncPremiumTheme();supabase.auth.onAuthStateChange(()=>syncPremiumTheme());
               .eq("storage_path", oldPath)
               .select("id,title,storage_path");
             if (metadataError || !updatedRows?.length) {
-              const rollback = await supabase.storage.from(bucket).move(newPath, oldPath);
-              if (rollback.error) {
-                throw new Error("Premium listing update failed and storage rollback also failed: " +
-                  (metadataError?.message || "No matching Premium listing") + " · " + rollback.error.message);
+              const cleanup = await supabase.storage.from(bucket).remove([newPath]);
+              if (cleanup.error) {
+                throw new Error("Premium listing update failed; copied-file cleanup also failed: " +
+                  (metadataError?.message || "No matching Premium listing") + " · " + cleanup.error.message);
               }
-              throw metadataError || new Error("No Premium listing matched the old storage path. Rename was rolled back.");
+              throw metadataError || new Error("No Premium listing matched the old storage path. Original file is unchanged.");
             }
+          }
+          const { error: removeOldError } = await supabase.storage.from(bucket).remove([oldPath]);
+          if (removeOldError) {
+            fileListStatus.textContent = "New name saved, but the old file could not be removed: " + removeOldError.message;
           }
           await loadExistingFiles();
           fileListStatus.textContent = "File renamed successfully. Premium title and file path are updated.";
