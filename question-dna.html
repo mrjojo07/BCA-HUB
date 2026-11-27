@@ -93,14 +93,21 @@
       const status=document.getElementById("dnaStatus");
       if(status)status.textContent="Loading required libraries…";
       const loadWithTimeout=(promise,label)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error(label+" timed out. Refresh and try again.")),15000))]);
-      const supabaseModule=await loadWithTimeout(import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm"),"Supabase library");
+      let supabaseModule;
+      try{supabaseModule=await loadWithTimeout(import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm"),"Supabase library");}
+      catch(primarySupabaseError){supabaseModule=await loadWithTimeout(import("https://esm.sh/@supabase/supabase-js@2.118.0"),"Supabase library fallback");}
       let pdfModule;
       try{
         pdfModule=await loadWithTimeout(import("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs"),"PDF reader");
         pdfModule.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
       }catch(firstPdfError){
-        pdfModule=await loadWithTimeout(import("https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.mjs"),"PDF reader fallback");
-        pdfModule.GlobalWorkerOptions.workerSrc="https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.mjs";
+        try{
+          pdfModule=await loadWithTimeout(import("https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.mjs"),"PDF reader fallback");
+          pdfModule.GlobalWorkerOptions.workerSrc="https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.mjs";
+        }catch(secondPdfError){
+          pdfModule=await loadWithTimeout(import("https://esm.sh/pdfjs-dist@4.10.38/build/pdf.mjs"),"PDF reader alternate");
+          pdfModule.GlobalWorkerOptions.workerSrc="https://esm.sh/pdfjs-dist@4.10.38/build/pdf.worker.mjs";
+        }
       }
       createClient=supabaseModule.createClient;
       pdfjsLib=pdfModule;
@@ -109,7 +116,7 @@
       const status=document.getElementById("dnaStatus");
       const button=document.getElementById("dnaAnalyze");
       if(status)status.textContent="Question DNA library loading failed. Refresh and try again. Details: "+(error?.message||String(error));
-      if(button){button.disabled=true;button.textContent="Library loading failed";}
+      if(button){button.disabled=false;button.textContent="Retry Analyze Papers";button.onclick=()=>location.reload();}
       return;
     }
     const supabase=createClient("https://efbkhmfekfujbwfdpfhk.supabase.co","sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH");
