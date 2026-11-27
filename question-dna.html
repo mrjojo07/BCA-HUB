@@ -57,8 +57,8 @@
     <h1 class="dna-title">Question <span>DNA</span></h1>
     <p class="dna-intro">Explore repeated questions, paper-year coverage and revision priorities from your Previous Year Question Papers.</p>
     <section class="dna-controls" aria-label="Question DNA filters">
-      <div class="dna-field"><label for="dnaSemester">Semester</label><select id="dnaSemester"><option value="1">Semester 1</option></select></div>
-      <div class="dna-field"><label for="dnaSubject">Subject</label><select id="dnaSubject">
+      <div class="dna-field"><label for="dnaSemester">Semester</label><select id="dnaSemester"><option value="" selected disabled>Select semester</option><option value="1">Semester 1</option></select></div>
+      <div class="dna-field"><label for="dnaSubject">Subject</label><select id="dnaSubject"><option value="" selected disabled>Select subject</option>
         <option value="fundamentals-of-computers-and-computational-thinking">Fundamentals of Computers and Computational Thinking</option>
         <option value="introduction-to-computers-and-office-automation">Introduction to Computers and Office Automation</option>
         <option value="mathematical-foundation-for-computer-applications">Mathematical Foundation for Computer Applications</option>
@@ -138,10 +138,6 @@
     document.querySelectorAll(".admin-back,.dna-back").forEach(link=>{
       link.href="index.html?returnSemester="+encodeURIComponent(returnSemester)+"&returnSubject="+encodeURIComponent(returnSubject);
     });
-    const requestedSubject=query.get("subject");
-    if(requestedSubject&&subjects[requestedSubject])$("dnaSubject").value=requestedSubject;
-    const requestedSemester=query.get("semester");
-    if(requestedSemester&&$("dnaSemester").querySelector('option[value="'+requestedSemester+'"]'))$("dnaSemester").value=requestedSemester;
     const stop=new Set("about above after again against all also an and any are as at be because been before being between both but by can could did do does doing down during each few for from further had has have having he her here hers herself him himself his how i if in into is it its itself just me more most my myself no nor not of off on once only or other our ours ourselves out over own same she should so some such than that the their theirs them themselves then there these they this those through to too under until up very was we were what when where which while who whom why will with would you your".split(" "));
     function cleanText(s){return s.toLowerCase().replace(/[^a-z0-9\s-]/g," ").replace(/\s+/g," ").trim();}
     function extractTerms(text){
@@ -323,6 +319,7 @@
       if(!dnaAccessReady){$("dnaStatus").textContent="Checking administrator access… please wait.";return;}
       if(!dnaAccessAllowed){$("dnaStatus").textContent="Question DNA access could not be verified. Please sign in again and reopen Premium Theme.";return;}
       const btn=$("dnaAnalyze"),semester=$("dnaSemester").value,slug=$("dnaSubject").value;
+      if(!semester||!slug){$("dnaStatus").textContent="Please select both semester and subject before analyzing.";return;}
       btn.disabled=true;btn.textContent="Scanning…";$("dnaStatus").textContent="Finding PDFs and extracting their text…";
       $("dnaYears").textContent="Working…";$("dnaFiles").replaceChildren();
       try{
