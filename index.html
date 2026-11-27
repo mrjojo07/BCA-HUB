@@ -68,20 +68,15 @@
     const supabase = createClient("https://efbkhmfekfujbwfdpfhk.supabase.co", "sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH");
     const adminPanelMenu=document.getElementById("adminPanelMenu");
     const adminPanelTopButton=document.getElementById("adminPanelTopButton");
-    const updateAdminMenu=async()=>{
-      try{
-        const {data:{user}}=await supabase.auth.getUser();
-        const meta=user?.app_metadata||{};
-        const isAdmin=meta.role==="admin"||meta.admin===true;
-        if(adminPanelMenu) adminPanelMenu.hidden=!isAdmin;
-        if(adminPanelTopButton) adminPanelTopButton.hidden=!isAdmin;
-      }catch{
-        if(adminPanelMenu) adminPanelMenu.hidden=true;
-        if(adminPanelTopButton) adminPanelTopButton.hidden=true;
-      }
+    const setAdminMenuVisible=(user)=>{
+      const meta=user?.app_metadata||{};
+      const isAdmin=meta.role==="admin"||meta.admin===true;
+      if(adminPanelMenu) adminPanelMenu.hidden=!isAdmin;
+      if(adminPanelTopButton) adminPanelTopButton.hidden=!isAdmin;
     };
-    updateAdminMenu();
-    supabase.auth.onAuthStateChange(()=>{updateAdminMenu();});
+    // Read the locally cached session first to avoid waiting for a network user lookup.
+    supabase.auth.getSession().then(({data:{session}})=>setAdminMenuVisible(session?.user||null));
+    supabase.auth.onAuthStateChange((_event,session)=>{setAdminMenuVisible(session?.user||null);});
 
     // Use a random, anonymous browser ID so repeat visits can be counted without fingerprinting.
     const getAnalyticsVisitorId = () => {
