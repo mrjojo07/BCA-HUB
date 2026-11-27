@@ -305,7 +305,7 @@
     let dnaAccessReady=false;
     let dnaAccessAllowed=false;
     async function analyze(){
-      if(!dnaAccessReady){$("dnaStatus").textContent="Checking administrator access… please wait.";return;}
+      if(!dnaAccessReady){$("dnaStatus").textContent="Checking Gold Theme access… please wait.";return;}
       if(!dnaAccessAllowed){$("dnaStatus").textContent="Question DNA access could not be verified. Please sign in again and reopen Premium Theme.";return;}
       const btn=$("dnaAnalyze"),semester=$("dnaSemester").value,slug=$("dnaSubject").value;
       btn.disabled=true;btn.textContent="Scanning…";$("dnaStatus").textContent="Finding PDFs and extracting their text…";
@@ -344,17 +344,17 @@
     async function init(){
       const button=$("dnaAnalyze");
       button.disabled=true;
-      button.textContent="Checking access…";
+      button.textContent="Checking Gold Theme access…";
       $("dnaStatus").textContent="Checking administrator access…";
       button.addEventListener("click",analyze);
       try{
         const {data:{session}}=await supabase.auth.getSession();
         const meta=session?.user?.app_metadata||{};
         const premiumActive=sessionStorage.getItem("bca-sync-experience")==="premium"||localStorage.getItem("bca-sync-experience")==="premium";
-        dnaAccessAllowed=(meta.role==="admin"||meta.admin===true)&&premiumActive;
+        dnaAccessAllowed=premiumActive;
         dnaAccessReady=true;
         if(!dnaAccessAllowed){
-          document.querySelector(".dna-main").innerHTML='<h1 class="dna-title">Access <span>Restricted</span></h1><p class="dna-intro">Question DNA is available from the administrator account while Premium Theme is active.</p><a class="dna-back" href="index.html">← Return to BCA SYNC</a>';
+          document.querySelector(".dna-main").innerHTML='<h1 class="dna-title">Access <span>Restricted</span></h1><p class="dna-intro">Question DNA is available to everyone while Gold Theme is active.</p><a class="dna-back" href="index.html">← Return to BCA SYNC</a>';
           return;
         }
         button.disabled=false;
@@ -366,7 +366,7 @@
         dnaAccessAllowed=false;
         button.disabled=true;
         button.textContent="Access check failed";
-        $("dnaStatus").textContent="Could not verify your admin session. Please sign in again, activate Premium Theme, and reopen Question DNA.";
+        $("dnaStatus").textContent="Could not verify Gold Theme access. Activate Gold Theme and reopen Question DNA.";
       }
     }
     init();
