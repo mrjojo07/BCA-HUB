@@ -67,13 +67,18 @@
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm";
     const supabase = createClient("https://efbkhmfekfujbwfdpfhk.supabase.co", "sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH");
     const adminPanelMenu=document.getElementById("adminPanelMenu");
+    const adminPanelTopButton=document.getElementById("adminPanelTopButton");
     const updateAdminMenu=async()=>{
-      if(!adminPanelMenu)return;
       try{
         const {data:{user}}=await supabase.auth.getUser();
         const meta=user?.app_metadata||{};
-        adminPanelMenu.hidden=!(meta.role==="admin"||meta.admin===true);
-      }catch{adminPanelMenu.hidden=true;}
+        const isAdmin=meta.role==="admin"||meta.admin===true;
+        if(adminPanelMenu) adminPanelMenu.hidden=!isAdmin;
+        if(adminPanelTopButton) adminPanelTopButton.hidden=!isAdmin;
+      }catch{
+        if(adminPanelMenu) adminPanelMenu.hidden=true;
+        if(adminPanelTopButton) adminPanelTopButton.hidden=true;
+      }
     };
     updateAdminMenu();
     supabase.auth.onAuthStateChange(()=>{updateAdminMenu();});
