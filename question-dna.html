@@ -105,14 +105,14 @@
       });
       try{
         if(dnaBootStatus)dnaBootStatus.textContent="Loading PDF reader…";
-        await loadScript([
+        const pdfScriptUrl=await loadScript([
           "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js",
           "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js",
           "https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js"
         ],"PDF.js");
         pdfjsLib=window.pdfjsLib;
         if(!pdfjsLib||!pdfjsLib.getDocument)throw new Error("PDF.js loaded but its API was unavailable.");
-        pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+        pdfjsLib.GlobalWorkerOptions.workerSrc=pdfScriptUrl.replace(/pdf\\.min\\.js(?:\\?.*)?$/,"pdf.worker.min.js");
       }catch(error){
         console.error("Question DNA PDF library failed:",error);
         if(dnaBootStatus)dnaBootStatus.textContent="PDF reader could not load. Check internet, then tap Retry.";
@@ -150,7 +150,9 @@
       return counts;
     }
     async function readPdf(url){
-      const response=await fetch(url); if(!response.ok) throw new Error("PDF could not be downloaded");
+      const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),30000);
+      let response;try{response=await fetch(url,{signal:controller.signal});}finally{clearTimeout(timeout);}
+      if(!response.ok)throw new Error("PDF download failed (HTTP "+response.status+")");
       const data=new Uint8Array(await response.arrayBuffer());
       const pdf=await pdfjsLib.getDocument({data}).promise;
       let text="";
@@ -335,7 +337,7 @@
         if(!papers.length){
           $("dnaStatus").textContent="No paper entries were found. Folder checked: "+result.folder+". Storage list returned "+result.listedCount+" item(s)."+(result.storageError?" Storage message: "+result.storageError:"");
           renderList($("dnaYears"),[]);
-          ["dnaRepeated","dnaModules"].forEach(id=>{const el=$(id);if(el){el.className="dna-empty";el.textContent="No papers available for this subject.";}});
+          ["dnaRepeated","dnaVariations","dnaModules"].forEach(id=>{const el=$(id);if(el){el.className="dna-empty";el.textContent="No papers available for this subject.";}});
           $("dnaPaperCount").textContent="0";$("dnaYearCount").textContent="0";
           return;
         }
