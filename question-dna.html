@@ -83,29 +83,47 @@
   </main>
   <script>
     window.__bcaDnaEngineStarted = true;
-    const dnaBootStatus = document.getElementById("dnaStatus");
-    const dnaBootButton = document.getElementById("dnaAnalyze");
-    if (dnaBootStatus) dnaBootStatus.textContent = "Starting Question DNA engine (known-good loader)…";
-    if (dnaBootButton) { dnaBootButton.disabled = true; dnaBootButton.textContent = "Loading…"; }
-    (async () => {
-    let createClient, pdfjsLib;
-    try{
-      const [supabaseModule,pdfModule]=await Promise.all([
-        import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm"),
-        import("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs")
-      ]);
-      createClient=supabaseModule.createClient;
-      pdfjsLib=pdfModule;
-      pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
-    }catch(error){
-      console.error("Question DNA dependency loading failed:",error);
-      const status=document.getElementById("dnaStatus");
-      const button=document.getElementById("dnaAnalyze");
-      if(status)status.textContent="Question DNA could not load a required library. Check your internet connection and try again. Details: "+(error?.message||String(error));
-      if(button){button.disabled=true;button.textContent="Library loading failed";}
-      return;
-    }
-    const supabase=createClient("https://efbkhmfekfujbwfdpfhk.supabase.co","sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH");
+    const dnaStatusEl=document.getElementById("dnaStatus");
+    const dnaButtonEl=document.getElementById("dnaAnalyze");
+    if(dnaButtonEl){dnaButtonEl.disabled=true;dnaButtonEl.textContent="Loading libraries…";}
+    if(dnaStatusEl)dnaStatusEl.textContent="Question DNA: loading PDF and storage libraries…";
+    (async()=>{
+      const loadScript=(urls,label)=>new Promise((resolve,reject)=>{
+        let n=0;
+        const attempt=()=>{
+          if(n>=urls.length){reject(new Error(label+" unavailable. Tried "+urls.length+" sources."));return;}
+          const url=urls[n++],tag=document.createElement("script");let done=false;
+          const timeout=setTimeout(()=>{if(done)return;done=true;tag.remove();attempt();},12000);
+          tag.onload=()=>{if(done)return;done=true;clearTimeout(timeout);resolve(url);};
+          tag.onerror=()=>{if(done)return;done=true;clearTimeout(timeout);tag.remove();attempt();};
+          tag.src=url;tag.async=true;document.head.appendChild(tag);
+        };attempt();
+      });
+      let pdfjsLib,createClient;
+      try{
+        if(dnaStatusEl)dnaStatusEl.textContent="Question DNA: loading PDF reader…";
+        const pdfUrl=await loadScript([
+          "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js",
+          "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js",
+          "https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js"
+        ],"PDF.js");
+        pdfjsLib=window.pdfjsLib;
+        if(!pdfjsLib?.getDocument)throw new Error("PDF.js script loaded but API is missing.");
+        pdfjsLib.GlobalWorkerOptions.workerSrc=pdfUrl.replace(/pdf\.min\.js(?:\?.*)?$/,"pdf.worker.min.js");
+        if(dnaStatusEl)dnaStatusEl.textContent="Question DNA: loading Supabase storage…";
+        await loadScript([
+          "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js",
+          "https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"
+        ],"Supabase");
+        createClient=window.supabase?.createClient;
+        if(!createClient)throw new Error("Supabase script loaded but createClient API is missing.");
+      }catch(error){
+        console.error("Question DNA startup error",error);
+        if(dnaStatusEl)dnaStatusEl.textContent="DNA startup failed: "+(error?.message||String(error))+" Tap Retry after checking internet.";
+        if(dnaButtonEl){dnaButtonEl.disabled=false;dnaButtonEl.textContent="Retry";dnaButtonEl.onclick=()=>location.reload();}
+        return;
+      }
+      const supabase=createClient("https://efbkhmfekfujbwfdpfhk.supabase.co","sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH");
     const $=id=>document.getElementById(id);
     const subjects={
       "fundamentals-of-computers-and-computational-thinking":"Fundamentals of Computers and Computational Thinking",
@@ -343,7 +361,7 @@
       button.disabled=true;
       button.textContent="Analyze Papers";
       $("dnaStatus").textContent="Question DNA ready. Choose a subject and analyze papers.";
-      button.addEventListener("click",analyze);
+      button.onclick=null;button.addEventListener("click",analyze);
       try{
         dnaAccessReady=true;
         dnaAccessAllowed=true;
