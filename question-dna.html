@@ -367,7 +367,8 @@
         dnaAccessAllowed=true;
         button.disabled=false;
         button.textContent="Analyze Papers";
-        // Do not auto-run. Wait for the student to tap Analyze Papers.\n        $("dnaStatus").textContent="Question DNA ready. Tap Analyze Papers to begin.";
+        // Do not auto-run. Wait for the student to tap Analyze Papers.
+        $("dnaStatus").textContent="Question DNA ready. Tap Analyze Papers to begin.";
       }catch(error){
         console.error("Question DNA access check failed:",error);
         dnaAccessReady=true;
