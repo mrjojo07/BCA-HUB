@@ -83,43 +83,44 @@
   </main>
   <script>
     window.__bcaDnaEngineStarted = true;
-    const dnaBootStatus = document.getElementById("dnaStatus");
-    const dnaBootButton = document.getElementById("dnaAnalyze");
-    if (dnaBootStatus) dnaBootStatus.textContent = "Starting Question DNA engine (build 2026-11-06.2)…";
-    if (dnaBootButton) { dnaBootButton.disabled = true; dnaBootButton.textContent = "Loading…"; }
-    (async () => {
-    let createClient, pdfjsLib;
-    try{
-      const status=document.getElementById("dnaStatus");
-      if(status)status.textContent="Loading required libraries…";
-      const loadWithTimeout=(promise,label)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error(label+" timed out. Refresh and try again.")),15000))]);
-      let supabaseModule;
-      try{supabaseModule=await loadWithTimeout(import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm"),"Supabase library");}
-      catch(primarySupabaseError){supabaseModule=await loadWithTimeout(import("https://esm.sh/@supabase/supabase-js@2.118.0"),"Supabase library fallback");}
-      let pdfModule;
+    const dnaBootStatus=document.getElementById("dnaStatus");
+    const dnaBootButton=document.getElementById("dnaAnalyze");
+    const DNA_BUILD="2026-11-27.3";
+    if(dnaBootStatus)dnaBootStatus.textContent="Starting Question DNA "+DNA_BUILD+"…";
+    if(dnaBootButton){dnaBootButton.disabled=true;dnaBootButton.textContent="Loading PDF reader…";}
+    (async()=>{
+      let pdfjsLib;
+      const loadScript=(urls,label)=>new Promise((resolve,reject)=>{
+        let index=0;
+        const tryNext=()=>{
+          if(index>=urls.length){reject(new Error(label+" failed to load from all sources."));return;}
+          const url=urls[index++],script=document.createElement("script");
+          let finished=false;
+          const timer=setTimeout(()=>{if(finished)return;finished=true;script.remove();tryNext();},12000);
+          script.onload=()=>{if(finished)return;finished=true;clearTimeout(timer);resolve(url);};
+          script.onerror=()=>{if(finished)return;finished=true;clearTimeout(timer);script.remove();tryNext();};
+          script.src=url;script.async=true;document.head.appendChild(script);
+        };
+        tryNext();
+      });
       try{
-        pdfModule=await loadWithTimeout(import("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs"),"PDF reader");
-        pdfModule.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
-      }catch(firstPdfError){
-        try{
-          pdfModule=await loadWithTimeout(import("https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.mjs"),"PDF reader fallback");
-          pdfModule.GlobalWorkerOptions.workerSrc="https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.mjs";
-        }catch(secondPdfError){
-          pdfModule=await loadWithTimeout(import("https://esm.sh/pdfjs-dist@4.10.38/build/pdf.mjs"),"PDF reader alternate");
-          pdfModule.GlobalWorkerOptions.workerSrc="https://esm.sh/pdfjs-dist@4.10.38/build/pdf.worker.mjs";
-        }
+        if(dnaBootStatus)dnaBootStatus.textContent="Loading PDF reader…";
+        await loadScript([
+          "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js",
+          "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js",
+          "https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js"
+        ],"PDF.js");
+        pdfjsLib=window.pdfjsLib;
+        if(!pdfjsLib||!pdfjsLib.getDocument)throw new Error("PDF.js loaded but its API was unavailable.");
+        pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+      }catch(error){
+        console.error("Question DNA PDF library failed:",error);
+        if(dnaBootStatus)dnaBootStatus.textContent="PDF reader could not load. Check internet, then tap Retry.";
+        if(dnaBootButton){dnaBootButton.disabled=false;dnaBootButton.textContent="Retry";dnaBootButton.onclick=()=>location.reload();}
+        return;
       }
-      createClient=supabaseModule.createClient;
-      pdfjsLib=pdfModule;
-    }catch(error){
-      console.error("Question DNA dependency loading failed:",error);
-      const status=document.getElementById("dnaStatus");
-      const button=document.getElementById("dnaAnalyze");
-      if(status)status.textContent="Question DNA library loading failed. Refresh and try again. Details: "+(error?.message||String(error));
-      if(button){button.disabled=false;button.textContent="Retry Analyze Papers";button.onclick=()=>location.reload();}
-      return;
-    }
-    const supabase=createClient("https://efbkhmfekfujbwfdpfhk.supabase.co","sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH");
+      const supabaseUrl="https://efbkhmfekfujbwfdpfhk.supabase.co";
+      const supabaseKey="sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH";
     const $=id=>document.getElementById(id);
     const subjects={
       "fundamentals-of-computers-and-computational-thinking":"Fundamentals of Computers and Computational Thinking",
@@ -199,22 +200,21 @@
       }
       let storageError=null,listedCount=0;
       try{
-        const bucket=supabase.storage.from("bca-hub-materials");
         const pageSize=100,maxPages=20;
         for(let page=0;page<maxPages;page++){
-          const storage=await bucket.list(folder,{
-            limit:pageSize,
-            offset:page*pageSize,
-            sortBy:{column:"name",order:"asc"}
+          const response=await fetch(supabaseUrl+"/storage/v1/object/list/bca-hub-materials",{
+            method:"POST",
+            headers:{"apikey":supabaseKey,"Authorization":"Bearer "+supabaseKey,"Content-Type":"application/json"},
+            body:JSON.stringify({prefix:folder,limit:pageSize,offset:page*pageSize,sortBy:{column:"name",order:"asc"}})
           });
-          if(storage.error)throw storage.error;
-          const listed=Array.isArray(storage.data)?storage.data:[];
+          if(!response.ok)throw new Error("Storage listing returned HTTP "+response.status);
+          const items=await response.json();
+          const listed=Array.isArray(items)?items:[];
           listedCount+=listed.length;
           for(const f of listed){
             if(!f||typeof f.name!=="string"||!f.name||f.name==="."||f.name===".."||f.name===".emptyFolderPlaceholder")continue;
             const mime=String(f.metadata?.mimetype||f.metadata?.contentType||f.metadata?.content_type||"").toLowerCase();
-            const isPdf=/\.pdf$/i.test(f.name)||mime==="application/pdf";
-            if(!isPdf)continue;
+            if(!/\.pdf$/i.test(f.name)&&mime!=="application/pdf")continue;
             const path=folder+"/"+f.name;
             files.push({name:f.name,path,url:publicStorageUrl(path),source:"storage-list"});
           }
@@ -363,31 +363,12 @@
     }
     async function init(){
       const button=$("dnaAnalyze");
-      button.disabled=true;
-      button.textContent="Checking Gold Theme access…";
-      $("dnaStatus").textContent="Checking Gold Theme access…";
+      button.disabled=false;
+      button.textContent="Analyze Papers";
+      dnaAccessReady=true;
+      dnaAccessAllowed=true;
+      $("dnaStatus").textContent="Question DNA "+DNA_BUILD+" is ready. Select a subject and tap Analyze Papers.";
       button.addEventListener("click",analyze);
-      try{
-        const {data:{session}}=await supabase.auth.getSession();
-        const meta=session?.user?.app_metadata||{};
-        const premiumActive=sessionStorage.getItem("bca-sync-experience")==="premium"||localStorage.getItem("bca-sync-experience")==="premium";
-        dnaAccessAllowed=premiumActive;
-        dnaAccessReady=true;
-        if(!dnaAccessAllowed){
-          document.querySelector(".dna-main").innerHTML='<h1 class="dna-title">Access <span>Restricted</span></h1><p class="dna-intro">Question DNA is available to everyone while Gold Theme is active.</p><a class="dna-back" href="index.html">← Return to BCA SYNC</a>';
-          return;
-        }
-        button.disabled=false;
-        button.textContent="Analyze Papers";
-        analyze();
-      }catch(error){
-        console.error("Question DNA access check failed:",error);
-        dnaAccessReady=true;
-        dnaAccessAllowed=false;
-        button.disabled=true;
-        button.textContent="Access check failed";
-        $("dnaStatus").textContent="Could not verify Gold Theme access. Activate Gold Theme and reopen Question DNA.";
-      }
     }
     init();
     })();
