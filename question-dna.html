@@ -75,11 +75,11 @@
       <section class="dna-panel"><h2>Paper year coverage</h2><div id="dnaYears" class="dna-empty">Year distribution will appear here.</div></section>
     </div>
     <div class="dna-results" style="margin-top:14px">
-      <section class="dna-panel dna-wide"><h2>Important Questions</h2><div id="dnaRepeated" class="dna-empty">Important questions will appear here after analysis.</div></section>
+      <section class="dna-panel dna-wide"><h2>Exact Repeated Questions</h2><p class="dna-note">Same wording (ignoring case, numbering, and punctuation) only.</p><div id="dnaRepeated" class="dna-empty">Exact repeated questions will appear here after analysis.</div><h2 style="margin-top:20px">Similar Question Variations</h2><p class="dna-note">Related questions with changed wording are listed separately.</p><div id="dnaVariations" class="dna-empty">Variations will appear here after analysis.</div></section>
       <section class="dna-panel"><h2>Module-wise Analysis</h2><div id="dnaModules" class="dna-empty">Module mapping will appear here.</div></section>
     </div>
     <section class="dna-panel" style="margin-top:14px"><h2>Source papers</h2><div id="dnaFiles" class="dna-files"><p class="dna-empty">No papers scanned yet.</p></div></section>
-    <p class="dna-note">Analysis is based only on readable text extracted from available PDFs. Repeated questions are grouped by text similarity; this is a revision aid, not a prediction of future exam questions. Scanned image-only PDFs may not contain extractable text. Module-wise classification requires matching the papers with the confirmed Calicut University syllabus.</p>
+    <p class="dna-note">Analysis is based only on readable text extracted from available PDFs. Exact repeats are matched separately from similar wording variations; this is a revision aid, not a prediction of future exam questions. Scanned image-only PDFs may not contain extractable text. Module-wise classification requires matching the papers with the confirmed Calicut University syllabus.</p>
   </main>
   <script>
     window.__bcaDnaEngineStarted = true;
@@ -248,38 +248,43 @@
     }
     function normalizeExactQuestion(value){
       return cleanText(value)
-        .replace(/^(?:(?:q(?:uestion)?\s*)?\d{1,2}\s*[.)]|\d{1,2}\s*\([a-h]\)\s*|\(?[a-h]\)\s*)/i,"")
-        .replace(/\s+/g," ")
-        .trim();
+        .replace(/^(?:(?:q(?:uestion)?\\s*)?\\d{1,2}\\s*[.)]|\\d{1,2}\\s*\\([a-h]\\)\\s*|\\(?[a-h]\\)\\s*)/i,"")
+        .toLowerCase().replace(/[^a-z0-9]+/g," ").replace(/\\s+/g," ").trim();
     }
     function groupRepeatedQuestions(entries){
-      const groups=[];
+      const exactMap=new Map(), all=[];
       for(const entry of entries)for(const question of entry.questions){
-        const exactKey=normalizeExactQuestion(question);
-        if(!exactKey)continue;
-        let best=groups.find(group=>group.exactKey===exactKey)||null;
-        let bestScore=best?1:0;
-        if(!best){
-          for(const group of groups){
-            const score=questionSimilarity(question,group.representative);
-            if(score>bestScore){bestScore=score;best=group;}
-          }
-        }
-        if(best&&bestScore>=0.36){
-          if(!best.items.some(x=>x.paper.name===entry.paper.name))best.items.push({question,paper:entry.paper});
-          if(bestScore===1)best.matchType="Exact match";
-        }else groups.push({representative:question,exactKey,matchType:"Similar match",items:[{question,paper:entry.paper}]});
+        const key=normalizeExactQuestion(question); if(!key)continue;
+        const item={question,paper:entry.paper}; all.push({key,item,question});
+        if(!exactMap.has(key))exactMap.set(key,{representative:question,items:[]});
+        const group=exactMap.get(key);
+        if(!group.items.some(x=>x.paper.name===entry.paper.name))group.items.push(item);
       }
-      return groups.filter(g=>g.items.length>=2).sort((a,b)=>b.items.length-a.items.length);
+      const exact=[...exactMap.values()].filter(g=>g.items.length>=2).sort((a,b)=>b.items.length-a.items.length);
+      const repeatedExactKeys=new Set([...exactMap.entries()].filter(([,g])=>g.items.length>=2).map(([k])=>k));
+      const remaining=all.filter(x=>!repeatedExactKeys.has(x.key));
+      const variations=[];
+      for(const entry of remaining){
+        let best=null,bestScore=0;
+        for(const group of variations){
+          const score=questionSimilarity(entry.question,group.representative);
+          if(score>bestScore){bestScore=score;best=group;}
+        }
+        if(best&&bestScore>=0.45){
+          if(!best.items.some(x=>x.paper.name===entry.item.paper.name))best.items.push(entry.item);
+        }else variations.push({representative:entry.question,items:[entry.item]});
+      }
+      return {exact,variations:variations.filter(g=>g.items.length>=2).sort((a,b)=>b.items.length-a.items.length)};
     }
-    function renderQuestionCards(target,groups){
+    function renderQuestionCards(target,groups,emptyMessage){
       target.replaceChildren();
-      if(!groups.length){target.className="dna-empty";target.textContent="No repeated full questions could be matched confidently. Try papers with selectable text.";return;}
+      if(!groups.length){target.className="dna-empty";target.textContent=emptyMessage;return;}
       target.className="dna-list";
       groups.forEach((group,index)=>{
         const card=document.createElement("div");card.className="dna-question";
         const title=document.createElement("strong");title.textContent=(index+1)+". "+group.representative;
-        const meta=document.createElement("small");meta.textContent="Repeated in "+group.items.length+" separate papers · "+[...new Set(group.items.map(x=>yearFrom(x.paper.name)))].join(", ");
+        const years=[...new Set(group.items.map(x=>yearFrom(x.paper.name)))];
+        const meta=document.createElement("small");meta.textContent="Found in "+group.items.length+" papers · "+years.join(", ");
         const occurrences=document.createElement("div");occurrences.className="dna-files";
         group.items.forEach(item=>{
           const occurrence=document.createElement("div");occurrence.className="dna-file";
