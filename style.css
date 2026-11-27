@@ -2395,3 +2395,11 @@ body.premium-mode .hero-art .chip-code{bottom:42px!important;left:2px!important;
 .account-label{font-size:12px;font-weight:700;color:#e6efff}
 .account-dropdown{width:205px}
 @media(max-width:650px){.account-button{gap:5px;padding:4px 7px}.account-avatar{width:32px;height:32px;flex-basis:32px}.account-label{font-size:11px}.account-chevron{font-size:15px}}
+
+/* Admin shortcut sits opposite Upload Notes and remains hidden for non-admin accounts. */
+.upload-notes-bar{justify-content:space-between!important}
+.upload-notes-bar .header-upload-notes{margin-right:auto!important;margin-left:0!important}
+.header-admin-button{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:8px 13px;border:1px solid #d7b45d;border-radius:9px;background:linear-gradient(110deg,#8b641b,#c69a3c);color:#fff;font-size:11px;font-weight:800;white-space:nowrap;box-shadow:0 5px 16px rgba(201,157,61,.25)}
+.header-admin-button:hover{background:linear-gradient(110deg,#b78628,#e0bd66);color:#fff}
+.header-admin-button[hidden]{display:none!important}
+@media(max-width:420px){.upload-notes-bar{justify-content:space-between!important}.header-admin-button{padding:8px 11px}}
