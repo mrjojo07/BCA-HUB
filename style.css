@@ -2404,5 +2404,5 @@ body.premium-mode .hero-art .chip-code{bottom:42px!important;left:2px!important;
 .header-admin-button[hidden]{display:none!important}
 @media(max-width:420px){.upload-notes-bar{justify-content:space-between!important}.header-admin-button{padding:8px 11px}}
 
-/* Keep the Admin shortcut blue even while Gold/Premium theme is active. */
-body.premium-mode .header-admin-button,body.premium-mode .header-admin-button:hover{color:#fff!important;background:linear-gradient(110deg,#0756a5,#087fe8)!important;border:1px solid #168cff!important;box-shadow:0 5px 16px rgba(0,125,235,.28)!important}
+/* Admin shortcut follows the active theme: blue in Old Theme, gold in Premium Theme. */
+body.premium-mode .header-admin-button,body.premium-mode .header-admin-button:hover{color:#17120a!important;background:linear-gradient(110deg,#f2d98e,#bd913c)!important;border:1px solid #e4c574!important;box-shadow:0 5px 20px #c39a4530!important}
