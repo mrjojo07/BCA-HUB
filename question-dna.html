@@ -64,7 +64,7 @@
         <option value="mathematical-foundation-for-computer-applications">Mathematical Foundation for Computer Applications</option>
         <option value="discrete-structures-for-computer-applications">Discrete Structures for Computer Applications</option>
       </select></div>
-      <button class="dna-button" id="dnaAnalyze" type="button" onclick="this.dataset.tapped='1';document.getElementById('dnaStatus').textContent='Analyze button received your tap. Loading the analysis engine…';">Analyze Papers</button>
+      <button class="dna-button" id="dnaAnalyze" type="button">Analyze Papers</button>
     </section>
     <p class="dna-status" id="dnaStatus" role="status" aria-live="polite">Choose a subject and analyze its available question papers.</p>
     <section class="dna-stats" aria-label="Analysis summary">
@@ -361,13 +361,13 @@
       button.disabled=true;
       button.textContent="Analyze Papers";
       $("dnaStatus").textContent="Question DNA ready. Choose a subject and analyze papers.";
-      button.onclick=null;button.addEventListener("click",analyze);
+      button.onclick=analyze;
       try{
         dnaAccessReady=true;
         dnaAccessAllowed=true;
         button.disabled=false;
         button.textContent="Analyze Papers";
-        analyze();
+        // Do not auto-run. Wait for the student to tap Analyze Papers.\n        $("dnaStatus").textContent="Question DNA ready. Tap Analyze Papers to begin.";
       }catch(error){
         console.error("Question DNA access check failed:",error);
         dnaAccessReady=true;
