@@ -100,7 +100,7 @@
           tag.src=url;tag.async=true;document.head.appendChild(tag);
         };attempt();
       });
-      let pdfjsLib,createClient;
+      let pdfjsLib;
       try{
         if(dnaStatusEl)dnaStatusEl.textContent="Question DNA: loading PDF reader…";
         const pdfUrl=await loadScript([
@@ -111,20 +111,12 @@
         pdfjsLib=window.pdfjsLib;
         if(!pdfjsLib?.getDocument)throw new Error("PDF.js script loaded but API is missing.");
         pdfjsLib.GlobalWorkerOptions.workerSrc=pdfUrl.replace(/pdf\.min\.js(?:\?.*)?$/,"pdf.worker.min.js");
-        if(dnaStatusEl)dnaStatusEl.textContent="Question DNA: loading Supabase storage…";
-        await loadScript([
-          "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js",
-          "https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"
-        ],"Supabase");
-        createClient=window.supabase?.createClient;
-        if(!createClient)throw new Error("Supabase script loaded but createClient API is missing.");
       }catch(error){
         console.error("Question DNA startup error",error);
         if(dnaStatusEl)dnaStatusEl.textContent="DNA startup failed: "+(error?.message||String(error))+" Tap Retry after checking internet.";
         if(dnaButtonEl){dnaButtonEl.disabled=false;dnaButtonEl.textContent="Retry";dnaButtonEl.onclick=()=>location.reload();}
         return;
       }
-      const supabase=createClient("https://efbkhmfekfujbwfdpfhk.supabase.co","sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH");
     const $=id=>document.getElementById(id);
     const subjects={
       "fundamentals-of-computers-and-computational-thinking":"Fundamentals of Computers and Computational Thinking",
@@ -192,42 +184,9 @@
     async function findPapers(semester,slug){
       const semesterFolder=String(semester).startsWith("semester-")?String(semester):"semester-"+semester;
       const folder="resources/"+semesterFolder+"/previous-year-questions/"+slug;
-      const files=[];
       const indexedNames=knownPyqPapers[semesterFolder+"|"+slug]||[];
-      for(const name of indexedNames){
-        const path=folder+"/"+name;
-        files.push({name,path,url:publicStorageUrl(path),source:"verified-index"});
-      }
-      let storageError=null,listedCount=0;
-      try{
-        const bucket=supabase.storage.from("bca-hub-materials");
-        const pageSize=100,maxPages=20;
-        for(let page=0;page<maxPages;page++){
-          const storage=await bucket.list(folder,{
-            limit:pageSize,
-            offset:page*pageSize,
-            sortBy:{column:"name",order:"asc"}
-          });
-          if(storage.error)throw storage.error;
-          const listed=Array.isArray(storage.data)?storage.data:[];
-          listedCount+=listed.length;
-          for(const f of listed){
-            if(!f||typeof f.name!=="string"||!f.name||f.name==="."||f.name===".."||f.name===".emptyFolderPlaceholder")continue;
-            const mime=String(f.metadata?.mimetype||f.metadata?.contentType||f.metadata?.content_type||"").toLowerCase();
-            const isPdf=/\.pdf$/i.test(f.name)||mime==="application/pdf";
-            if(!isPdf)continue;
-            const path=folder+"/"+f.name;
-            files.push({name:f.name,path,url:publicStorageUrl(path),source:"storage-list"});
-          }
-          if(listed.length<pageSize)break;
-        }
-      }catch(error){storageError=error?.message||String(error);}
-      const unique=new Map();
-      for(const file of files){
-        const key=(file.path||file.name).toLowerCase();
-        if(!unique.has(key))unique.set(key,file);
-      }
-      return {papers:[...unique.values()],folder,listedCount,storageError,indexedCount:indexedNames.length};
+      const papers=indexedNames.map(name=>({name,path:folder+"/"+name,url:publicStorageUrl(folder+"/"+name),source:"verified-index"}));
+      return {papers,folder,listedCount:papers.length,storageError:null,indexedCount:indexedNames.length};
     }
 
     function yearFrom(name){const m=name.match(/(?:19|20)\d{2}/);return m?m[0]:"Year not stated";}
