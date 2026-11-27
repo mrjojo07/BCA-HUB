@@ -668,7 +668,7 @@ subjectBrowser?.addEventListener("click", (event) => {
       sessionStorage.setItem("bca-sync-return-semester",String(currentSemester));
       sessionStorage.setItem("bca-sync-return-subject",slug);
       history.replaceState({bcaSyncReturn:true},"",returnUrl);
-      window.location.href = "question-dna.html?build=20261106-2&semester="+encodeURIComponent(currentSemester)+"&subject="+encodeURIComponent(slug);
+      window.location.href = "question-dna.html?build=20261127-1";
     }
     else showMaterials(material.dataset.material);
     return;
