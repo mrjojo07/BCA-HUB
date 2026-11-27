@@ -75,52 +75,37 @@
       <section class="dna-panel"><h2>Paper year coverage</h2><div id="dnaYears" class="dna-empty">Year distribution will appear here.</div></section>
     </div>
     <div class="dna-results" style="margin-top:14px">
-      <section class="dna-panel dna-wide"><h2>Exact Repeated Questions</h2><p class="dna-note">Same wording (ignoring case, numbering, and punctuation) only.</p><div id="dnaRepeated" class="dna-empty">Exact repeated questions will appear here after analysis.</div><h2 style="margin-top:20px">Similar Question Variations</h2><p class="dna-note">Related questions with changed wording are listed separately.</p><div id="dnaVariations" class="dna-empty">Variations will appear here after analysis.</div></section>
+      <section class="dna-panel dna-wide"><h2>Important Questions</h2><div id="dnaRepeated" class="dna-empty">Important questions will appear here after analysis.</div></section>
       <section class="dna-panel"><h2>Module-wise Analysis</h2><div id="dnaModules" class="dna-empty">Module mapping will appear here.</div></section>
     </div>
     <section class="dna-panel" style="margin-top:14px"><h2>Source papers</h2><div id="dnaFiles" class="dna-files"><p class="dna-empty">No papers scanned yet.</p></div></section>
-    <p class="dna-note">Analysis is based only on readable text extracted from available PDFs. Exact repeats are matched separately from similar wording variations; this is a revision aid, not a prediction of future exam questions. Scanned image-only PDFs may not contain extractable text. Module-wise classification requires matching the papers with the confirmed Calicut University syllabus.</p>
+    <p class="dna-note">Analysis is based only on readable text extracted from available PDFs. Repeated questions are grouped by text similarity; this is a revision aid, not a prediction of future exam questions. Scanned image-only PDFs may not contain extractable text. Module-wise classification requires matching the papers with the confirmed Calicut University syllabus.</p>
   </main>
   <script>
     window.__bcaDnaEngineStarted = true;
-    const dnaBootStatus=document.getElementById("dnaStatus");
-    const dnaBootButton=document.getElementById("dnaAnalyze");
-    const DNA_BUILD="2026-11-27.3";
-    if(dnaBootStatus)dnaBootStatus.textContent="Starting Question DNA "+DNA_BUILD+"…";
-    if(dnaBootButton){dnaBootButton.disabled=true;dnaBootButton.textContent="Loading PDF reader…";}
-    (async()=>{
-      let pdfjsLib;
-      const loadScript=(urls,label)=>new Promise((resolve,reject)=>{
-        let index=0;
-        const tryNext=()=>{
-          if(index>=urls.length){reject(new Error(label+" failed to load from all sources."));return;}
-          const url=urls[index++],script=document.createElement("script");
-          let finished=false;
-          const timer=setTimeout(()=>{if(finished)return;finished=true;script.remove();tryNext();},12000);
-          script.onload=()=>{if(finished)return;finished=true;clearTimeout(timer);resolve(url);};
-          script.onerror=()=>{if(finished)return;finished=true;clearTimeout(timer);script.remove();tryNext();};
-          script.src=url;script.async=true;document.head.appendChild(script);
-        };
-        tryNext();
-      });
-      try{
-        if(dnaBootStatus)dnaBootStatus.textContent="Loading PDF reader…";
-        const pdfScriptUrl=await loadScript([
-          "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js",
-          "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js",
-          "https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js"
-        ],"PDF.js");
-        pdfjsLib=window.pdfjsLib;
-        if(!pdfjsLib||!pdfjsLib.getDocument)throw new Error("PDF.js loaded but its API was unavailable.");
-        pdfjsLib.GlobalWorkerOptions.workerSrc=pdfScriptUrl.replace(/pdf\\.min\\.js(?:\\?.*)?$/,"pdf.worker.min.js");
-      }catch(error){
-        console.error("Question DNA PDF library failed:",error);
-        if(dnaBootStatus)dnaBootStatus.textContent="PDF reader could not load. Check internet, then tap Retry.";
-        if(dnaBootButton){dnaBootButton.disabled=false;dnaBootButton.textContent="Retry";dnaBootButton.onclick=()=>location.reload();}
-        return;
-      }
-      const supabaseUrl="https://efbkhmfekfujbwfdpfhk.supabase.co";
-      const supabaseKey="sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH";
+    const dnaBootStatus = document.getElementById("dnaStatus");
+    const dnaBootButton = document.getElementById("dnaAnalyze");
+    if (dnaBootStatus) dnaBootStatus.textContent = "Starting Question DNA engine (known-good loader)…";
+    if (dnaBootButton) { dnaBootButton.disabled = true; dnaBootButton.textContent = "Loading…"; }
+    (async () => {
+    let createClient, pdfjsLib;
+    try{
+      const [supabaseModule,pdfModule]=await Promise.all([
+        import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm"),
+        import("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs")
+      ]);
+      createClient=supabaseModule.createClient;
+      pdfjsLib=pdfModule;
+      pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
+    }catch(error){
+      console.error("Question DNA dependency loading failed:",error);
+      const status=document.getElementById("dnaStatus");
+      const button=document.getElementById("dnaAnalyze");
+      if(status)status.textContent="Question DNA could not load a required library. Check your internet connection and try again. Details: "+(error?.message||String(error));
+      if(button){button.disabled=true;button.textContent="Library loading failed";}
+      return;
+    }
+    const supabase=createClient("https://efbkhmfekfujbwfdpfhk.supabase.co","sb_publishable_N62MLBZ5CQ7016suLKhOmg_wpuQYSbH");
     const $=id=>document.getElementById(id);
     const subjects={
       "fundamentals-of-computers-and-computational-thinking":"Fundamentals of Computers and Computational Thinking",
@@ -150,9 +135,7 @@
       return counts;
     }
     async function readPdf(url){
-      const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),30000);
-      let response;try{response=await fetch(url,{signal:controller.signal});}finally{clearTimeout(timeout);}
-      if(!response.ok)throw new Error("PDF download failed (HTTP "+response.status+")");
+      const response=await fetch(url); if(!response.ok) throw new Error("PDF could not be downloaded");
       const data=new Uint8Array(await response.arrayBuffer());
       const pdf=await pdfjsLib.getDocument({data}).promise;
       let text="";
@@ -202,21 +185,22 @@
       }
       let storageError=null,listedCount=0;
       try{
+        const bucket=supabase.storage.from("bca-hub-materials");
         const pageSize=100,maxPages=20;
         for(let page=0;page<maxPages;page++){
-          const response=await fetch(supabaseUrl+"/storage/v1/object/list/bca-hub-materials",{
-            method:"POST",
-            headers:{"apikey":supabaseKey,"Authorization":"Bearer "+supabaseKey,"Content-Type":"application/json"},
-            body:JSON.stringify({prefix:folder,limit:pageSize,offset:page*pageSize,sortBy:{column:"name",order:"asc"}})
+          const storage=await bucket.list(folder,{
+            limit:pageSize,
+            offset:page*pageSize,
+            sortBy:{column:"name",order:"asc"}
           });
-          if(!response.ok)throw new Error("Storage listing returned HTTP "+response.status);
-          const items=await response.json();
-          const listed=Array.isArray(items)?items:[];
+          if(storage.error)throw storage.error;
+          const listed=Array.isArray(storage.data)?storage.data:[];
           listedCount+=listed.length;
           for(const f of listed){
             if(!f||typeof f.name!=="string"||!f.name||f.name==="."||f.name===".."||f.name===".emptyFolderPlaceholder")continue;
             const mime=String(f.metadata?.mimetype||f.metadata?.contentType||f.metadata?.content_type||"").toLowerCase();
-            if(!/\.pdf$/i.test(f.name)&&mime!=="application/pdf")continue;
+            const isPdf=/\.pdf$/i.test(f.name)||mime==="application/pdf";
+            if(!isPdf)continue;
             const path=folder+"/"+f.name;
             files.push({name:f.name,path,url:publicStorageUrl(path),source:"storage-list"});
           }
@@ -263,44 +247,35 @@
       return [...new Set(candidates)];
     }
     function normalizeExactQuestion(value){
-      return cleanText(value)
-        .replace(/^(?:(?:q(?:uestion)?\\s*)?\\d{1,2}\\s*[.)]|\\d{1,2}\\s*\\([a-h]\\)\\s*|\\(?[a-h]\\)\\s*)/i,"")
-        .toLowerCase().replace(/[^a-z0-9]+/g," ").replace(/\\s+/g," ").trim();
+      return cleanText(value).replace(/^(?:(?:q(?:uestion)?\\s*)?\\d{1,2}\\s*[.)]|\\d{1,2}\\s*\\([a-h]\\)\\s*|\\(?[a-h]\\)\\s*)/i,"").toLowerCase().replace(/[^a-z0-9]+/g," ").replace(/\\s+/g," ").trim();
     }
     function groupRepeatedQuestions(entries){
-      const exactMap=new Map(), all=[];
+      const exactMap=new Map(),all=[];
       for(const entry of entries)for(const question of entry.questions){
-        const key=normalizeExactQuestion(question); if(!key)continue;
-        const item={question,paper:entry.paper}; all.push({key,item,question});
+        const key=normalizeExactQuestion(question);if(!key)continue;
+        const item={question,paper:entry.paper};all.push({key,question,item});
         if(!exactMap.has(key))exactMap.set(key,{representative:question,items:[]});
-        const group=exactMap.get(key);
-        if(!group.items.some(x=>x.paper.name===entry.paper.name))group.items.push(item);
+        const group=exactMap.get(key);if(!group.items.some(x=>x.paper.name===entry.paper.name))group.items.push(item);
       }
       const exact=[...exactMap.values()].filter(g=>g.items.length>=2).sort((a,b)=>b.items.length-a.items.length);
-      const repeatedExactKeys=new Set([...exactMap.entries()].filter(([,g])=>g.items.length>=2).map(([k])=>k));
-      const remaining=all.filter(x=>!repeatedExactKeys.has(x.key));
-      const variations=[];
+      const repeatedKeys=new Set([...exactMap].filter(([,g])=>g.items.length>=2).map(([k])=>k));
+      const remaining=all.filter(x=>!repeatedKeys.has(x.key)),variations=[];
       for(const entry of remaining){
         let best=null,bestScore=0;
-        for(const group of variations){
-          const score=questionSimilarity(entry.question,group.representative);
-          if(score>bestScore){bestScore=score;best=group;}
-        }
-        if(best&&bestScore>=0.45){
-          if(!best.items.some(x=>x.paper.name===entry.item.paper.name))best.items.push(entry.item);
-        }else variations.push({representative:entry.question,items:[entry.item]});
+        for(const group of variations){const score=questionSimilarity(entry.question,group.representative);if(score>bestScore){bestScore=score;best=group;}}
+        if(best&&bestScore>=0.45){if(!best.items.some(x=>x.paper.name===entry.item.paper.name))best.items.push(entry.item);}
+        else variations.push({representative:entry.question,items:[entry.item]});
       }
       return {exact,variations:variations.filter(g=>g.items.length>=2).sort((a,b)=>b.items.length-a.items.length)};
     }
     function renderQuestionCards(target,groups,emptyMessage){
       target.replaceChildren();
-      if(!groups.length){target.className="dna-empty";target.textContent=emptyMessage;return;}
+      if(!groups.length){target.className="dna-empty";target.textContent=emptyMessage||"No repeated full questions could be matched confidently. Try papers with selectable text.";return;}
       target.className="dna-list";
       groups.forEach((group,index)=>{
         const card=document.createElement("div");card.className="dna-question";
         const title=document.createElement("strong");title.textContent=(index+1)+". "+group.representative;
-        const years=[...new Set(group.items.map(x=>yearFrom(x.paper.name)))];
-        const meta=document.createElement("small");meta.textContent="Found in "+group.items.length+" papers · "+years.join(", ");
+        const meta=document.createElement("small");meta.textContent="Repeated in "+group.items.length+" separate papers · "+[...new Set(group.items.map(x=>yearFrom(x.paper.name)))].join(", ");
         const occurrences=document.createElement("div");occurrences.className="dna-files";
         group.items.forEach(item=>{
           const occurrence=document.createElement("div");occurrence.className="dna-file";
@@ -326,7 +301,7 @@
     let dnaAccessReady=false;
     let dnaAccessAllowed=false;
     async function analyze(){
-      if(!dnaAccessReady){$("dnaStatus").textContent="Checking Gold Theme access… please wait.";return;}
+      if(!dnaAccessReady){$("dnaStatus").textContent="Checking administrator access… please wait.";return;}
       if(!dnaAccessAllowed){$("dnaStatus").textContent="Question DNA access could not be verified. Please sign in again and reopen Premium Theme.";return;}
       const btn=$("dnaAnalyze"),semester=$("dnaSemester").value,slug=$("dnaSubject").value;
       btn.disabled=true;btn.textContent="Scanning…";$("dnaStatus").textContent="Finding PDFs and extracting their text…";
@@ -355,7 +330,7 @@
         const yearItems=[...years].map(([label,count])=>({label,count})).sort((a,b)=>b.label.localeCompare(a.label));
         $("dnaPaperCount").textContent=String(readable.length);$("dnaYearCount").textContent=String(years.size);renderList($("dnaYears"),yearItems,"years");
         const repeated=groupRepeatedQuestions(questionEntries);
-        renderQuestionCards($("dnaRepeated"),repeated.exact,"No exact repeated questions found in the readable papers.");
+        renderQuestionCards($("dnaRepeated"),repeated.exact,"No exact repeated questions found in readable papers.");
         renderQuestionCards($("dnaVariations"),repeated.variations,"No similar question variations matched.");
         const moduleTarget=$("dnaModules");moduleTarget.className="dna-empty";
         moduleTarget.textContent="Module-wise mapping needs the confirmed Calicut University syllabus for these four subjects. Upload the syllabus PDF to enable reliable module tagging; questions will not be assigned to modules by guesswork.";
@@ -365,12 +340,24 @@
     }
     async function init(){
       const button=$("dnaAnalyze");
-      button.disabled=false;
+      button.disabled=true;
       button.textContent="Analyze Papers";
-      dnaAccessReady=true;
-      dnaAccessAllowed=true;
-      $("dnaStatus").textContent="Question DNA "+DNA_BUILD+" is ready. Select a subject and tap Analyze Papers.";
+      $("dnaStatus").textContent="Question DNA ready. Choose a subject and analyze papers.";
       button.addEventListener("click",analyze);
+      try{
+        dnaAccessReady=true;
+        dnaAccessAllowed=true;
+        button.disabled=false;
+        button.textContent="Analyze Papers";
+        analyze();
+      }catch(error){
+        console.error("Question DNA access check failed:",error);
+        dnaAccessReady=true;
+        dnaAccessAllowed=false;
+        button.disabled=true;
+        button.textContent="Access check failed";
+        $("dnaStatus").textContent="Could not verify your admin session. Please sign in again, activate Premium Theme, and reopen Question DNA.";
+      }
     }
     init();
     })();
