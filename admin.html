@@ -414,7 +414,7 @@ syncPremiumTheme();supabase.auth.onAuthStateChange(()=>syncPremiumTheme());
         if (storageResult.error) throw storageResult.error;
         const storageFiles = (storageResult.data || []).filter(item => item.name && item.id).map(item => ({
           name: item.name,
-          path: (accessType === "premium" ? "premiumstorage:" : "storage:") + item.name
+          path: (accessType === "premium" ? "premiumstorage:" : "storage:") + folder + "/" + item.name
         }));
         let githubFiles = [];
         if (accessType === "free") {
@@ -504,7 +504,8 @@ syncPremiumTheme();supabase.auth.onAuthStateChange(()=>syncPremiumTheme());
       if (selected.startsWith("storage:") || selected.startsWith("premiumstorage:")) {
         const isPremiumFile = selected.startsWith("premiumstorage:");
         const prefixLength = isPremiumFile ? "premiumstorage:".length : "storage:".length;
-        const oldName = selected.slice(prefixLength);
+        const oldPath = selected.slice(prefixLength);
+        const oldName = oldPath.split("/").pop();
         const newName = prompt("Enter the new file name (keep the file extension):", oldName);
         if (newName === null) return;
         const cleanName = newName.trim();
@@ -519,8 +520,7 @@ syncPremiumTheme();supabase.auth.onAuthStateChange(()=>syncPremiumTheme());
         try {
           const folder = selectedFolder();
           const bucket = isPremiumFile ? "bca-premium-materials" : "bca-hub-materials";
-          const oldPath = folder + "/" + oldName;
-          const newPath = folder + "/" + cleanName;
+          const newPath = oldPath.slice(0, oldPath.lastIndexOf("/") + 1) + cleanName;
           const { error } = await supabase.storage.from(bucket).move(oldPath, newPath);
           if (error) throw error;
           if (isPremiumFile) {
@@ -558,8 +558,8 @@ syncPremiumTheme();supabase.auth.onAuthStateChange(()=>syncPremiumTheme());
       if (selected.startsWith("storage:") || selected.startsWith("premiumstorage:")) {
         const isPremiumFile = selected.startsWith("premiumstorage:");
         const prefixLength = isPremiumFile ? "premiumstorage:".length : "storage:".length;
-        const fileName = selected.slice(prefixLength);
-        const path = selectedFolder() + "/" + fileName;
+        const path = selected.slice(prefixLength);
+        const fileName = path.split("/").pop();
         if (!confirm('Delete "' + fileName + '" from the published website?')) return;
         removeButton.disabled = true;
         const bucket = isPremiumFile ? "bca-premium-materials" : "bca-hub-materials";
