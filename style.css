@@ -2452,10 +2452,3 @@ background-position:0 -150px,35px -220px,70px -180px,15px -250px,90px -200px,40p
 animation:slow-christmas-snow 32s linear infinite!important}
 @keyframes slow-christmas-snow{to{background-position:0 150px,35px 220px,70px 180px,15px 250px,90px 200px,40px 280px,120px 170px,65px 260px,25px 210px,100px 300px,50px 240px,140px 320px,center!important}}
 @media(prefers-reduced-motion:reduce){body.premium-mode .hero{animation:none!important}}
-
-/* Exact reference palette: crimson red, not rusty brown. */
-body.premium-mode{background:#300006!important;color:#fff!important}
-body.premium-mode .hero,body.premium-mode .semester-section,body.premium-mode .countdown-section,body.premium-mode .community-upload-section,body.premium-mode .saved-resources-section,body.premium-mode .resource-request-section,body.premium-mode .about-section{background-color:#780009!important;background-image:radial-gradient(ellipse at 50% 35%,#a80012 0%,#85000b 48%,#4b0006 78%,#280003 100%)!important;border-color:#d51d2b!important;color:#fff!important}
-body.premium-mode .site-header{background:linear-gradient(90deg,#330004,#790008 50%,#330004)!important;border-bottom-color:#d51d2b!important}
-body.premium-mode .code-card,body.premium-mode .floating-chip,body.premium-mode .semester-card,body.premium-mode .countdown-card,body.premium-mode .resource-card,body.premium-mode .subject-item,body.premium-mode .saved-resources-list,body.premium-mode .community-upload-form,body.premium-mode .resource-request-form{background:linear-gradient(145deg,#680008,#310003)!important;border-color:#c91b28!important;color:#fff!important}
-body.premium-mode .site-footer{background:#2b0004!important;border-color:#c91b28!important;color:#ffe2b0!important}
