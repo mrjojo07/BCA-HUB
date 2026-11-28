@@ -2443,3 +2443,12 @@ body.premium-mode .hero-glow{background:#ff24242e!important}
 body.premium-mode .text-link{background:#650509!important;border-color:#ffca35!important;color:#ffdf66!important;-webkit-text-fill-color:#ffdf66!important}
 body.premium-mode .code-card,body.premium-mode .floating-chip,body.premium-mode .semester-card,body.premium-mode .countdown-card,body.premium-mode .resource-card,body.premium-mode .subject-item,body.premium-mode .saved-resources-list,body.premium-mode .community-upload-form,body.premium-mode .resource-request-form{background:linear-gradient(145deg,#73090d,#3b0305)!important;border-color:#d83a31!important;color:#fff!important}
 body.premium-mode .site-footer{background:#350204!important;border-color:#d83232!important;color:#ffe2b0!important}
+
+/* Slow, continuous falling snowfall on Christmas Premium hero. */
+body.premium-mode .hero{background-image:
+radial-gradient(circle,#fff9e9 0 1px,transparent 2px),radial-gradient(circle,#fff9e9 0 1.4px,transparent 2.5px),radial-gradient(circle,#fff9e9 0 1px,transparent 2px),radial-gradient(circle,#fff9e9 0 1.6px,transparent 2.6px),radial-gradient(circle,#fff9e9 0 1px,transparent 2px),radial-gradient(circle,#fff9e9 0 1.3px,transparent 2.4px),radial-gradient(circle,#fff9e9 0 1px,transparent 2px),radial-gradient(circle,#fff9e9 0 1.5px,transparent 2.5px),radial-gradient(circle,#fff9e9 0 1px,transparent 2px),radial-gradient(circle,#fff9e9 0 1.4px,transparent 2.5px),radial-gradient(circle,#fff9e9 0 1px,transparent 2px),radial-gradient(circle,#fff9e9 0 1.6px,transparent 2.6px),radial-gradient(ellipse at 68% 32%,#b9151b 0%,#82080e 52%,#3b0205 100%)!important;
+background-size:110px 150px,170px 220px,230px 180px,140px 250px,280px 200px,190px 280px,240px 170px,320px 260px,150px 210px,260px 300px,200px 240px,350px 320px,auto!important;
+background-position:0 -150px,35px -220px,70px -180px,15px -250px,90px -200px,40px -280px,120px -170px,65px -260px,25px -210px,100px -300px,50px -240px,140px -320px,center!important;
+animation:slow-christmas-snow 32s linear infinite!important}
+@keyframes slow-christmas-snow{to{background-position:0 150px,35px 220px,70px 180px,15px 250px,90px 200px,40px 280px,120px 170px,65px 260px,25px 210px,100px 300px,50px 240px,140px 320px,center!important}}
+@media(prefers-reduced-motion:reduce){body.premium-mode .hero{animation:none!important}}
