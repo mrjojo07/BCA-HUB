@@ -2486,3 +2486,10 @@ body.premium-mode .gift-bow{top:-18px;width:21px;height:13px;}
 body.premium-mode .gift-bow:before,body.premium-mode .gift-bow:after{width:12px;height:9px;border-width:2px;}
 body.premium-mode .gift-bow:before{left:-2px}body.premium-mode .gift-bow:after{right:-2px}
 body.premium-mode .christmas-gift-trigger:before{left:0;top:14px;font-size:10px}body.premium-mode .christmas-gift-trigger:after{right:0;top:3px;font-size:8px}
+
+/* Real falling snowfall overlay — Premium Christmas mode only */
+#premiumSnowfall{position:fixed;inset:0;z-index:1100;overflow:hidden;pointer-events:none;contain:strict}
+#premiumSnowfall .snowflake{position:absolute;top:-12vh;left:var(--snow-left);color:#fff;opacity:var(--snow-opacity);font-size:var(--snow-size);text-shadow:0 0 5px #ffffff55;will-change:transform;animation:snow-fall var(--snow-duration) linear var(--snow-delay) infinite}
+@keyframes snow-fall{0%{transform:translate3d(0,-12vh,0) rotate(0deg)}50%{transform:translate3d(var(--snow-drift),50vh,0) rotate(180deg)}100%{transform:translate3d(calc(var(--snow-drift)*-0.35),112vh,0) rotate(360deg)}}
+body:not(.premium-mode) #premiumSnowfall{display:none!important}
+@media(prefers-reduced-motion:reduce){#premiumSnowfall .snowflake{animation:none!important;display:none!important}}
