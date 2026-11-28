@@ -2541,3 +2541,6 @@ body.premium-mode .site-header{position:sticky!important;top:0!important;}
 .nav-links.open{visibility:visible!important;transform:translateX(0)!important;}
 body.sidebar-scroll-locked{overflow:hidden!important;}
 body.premium-mode .sidebar-backdrop{background:rgba(15,2,1,.52)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+
+/* Restore the earlier clean premium background: remove snowfall entirely */
+#premiumSnowfall,body.premium-mode #premiumSnowfall{display:none!important;visibility:hidden!important;}
