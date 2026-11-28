@@ -2509,3 +2509,9 @@ body.premium-mode #brandMenuToggle:after{content:"";position:absolute;left:3px;t
 #premiumSnowfall{z-index:1!important;}
 body.premium-mode main{position:relative;z-index:2;}
 body.premium-mode .site-header,body.premium-mode .upload-notes-bar,body.premium-mode #navLinks{position:relative;z-index:20;}
+
+/* Final snowfall layering: flakes must never visually cross cards */
+body.premium-mode #premiumSnowfall{z-index:0!important;}
+body.premium-mode main{isolation:isolate;position:relative;z-index:2;}
+body.premium-mode main .semester-card,body.premium-mode main .subject-item,body.premium-mode main .material-type,body.premium-mode main .countdown-card,body.premium-mode main .resource-card,body.premium-mode main .saved-resources-list{background-color:#160f09!important;}
+body.premium-mode main .semester-card,body.premium-mode main .subject-item,body.premium-mode main .material-type{backdrop-filter:none!important;}
