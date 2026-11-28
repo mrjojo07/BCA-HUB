@@ -2493,3 +2493,7 @@ body.premium-mode .christmas-gift-trigger:before{left:0;top:14px;font-size:10px}
 @keyframes snow-fall{0%{transform:translate3d(0,-12vh,0) rotate(0deg)}50%{transform:translate3d(var(--snow-drift),50vh,0) rotate(180deg)}100%{transform:translate3d(calc(var(--snow-drift)*-0.35),112vh,0) rotate(360deg)}}
 body:not(.premium-mode) #premiumSnowfall{display:none!important}
 @media(prefers-reduced-motion:reduce){#premiumSnowfall .snowflake{animation:none!important;display:none!important}}
+
+/* Snow stays visually behind readable content */
+#premiumSnowfall{z-index:8!important}
+body.premium-mode main h1,body.premium-mode main h2,body.premium-mode main h3,body.premium-mode main h4,body.premium-mode main p,body.premium-mode main a,body.premium-mode main button,body.premium-mode main label,body.premium-mode main small,body.premium-mode main strong,body.premium-mode main b,body.premium-mode main .eyebrow,body.premium-mode main .hero-content,body.premium-mode main .section-heading,body.premium-mode main .semester-card,body.premium-mode main .subject-item,body.premium-mode main .material-type,body.premium-mode main .countdown-card,body.premium-mode main .recent-card,body.premium-mode main .quiz-panel{position:relative;z-index:9}
