@@ -2533,3 +2533,11 @@ body.premium-mode main>.hero .hero-content,body.premium-mode main>.hero .hero-ar
 body.premium-mode main>.hero .hero-content{z-index:5!important;position:relative!important;}
 body.premium-mode .site-header{position:sticky!important;top:0!important;}
 @media(max-width:650px){body.premium-mode main>.hero{padding-top:24px!important;padding-bottom:32px!important;}}
+
+
+/* Logo-menu fix: avoid whole-page blur when the sidebar opens */
+.sidebar-backdrop{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:rgba(2,6,17,.48)!important;z-index:29!important;}
+.nav-links{z-index:40!important;}
+.nav-links.open{visibility:visible!important;transform:translateX(0)!important;}
+body.sidebar-scroll-locked{overflow:hidden!important;}
+body.premium-mode .sidebar-backdrop{background:rgba(15,2,1,.52)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
