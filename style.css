@@ -2434,3 +2434,12 @@ body.premium-mode .site-footer{background:#160302!important;border-color:#a83b22
 @keyframes christmas-snow{from{background-position:0 0,0 0,0 0,0 0,0 0}to{background-position:0 180px,0 230px,0 200px,0 240px,0 170px}}
 @media(max-width:650px){body.premium-mode .hero-art:before{top:-16px;right:2%;font-size:100px}body.premium-mode .hero-art:after{right:5%;bottom:0;font-size:46px}body.premium-mode .hero{padding-top:52px}body.premium-mode .hero-content{position:relative;z-index:2}}
 @media(prefers-reduced-motion:reduce){body.premium-mode .hero{animation:none!important}}
+
+/* Reference-matched brighter Christmas red override. */
+body.premium-mode{background:radial-gradient(ellipse at 50% 32%,#b20d12 0%,#790509 43%,#300204 100%)!important;color:#fff!important}
+body.premium-mode .site-header{background:linear-gradient(100deg,#370205,#8c080d 55%,#370205)!important;border-bottom:1px solid #ff3737!important}
+body.premium-mode .hero,body.premium-mode .semester-section,body.premium-mode .countdown-section,body.premium-mode .community-upload-section,body.premium-mode .saved-resources-section,body.premium-mode .resource-request-section,body.premium-mode .about-section{background:radial-gradient(ellipse at 68% 32%,#b9151b 0%,#82080e 52%,#3b0205 100%)!important;border-color:#e93a36!important;color:#fff!important}
+body.premium-mode .hero-glow{background:#ff24242e!important}
+body.premium-mode .text-link{background:#650509!important;border-color:#ffca35!important;color:#ffdf66!important;-webkit-text-fill-color:#ffdf66!important}
+body.premium-mode .code-card,body.premium-mode .floating-chip,body.premium-mode .semester-card,body.premium-mode .countdown-card,body.premium-mode .resource-card,body.premium-mode .subject-item,body.premium-mode .saved-resources-list,body.premium-mode .community-upload-form,body.premium-mode .resource-request-form{background:linear-gradient(145deg,#73090d,#3b0305)!important;border-color:#d83a31!important;color:#fff!important}
+body.premium-mode .site-footer{background:#350204!important;border-color:#d83232!important;color:#ffe2b0!important}
