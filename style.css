@@ -2504,3 +2504,8 @@ body.premium-mode .hero h1:before{content:"";position:absolute;left:-7px;top:-19
 body.premium-mode #brandMenuToggle{position:relative;}
 body.premium-mode #brandMenuToggle:after{content:"";position:absolute;left:3px;top:-8px;width:27px;height:25px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 56'%3E%3Cpath d='M8 43 Q14 16 48 5 Q45 26 57 42 Z' fill='%23d91d25' stroke='%23a30d16' stroke-width='2'/%3E%3Cpath d='M7 39 Q26 31 57 41 L54 51 Q28 46 5 49 Z' fill='%23fff8ed' stroke='%23e8e2d8' stroke-width='2'/%3E%3Ccircle cx='49' cy='8' r='8' fill='%23fff8ed' stroke='%23e8e2d8' stroke-width='2'/%3E%3C/svg%3E");background-size:contain;background-repeat:no-repeat;transform:rotate(-25deg);filter:drop-shadow(0 2px 3px #0007);pointer-events:none;z-index:5;}
 @media(max-width:480px){body.premium-mode .hero h1:before{left:-5px;top:-15px;width:29px;height:26px;}body.premium-mode #brandMenuToggle:after{left:1px;top:-6px;width:23px;height:21px;}}
+
+/* Correct snowfall stacking: snow behind the entire page content/cards */
+#premiumSnowfall{z-index:1!important;}
+body.premium-mode main{position:relative;z-index:2;}
+body.premium-mode .site-header,body.premium-mode .upload-notes-bar,body.premium-mode #navLinks{position:relative;z-index:20;}
