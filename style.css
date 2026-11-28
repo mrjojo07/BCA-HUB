@@ -2475,3 +2475,14 @@ body.premium-mode .christmas-gift-trigger:before,body.premium-mode .christmas-gi
 body.premium-mode .christmas-gift-trigger:before{left:0;top:16px;font-size:13px;animation-delay:.4s}body.premium-mode .christmas-gift-trigger:after{right:1px;top:5px;font-size:10px;animation-delay:1.2s}
 @keyframes gift-sparkle{0%,100%{opacity:.15;transform:scale(.6) rotate(0)}50%{opacity:1;transform:scale(1.25) rotate(45deg)}}
 @media(prefers-reduced-motion:reduce){body.premium-mode .christmas-gift-trigger:before,body.premium-mode .christmas-gift-trigger:after{animation:none}}
+
+/* Compact luxury gift sizing */
+body.premium-mode .christmas-gift-trigger{width:66px;height:72px;right:13px;bottom:calc(17px + env(safe-area-inset-bottom));}
+body.premium-mode .gift-box-art{left:9px;right:9px;bottom:7px;height:40px;border-radius:5px 5px 7px 7px;}
+body.premium-mode .gift-lid{left:-4px;right:-4px;top:-7px;height:12px;border-radius:4px;}
+body.premium-mode .gift-ribbon-vertical{left:calc(50% - 4.5px);top:-7px;width:9px;}
+body.premium-mode .gift-ribbon-horizontal{top:12px;height:7px;}
+body.premium-mode .gift-bow{top:-18px;width:21px;height:13px;}
+body.premium-mode .gift-bow:before,body.premium-mode .gift-bow:after{width:12px;height:9px;border-width:2px;}
+body.premium-mode .gift-bow:before{left:-2px}body.premium-mode .gift-bow:after{right:-2px}
+body.premium-mode .christmas-gift-trigger:before{left:0;top:14px;font-size:10px}body.premium-mode .christmas-gift-trigger:after{right:0;top:3px;font-size:8px}
