@@ -2423,8 +2423,6 @@ body.premium-mode .code-card,body.premium-mode .floating-chip,body.premium-mode 
 body.premium-mode .code-card{box-shadow:0 18px 50px #0009,0 0 22px #f1ae2420!important}
 body.premium-mode .code-top i{background:#f0c45a!important}body.premium-mode .code-top i:nth-child(2){background:#e65b31!important}body.premium-mode .code-top i:nth-child(3){background:#7fbd66!important}
 body.premium-mode .code-lines strong{color:#ffcf55!important}body.premium-mode .code-lines b{color:#ff8d69!important}body.premium-mode .code-lang{color:#ffcf55!important}
-body.premium-mode .hero-art:before{content:"🎅🏻";position:absolute;right:-4%;top:-58px;font-size:clamp(100px,13vw,175px);line-height:1;filter:drop-shadow(0 8px 12px #0008);z-index:4;transform:rotate(-7deg);pointer-events:none}
-body.premium-mode .hero-art:after{content:"🎁";position:absolute;right:3%;bottom:-4px;font-size:clamp(42px,6vw,76px);filter:drop-shadow(0 6px 8px #0008);z-index:4;pointer-events:none}
 body.premium-mode .hero{background-image:radial-gradient(circle at 12% 18%,#fff8d8 0 1px,transparent 2px),radial-gradient(circle at 30% 45%,#fff8d8 0 1px,transparent 2px),radial-gradient(circle at 80% 72%,#fff8d8 0 1px,transparent 2px),radial-gradient(circle at 65% 20%,#fff8d8 0 1px,transparent 2px),radial-gradient(circle at 90% 36%,#fff8d8 0 1px,transparent 2px)!important;background-size:170px 180px,210px 230px,260px 200px,190px 240px,230px 170px!important;animation:christmas-snow 18s linear infinite!important}
 body.premium-mode .site-header:before{content:"";position:absolute;left:0;right:0;top:0;height:9px;pointer-events:none;background:repeating-linear-gradient(90deg,#f9ce53 0 5px,transparent 5px 32px,#e64d2b 32px 37px,transparent 37px 64px);filter:drop-shadow(0 0 5px #ffc94c);opacity:.95}
 body.premium-mode .site-header{position:relative!important}
@@ -2432,7 +2430,6 @@ body.premium-mode .hero-note,body.premium-mode .hero-copy{color:#f2d9c7!importan
 body.premium-mode .note-icon{color:#ffcf55!important}
 body.premium-mode .site-footer{background:#160302!important;border-color:#a83b22!important;color:#f5d7ad!important}
 @keyframes christmas-snow{from{background-position:0 0,0 0,0 0,0 0,0 0}to{background-position:0 180px,0 230px,0 200px,0 240px,0 170px}}
-@media(max-width:650px){body.premium-mode .hero-art:before{top:-16px;right:2%;font-size:100px}body.premium-mode .hero-art:after{right:5%;bottom:0;font-size:46px}body.premium-mode .hero{padding-top:52px}body.premium-mode .hero-content{position:relative;z-index:2}}
 @media(prefers-reduced-motion:reduce){body.premium-mode .hero{animation:none!important}}
 
 /* Restore the original Christmas red palette from the first theme version. */
