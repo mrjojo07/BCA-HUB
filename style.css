@@ -2461,3 +2461,17 @@ body:not(.premium-mode) .christmas-gift-trigger{display:none!important}
 .christmas-audio-player{position:fixed!important;width:1px!important;height:1px!important;left:-10000px!important;top:-10000px!important;opacity:0!important;pointer-events:none!important;border:0!important}
 .christmas-music-toggle{position:fixed;right:18px;bottom:calc(105px + env(safe-area-inset-bottom));z-index:1201;border:1px solid #e8c65f;border-radius:999px;background:#3a0805;color:#ffe69a;padding:9px 14px;font-size:13px;font-weight:700;box-shadow:0 4px 15px #0006;cursor:pointer}
 .christmas-music-toggle[hidden]{display:none!important}
+
+/* Premium Christmas gift: luxury red lacquer + gold foil */
+body.premium-mode .christmas-gift-trigger{width:88px;height:94px;right:16px;bottom:calc(20px + env(safe-area-inset-bottom));filter:drop-shadow(0 9px 16px #000b) drop-shadow(0 0 9px #e8b94a44);animation:gift-bob 3.6s ease-in-out infinite;}
+body.premium-mode .gift-box-art{left:12px;right:12px;bottom:9px;height:54px;border-radius:6px 6px 9px 9px;background:linear-gradient(115deg,#a80e10 0%,#e12b24 23%,#9a090b 55%,#510405 100%);border:1px solid #f5d574;box-shadow:inset 5px 0 10px #ffd6a21c,inset -8px -6px 12px #26000066,0 0 0 1px #7b2108,0 0 18px #f4bd4240;}
+body.premium-mode .gift-lid{left:-5px;right:-5px;top:-9px;height:16px;border-radius:5px;background:linear-gradient(100deg,#d8221b,#f14a35 30%,#a80e10 68%,#670506);border:1px solid #ffe08a;box-shadow:0 2px 5px #26000088;}
+body.premium-mode .gift-ribbon-vertical{left:calc(50% - 6px);top:-9px;width:12px;background:linear-gradient(90deg,#95621a,#d9a638 24%,#fff0a2 48%,#dba83c 72%,#8d5a13);box-shadow:0 0 5px #ffdf7b44;}
+body.premium-mode .gift-ribbon-horizontal{top:19px;height:9px;background:linear-gradient(180deg,#fff0a2,#d9a638 42%,#8d5a13);}
+body.premium-mode .gift-bow{top:-24px;width:27px;height:17px;filter:drop-shadow(0 2px 3px #29000088);}
+body.premium-mode .gift-bow:before,body.premium-mode .gift-bow:after{width:15px;height:12px;border:3px solid #f9df81;border-radius:14px 14px 3px 14px;background:linear-gradient(130deg,#a66b19,#ffeb9b);}
+body.premium-mode .gift-bow:before{left:-3px;transform:rotate(25deg)}body.premium-mode .gift-bow:after{right:-3px;transform:scaleX(-1) rotate(25deg)}
+body.premium-mode .christmas-gift-trigger:before,body.premium-mode .christmas-gift-trigger:after{content:"✦";position:absolute;color:#ffe48a;text-shadow:0 0 9px #ffd75b;pointer-events:none;animation:gift-sparkle 2.6s ease-in-out infinite;}
+body.premium-mode .christmas-gift-trigger:before{left:0;top:16px;font-size:13px;animation-delay:.4s}body.premium-mode .christmas-gift-trigger:after{right:1px;top:5px;font-size:10px;animation-delay:1.2s}
+@keyframes gift-sparkle{0%,100%{opacity:.15;transform:scale(.6) rotate(0)}50%{opacity:1;transform:scale(1.25) rotate(45deg)}}
+@media(prefers-reduced-motion:reduce){body.premium-mode .christmas-gift-trigger:before,body.premium-mode .christmas-gift-trigger:after{animation:none}}
