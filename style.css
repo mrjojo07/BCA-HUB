@@ -2515,3 +2515,12 @@ body.premium-mode #premiumSnowfall{z-index:0!important;}
 body.premium-mode main{isolation:isolate;position:relative;z-index:2;}
 body.premium-mode main .semester-card,body.premium-mode main .subject-item,body.premium-mode main .material-type,body.premium-mode main .countdown-card,body.premium-mode main .resource-card,body.premium-mode main .saved-resources-list{background-color:#160f09!important;}
 body.premium-mode main .semester-card,body.premium-mode main .subject-item,body.premium-mode main .material-type{backdrop-filter:none!important;}
+
+
+/* Fix stray blank overlay above the hero: snowfall is a fixed visual-only layer */
+html,body{overflow-x:hidden;}
+#premiumSnowfall{position:fixed!important;top:0!important;left:0!important;width:100vw!important;height:100vh!important;height:100dvh!important;inset:0!important;z-index:1!important;display:none;overflow:hidden!important;pointer-events:none!important;contain:none!important;background:transparent!important;}
+body.premium-mode #premiumSnowfall{display:block!important;}
+body.premium-mode main{position:relative!important;z-index:2!important;}
+body.premium-mode .site-header,body.premium-mode .upload-notes-bar,body.premium-mode #navLinks{position:relative!important;z-index:20!important;}
+body.premium-mode .hero{position:relative!important;z-index:2!important;}
