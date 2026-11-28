@@ -2524,3 +2524,12 @@ body.premium-mode #premiumSnowfall{display:block!important;}
 body.premium-mode main{position:relative!important;z-index:2!important;}
 body.premium-mode .site-header,body.premium-mode .upload-notes-bar,body.premium-mode #navLinks{position:relative!important;z-index:20!important;}
 body.premium-mode .hero{position:relative!important;z-index:2!important;}
+
+
+/* Fix premium home hero rendering: no blank opening area before Learn smarter */
+body.premium-mode main{margin-top:0!important;padding-top:0!important;}
+body.premium-mode main>.hero{margin-top:0!important;min-height:0!important;padding-top:clamp(28px,6vh,64px)!important;}
+body.premium-mode main>.hero .hero-content,body.premium-mode main>.hero .hero-art{opacity:1!important;visibility:visible!important;translate:none!important;transform:none!important;animation:none!important;}
+body.premium-mode main>.hero .hero-content{z-index:5!important;position:relative!important;}
+body.premium-mode .site-header{position:sticky!important;top:0!important;}
+@media(max-width:650px){body.premium-mode main>.hero{padding-top:24px!important;padding-bottom:32px!important;}}
