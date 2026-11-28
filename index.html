@@ -18,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=127">
+  <link rel="stylesheet" href="style.css?v=128">
   <link rel="stylesheet" href="welcome-auth.css?v=14">
   <script>try{if(sessionStorage.getItem("bcaSyncNewUserWelcome")==="1"){document.documentElement.classList.add("show-new-user-welcome");document.documentElement.dataset.welcomeName=sessionStorage.getItem("bcaSyncWelcomeName")||"Student";sessionStorage.removeItem("bcaSyncNewUserWelcome");sessionStorage.removeItem("bcaSyncWelcomeName");}}catch(e){}</script>
   <style>html.show-new-user-welcome .header-actions,html.show-new-user-welcome .header-search,html.show-new-user-welcome #brandMenuToggle,html.show-new-user-welcome .nav-links{display:none!important}html.show-new-user-welcome,html.show-new-user-welcome body{overflow:hidden!important;overscroll-behavior:none!important;touch-action:none}html.show-new-user-welcome body{position:fixed;inset:0;width:100%}</style>
@@ -394,5 +394,9 @@
   <script>(()=>{const gift=document.getElementById("christmasGiftTrigger"),toggle=document.getElementById("christmasMusicToggle"),player=document.getElementById("christmasGiftSong");if(!gift||!toggle||!player)return;const id="uddbZ9dEZwI";let playing=false;function start(){player.src="https://www.youtube-nocookie.com/embed/"+id+"?autoplay=1&playsinline=1&controls=0&rel=0";playing=true;toggle.hidden=false;gift.setAttribute("aria-label","Stop Christmas song");gift.title="Stop Christmas song";toggle.textContent="♫ Stop music";}function stop(){player.src="";playing=false;toggle.hidden=true;gift.setAttribute("aria-label","Play Christmas song");gift.title="Play Christmas song";}gift.addEventListener("click",()=>playing?stop():start());toggle.addEventListener("click",stop);})();</script>
   <footer class="site-footer"><span class="copyright">© <span id="year"></span> BCA SYNC</span><nav class="footer-links" aria-label="Footer"><a href="about.html">About Us</a><a href="contact.html">Contact Us</a><a href="privacy-policy.html">Privacy Policy</a><a href="terms-and-conditions.html">Terms &amp; Conditions</a><a href="cancellation-refund-policy.html">Cancellation &amp; Refund</a></nav></footer>
   <script type="module" src="pwa.js?v=1"></script>
+
+<script>
+(()=>{const layer=document.createElement("div");layer.id="premiumSnowfall";layer.setAttribute("aria-hidden","true");const symbols=["❄","❅","❆","✻"];for(let i=0;i<48;i++){const flake=document.createElement("span");flake.className="snowflake";flake.textContent=symbols[Math.floor(Math.random()*symbols.length)];flake.style.setProperty("--snow-left",Math.random()*100+"vw");flake.style.setProperty("--snow-size",(8+Math.random()*13)+"px");flake.style.setProperty("--snow-opacity",(0.35+Math.random()*0.55).toFixed(2));flake.style.setProperty("--snow-duration",(12+Math.random()*18)+"s");flake.style.setProperty("--snow-delay",(-Math.random()*30)+"s");flake.style.setProperty("--snow-drift",(Math.random()*90-45)+"px");layer.appendChild(flake)}document.body.appendChild(layer);const sync=()=>layer.style.display=document.body.classList.contains("premium-mode")?"block":"none";sync();new MutationObserver(sync).observe(document.body,{attributes:true,attributeFilter:["class"]});})();
+</script>
 </body>
 </html>
